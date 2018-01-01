@@ -27,6 +27,12 @@ task LocalImport {
 }
 
 task Install {
-  Remove-Item -Recurse -Force ~\Documents\WindowsPowerShell\Modules\OxyPlotCli -EA Continue
-  Copy-Item -Recurse -Force .\OxyPlotCli ~\Documents\WindowsPowerShell\Modules
+  $INSTALL_PATH = "$HOME\Documents\WindowsPowerShell\Modules\OxyPlotCli"
+  if (Test-Path $INSTALL_PATH) {
+    Remove-Item -Recurse -Force "$HOME\Documents\WindowsPowerShell\Modules\OxyPlotCli" -EA Continue
+  }
+  else {
+    $null = mkdir $INSTALL_PATH
+  }
+  Copy-Item -Recurse -Force OxyPlotCli\* $INSTALL_PATH
 }
