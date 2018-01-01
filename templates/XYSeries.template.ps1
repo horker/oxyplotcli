@@ -53,8 +53,8 @@ process {
     Add-Oxy<% $ClassName -replace  "^([^.]+\.)*", "" %>Point $series<% $SeriesElement | foreach { %> $InputObject.$<% $_.Name %>Name<% } %>
 
     if ($null -eq $info.XDataType) {
-      $info.XDataType = $InputObject.<% $SeriesElement[0].Name %>.GetType()
-      $info.YDataType = $InputObject.<% $SeriesElement[1].Name %>.GetType()
+      $info.XDataType = $InputObject.$<% $SeriesElement[0].Name %>Name.GetType()
+      $info.YDataType = $InputObject.$<% $SeriesElement[1].Name %>Name.GetType()
     }
   }
 }
