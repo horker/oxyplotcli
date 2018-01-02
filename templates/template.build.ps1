@@ -6,83 +6,90 @@ $TEMPLATES = @(
 )
 
 $SERIES_TEMPLATES = @(
-  [PSCustomObject]@{
+  @{
     ClassName = "OxyPlot.Series.LineSeries"
     Template = "XYSeries.template.ps1"
     OutFile = "LineSeries.ps1"
     SeriesElement = @(
-      [PSCustomObject]@{ Name = "X"; Class = "object"; Axis = "X" },
-      [PSCustomObject]@{ Name = "Y"; Class = "object"; Axis = "Y" }
+      @{ Name = "X"; Class = "object"; Axis = "X" },
+      @{ Name = "Y"; Class = "object"; Axis = "Y" }
     )
   },
-  [PSCustomObject]@{
+  @{
     ClassName = "OxyPlot.Series.TwoColorLineSeries"
     Template = "XYSeries.template.ps1"
     OutFile = "TwoColorLineSeries.ps1"
     SeriesElement = @(
-      [PSCustomObject]@{ Name = "X"; Class = "object"; Axis = "X" },
-      [PSCustomObject]@{ Name = "Y"; Class = "object"; Axis = "Y" }
+      @{ Name = "X"; Class = "object"; Axis = "X" },
+      @{ Name = "Y"; Class = "object"; Axis = "Y" }
     )
   },
-  [PSCustomObject]@{
+  @{
     ClassName = "OxyPlot.Series.ScatterSeries"
     Template = "XYSeries.template.ps1"
     OutFile = "ScatterSeries.ps1"
     SeriesElement = @(
-      [PSCustomObject]@{ Name = "X"; Class = "object"; Axis = "X" },
-      [PSCustomObject]@{ Name = "Y"; Class = "object"; Axis = "Y" },
-      [PSCustomObject]@{ Name = "Size"; Class = "double" },
-      [PSCustomObject]@{ Name = "Value"; Class = "double" }
+      @{ Name = "X"; Class = "object"; Axis = "X" },
+      @{ Name = "Y"; Class = "object"; Axis = "Y" },
+      @{ Name = "Size"; Class = "double" },
+      @{ Name = "Value"; Class = "double" }
     )
   },
-  [PSCustomObject]@{
+  @{
     ClassName = "OxyPlot.Series.ScatterErrorSeries"
     Template = "XYSeries.template.ps1"
     OutFile = "ScatterErrorSeries.ps1"
     SeriesElement = @(
-      [PSCustomObject]@{ Name = "X"; Class = "object"; Axis = "X" },
-      [PSCustomObject]@{ Name = "Y"; Class = "object"; Axis = "Y" },
-      [PSCustomObject]@{ Name = "ErrorX"; Class = "object"; Axis = "X2" },
-      [PSCustomObject]@{ Name = "ErrorY"; Class = "object"; Axis = "Y2" },
-      [PSCustomObject]@{ Name = "Size"; Class = "double" },
-      [PSCustomObject]@{ Name = "Value"; Class = "double" }
+      @{ Name = "X"; Class = "object"; Axis = "X" },
+      @{ Name = "Y"; Class = "object"; Axis = "Y" },
+      @{ Name = "ErrorX"; Class = "object"; Axis = "X2" },
+      @{ Name = "ErrorY"; Class = "object"; Axis = "Y2" },
+      @{ Name = "Size"; Class = "double" },
+      @{ Name = "Value"; Class = "double" }
     )
   },
-  [PSCustomObject]@{
+  @{
     ClassName = "OxyPlot.Series.AreaSeries"
     Template = "XYSeries.template.ps1"
     OutFile = "AreaSeries.ps1"
     SeriesElement = @(
-      [PSCustomObject]@{ Name = "X"; Class = "object"; Axis = "X" },
-      [PSCustomObject]@{ Name = "Y"; Class = "object"; Axis = "Y" },
-      [PSCustomObject]@{ Name = "X2"; Class = "object"; Axis = "X2" },
-      [PSCustomObject]@{ Name = "Y2"; Class = "object"; Axis = "Y2" }
+      @{ Name = "X"; Class = "object"; Axis = "X" },
+      @{ Name = "Y"; Class = "object"; Axis = "Y" },
+      @{ Name = "X2"; Class = "object"; Axis = "X2" },
+      @{ Name = "Y2"; Class = "object"; Axis = "Y2" }
     )
   },
-  [PSCustomObject]@{
+  @{
     ClassName = "OxyPlot.Series.TwoColorAreaSeries"
     Template = "XYSeries.template.ps1"
     OutFile = "TwoColorAreaSeries.ps1"
     SeriesElement = @(
-      [PSCustomObject]@{ Name = "X"; Class = "object"; Axis = "X" },
-      [PSCustomObject]@{ Name = "Y"; Class = "object"; Axis = "Y" },
-      [PSCustomObject]@{ Name = "X2"; Class = "object"; Axis = "X2" },
-      [PSCustomObject]@{ Name = "Y2"; Class = "object"; Axis = "Y2" }
+      @{ Name = "X"; Class = "object"; Axis = "X" },
+      @{ Name = "Y"; Class = "object"; Axis = "Y" },
+      @{ Name = "X2"; Class = "object"; Axis = "X2" },
+      @{ Name = "Y2"; Class = "object"; Axis = "Y2" }
     )
   },
-  [PSCustomObject]@{
+  @{
     ClassName = "OxyPlot.Series.CandleStickSeries"
     Template = "XYSeries.template.ps1"
     OutFile = "CandleStickSeries.ps1"
     SeriesElement = @(
-      [PSCustomObject]@{ Name = "X"; Class = "object"; Axis = "X" },
-      [PSCustomObject]@{ Name = "High"; Class = "double"; Axis = "Y2" },
-      [PSCustomObject]@{ Name = "Low"; Class = "double"; Axis = "Y2" },
-      [PSCustomObject]@{ Name = "Open"; Class = "double"; Axis = "Y2" },
-      [PSCustomObject]@{ Name = "Close"; Class = "double"; Axis = "Y" }
+      @{ Name = "X"; Class = "object"; Axis = "X" },
+      @{ Name = "High"; Class = "double"; Axis = "Y2" },
+      @{ Name = "Low"; Class = "double"; Axis = "Y2" },
+      @{ Name = "Open"; Class = "double"; Axis = "Y2" },
+      @{ Name = "Close"; Class = "double"; Axis = "Y" }
     )
   }
 )
+
+$SERIES_TEMPLATES = $SERIES_TEMPLATES | foreach {
+  $_.SeriesElement = $_.SeriesElement | foreach {
+    [PSCustomObject]$_
+  }
+  [PSCustomObject]$_
+}
 
 ############################################################
 
