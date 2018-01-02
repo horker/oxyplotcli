@@ -23,6 +23,9 @@ function New-OxyDataPoint {
   New-Object OxyPlot.DataPoint (Convert-PlotValue $X), (Convert-PlotValue $Y)
 }
 
+############################################################
+# LineSeries
+
 function New-OxyLineSeriesPoint {
   [cmdletbinding()]
   param(
@@ -43,6 +46,33 @@ function Add-OxyLineSeriesPoint {
 
   $series.Points.Add((New-OxyLineSeriesPoint $X $Y))
 }
+
+############################################################
+# TwoColorLineSeries
+
+function New-OxyTwoColorLineSeriesPoint {
+  [cmdletbinding()]
+  param(
+    [object]$X,
+    [object]$Y
+  )
+
+  New-OxyDataPoint $X $Y
+}
+
+function Add-OxyTwoColorLineSeriesPoint {
+  [cmdletbinding()]
+  param(
+    [OxyPlot.Series.LineSeries]$series,
+    [object]$X,
+    [object]$Y
+  )
+
+  $series.Points.Add((New-OxyLineSeriesPoint $X $Y))
+}
+
+############################################################
+# ScatterSeries
 
 function New-OxyScatterSeriesPoint {
   [cmdletbinding()]
@@ -73,6 +103,9 @@ function Add-OxyScatterSeriesPoint {
 
   $series.Points.Add((New-OxyScatterSeriesPoint $X $Y $Size $Value $Tag))
 }
+
+############################################################
+# ScatterErrorSeries
 
 function New-OxyScatterErrorSeriesPoint {
   [cmdletbinding()]
@@ -108,6 +141,9 @@ function Add-OxyScatterErrorSeriesPoint {
   $series.Points.Add((New-OxyScatterErrorSeriesPoint $X $Y $ErrorX $ErrorY $Size $Value $Tag))
 }
 
+############################################################
+# AreaSeries
+
 function Add-OxyAreaSeriesPoint {
   [cmdletbinding()]
   param(
@@ -121,6 +157,26 @@ function Add-OxyAreaSeriesPoint {
   $series.Points.Add((New-OxyDataPoint $X $Y))
   $series.Points2.Add((New-OxyDataPoint $X2 $Y2))
 }
+
+############################################################
+# TwoColorAreaSeries
+
+function Add-OxyTwoColorAreaSeriesPoint {
+  [cmdletbinding()]
+  param(
+    [OxyPlot.Series.AreaSeries]$series,
+    [object]$X,
+    [object]$Y,
+    [object]$X2,
+    [object]$Y2
+  )
+
+  $series.Points.Add((New-OxyDataPoint $X $Y))
+  $series.Points2.Add((New-OxyDataPoint $X2 $Y2))
+}
+
+############################################################
+# CandleStickSeries
 
 function New-OxyCandleStickSeriesPoint {
   [cmdletbinding()]

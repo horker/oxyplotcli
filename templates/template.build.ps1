@@ -16,6 +16,15 @@ $SERIES_TEMPLATES = @(
     )
   },
   [PSCustomObject]@{
+    ClassName = "OxyPlot.Series.TwoColorLineSeries"
+    Template = "XYSeries.template.ps1"
+    OutFile = "TwoColorLineSeries.ps1"
+    SeriesElement = @(
+      [PSCustomObject]@{ Name = "X"; Class = "object"; Axis = "X" },
+      [PSCustomObject]@{ Name = "Y"; Class = "object"; Axis = "Y" }
+    )
+  },
+  [PSCustomObject]@{
     ClassName = "OxyPlot.Series.ScatterSeries"
     Template = "XYSeries.template.ps1"
     OutFile = "ScatterSeries.ps1"
@@ -43,6 +52,17 @@ $SERIES_TEMPLATES = @(
     ClassName = "OxyPlot.Series.AreaSeries"
     Template = "XYSeries.template.ps1"
     OutFile = "AreaSeries.ps1"
+    SeriesElement = @(
+      [PSCustomObject]@{ Name = "X"; Class = "object"; Axis = "X" },
+      [PSCustomObject]@{ Name = "Y"; Class = "object"; Axis = "Y" },
+      [PSCustomObject]@{ Name = "X2"; Class = "object"; Axis = "X2" },
+      [PSCustomObject]@{ Name = "Y2"; Class = "object"; Axis = "Y2" }
+    )
+  },
+  [PSCustomObject]@{
+    ClassName = "OxyPlot.Series.TwoColorAreaSeries"
+    Template = "XYSeries.template.ps1"
+    OutFile = "TwoColorAreaSeries.ps1"
     SeriesElement = @(
       [PSCustomObject]@{ Name = "X"; Class = "object"; Axis = "X" },
       [PSCustomObject]@{ Name = "Y"; Class = "object"; Axis = "Y" },
