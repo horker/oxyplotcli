@@ -239,8 +239,12 @@ function New-OxyPieSeriesPoint {
   )
 
   $slice = New-Object OxyPlot.Series.PieSlice $Label, $Value
-  $slice.Fill = New-OxyColor $Fill
-  $slice.IsExploded = ConvertTo-Bool $IsExploded
+  if ($null -ne $Fill -and $Fill.Length -gt 0) {
+    $slice.Fill = New-OxyColor $Fill
+  }
+  if ($null -ne $IsExploded) {
+    $slice.IsExploded = ConvertTo-Bool $IsExploded
+  }
 
   $slice
 }
