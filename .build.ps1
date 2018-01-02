@@ -36,3 +36,7 @@ task Install {
   }
   Copy-Item -Recurse -Force OxyPlotCli\* $INSTALL_PATH
 }
+
+task TouchTemplate {
+  (Get-Item "$PSScriptRoot\templates\XYSeries.template.ps1").LastWriteTime = Get-Date
+}
