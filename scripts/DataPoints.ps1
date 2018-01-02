@@ -4,6 +4,7 @@ function Convert-PlotValue {
   param(
     [object]$Value
   )
+
   if ($value -is [DateTime]) {
     $value = [OxyPlot.Axes.DateTimeAxis]::ToDouble($value)
   }
@@ -11,6 +12,22 @@ function Convert-PlotValue {
     $value = [OxyPlot.Axes.TimeSpanAxis]::ToDouble($value)
   }
   [double]$value
+}
+
+function ConvertTo-Bool {
+  param(
+    [object]$Value
+  )
+
+  if ($value -is [string]) {
+    if ($value -eq "true" -or $value -eq "t" -or $value -eq "1") {
+      return $true
+    }
+    if ($value -eq "false" -or $value -eq "f" -or $value -eq "0") {
+      return $false
+    }
+  }
+  [bool]$value
 }
 
 function New-OxyDataPoint {
@@ -216,10 +233,16 @@ function New-OxyPieSeriesPoint {
   [cmdletbinding()]
   param(
     [string]$Label,
-    [double]$Value
+    [double]$Value,
+    [string]$Fill,
+    [object]$IsExploded
   )
 
-  New-Object OxyPlot.Series.PieSlice $Label, $Value
+  $slice = New-Object OxyPlot.Series.PieSlice $Label, $Value
+  $slice.Fill = New-OxyColor $Fill
+  $slice.IsExploded = ConvertTo-Bool $IsExploded
+
+  $slice
 }
 
 function Add-OxyPieSeriesPoint {
@@ -227,9 +250,11 @@ function Add-OxyPieSeriesPoint {
   param(
     [OxyPlot.Series.PieSeries]$series,
     [string]$Label,
-    [double]$Value
+    [double]$Value,
+    [string]$Fill,
+    [object]$IsExploded
   )
 
-  $series.Slices.Add((New-OxyPieSeriesPoint $Label $Value))
+  $series.Slices.Add((New-OxyPieSeriesPoint $Label $Value $Fill $IsExploded))
 }
 

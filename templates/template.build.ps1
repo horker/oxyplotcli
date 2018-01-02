@@ -88,8 +88,10 @@ $SERIES_TEMPLATES = @(
     OutFile = "PieSeries.ps1"
     NoAxis = $true
     SeriesElement = @(
-      @{ Name = "Label"; Class = "string"; Axis = "" },
-      @{ Name = "Value"; Class = "double"; Axis = "" }
+      @{ Name = "Label"; Class = "string" },
+      @{ Name = "Value"; Class = "double" },
+      @{ Name = "Fill"; Class = "string" },
+      @{ Name = "IsExploded"; Class = "object" }
     )
   }
 )
