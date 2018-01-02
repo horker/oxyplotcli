@@ -155,7 +155,9 @@ function Add-OxyAreaSeriesPoint {
   )
 
   $series.Points.Add((New-OxyDataPoint $X $Y))
-  $series.Points2.Add((New-OxyDataPoint $X2 $Y2))
+  if ($null -ne $X2 -and $null -ne $Y2) {
+    $series.Points2.Add((New-OxyDataPoint $X2 $Y2))
+  }
 }
 
 ############################################################
@@ -172,7 +174,9 @@ function Add-OxyTwoColorAreaSeriesPoint {
   )
 
   $series.Points.Add((New-OxyDataPoint $X $Y))
-  $series.Points2.Add((New-OxyDataPoint $X2 $Y2))
+  if ($null -ne $X2 -and $null -ne $Y2) {
+    $series.Points2.Add((New-OxyDataPoint $X2 $Y2))
+  }
 }
 
 ############################################################
