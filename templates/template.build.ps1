@@ -5,6 +5,8 @@ $TEMPLATES = @(
   "Window.template.ps1"
 )
 
+############################################################
+
 $SERIES_TEMPLATES = @(
   @{
     ClassName = "OxyPlot.Series.LineSeries"
@@ -107,32 +109,32 @@ $SERIES_TEMPLATES = $SERIES_TEMPLATES | foreach {
 
 task . (@($TEMPLATES -replace "^", "build_") + @($SERIES_TEMPLATES.ClassName -replace "^", "build_"))
 
+############################################################
+
 foreach ($t in $TEMPLATES) {
   task "build_$t" `
     -Inputs ($t -replace "^", "$PSScriptRoot\..\templates\") `
     -Outputs ($t -replace "^(.+)\.template\.ps1$", "$PSScriptRoot\..\OxyPlotCli\`$1.ps1") `
-    -Partial `
     -Jobs {
-       process {
-         Get-Content $_ | Invoke-TemplateEngine | Set-Content $2
-      }
+      Get-Content $Inputs | Invoke-TemplateEngine | Set-Content $Outputs
     }
 }
 
+############################################################
+
 Set-StrictMode -Off
+
+$thisFile = "$PSScriptRoot\..\templates\template.build.ps1"
 
 foreach ($t in $SERIES_TEMPLATES) {
   task "build_$($t.ClassName)" `
-    -Inputs ($t.Template -replace "^", "$PSScriptRoot\..\templates\") `
+    -Inputs ($t.Template -replace "^", "$PSScriptRoot\..\templates\"), $thisFile `
     -Outputs ($t.OutFile -replace "^", "$PSScriptRoot\..\OxyPlotCli\") `
     -Data $t `
-    -Partial `
     -Jobs {
-       process {
-         $ClassName = $Task.Data.ClassName
-         $SeriesElement = $Task.Data.SeriesElement
-         $NoAxis = $Task.Data.NoAxis
-         Get-Content $_ | Invoke-TemplateEngine | Set-Content $2
-      }
+      $ClassName = $Task.Data.ClassName
+      $SeriesElement = $Task.Data.SeriesElement
+      $NoAxis = $Task.Data.NoAxis
+      Get-Content $Inputs[0] | Invoke-TemplateEngine | Set-Content $Outputs
     }
 }
