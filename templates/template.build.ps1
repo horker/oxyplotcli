@@ -2,7 +2,7 @@ Set-StrictMode -Version 3
 
 $TEMPLATES = @(
   "PlotModel.template.ps1",
-  "Window.template.ps1"
+  "OxyWindow.template.ps1"
 )
 
 ############################################################
