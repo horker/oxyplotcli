@@ -6,7 +6,7 @@ $TEMPLATES = @(
 )
 
 $SERIES_TEMPLATES = @(
-  [PsCustomObject]@{
+  [PSCustomObject]@{
     ClassName = "OxyPlot.Series.LineSeries"
     Template = "XYSeries.template.ps1"
     OutFile = "LineSeries.ps1"
@@ -15,7 +15,7 @@ $SERIES_TEMPLATES = @(
       [PSCustomObject]@{ Name = "Y"; Class = "object"; Axis = "Y" }
     )
   },
-  [PsCustomObject]@{
+  [PSCustomObject]@{
     ClassName = "OxyPlot.Series.ScatterSeries"
     Template = "XYSeries.template.ps1"
     OutFile = "ScatterSeries.ps1"
@@ -26,7 +26,7 @@ $SERIES_TEMPLATES = @(
       [PSCustomObject]@{ Name = "Value"; Class = "double" }
     )
   },
-  [PsCustomObject]@{
+  [PSCustomObject]@{
     ClassName = "OxyPlot.Series.ScatterErrorSeries"
     Template = "XYSeries.template.ps1"
     OutFile = "ScatterErrorSeries.ps1"
@@ -39,7 +39,7 @@ $SERIES_TEMPLATES = @(
       [PSCustomObject]@{ Name = "Value"; Class = "double" }
     )
   },
-  [PsCustomObject]@{
+  [PSCustomObject]@{
     ClassName = "OxyPlot.Series.AreaSeries"
     Template = "XYSeries.template.ps1"
     OutFile = "AreaSeries.ps1"
@@ -50,7 +50,7 @@ $SERIES_TEMPLATES = @(
       [PSCustomObject]@{ Name = "Y2"; Class = "object"; Axis = "Y2" }
     )
   },
-  [PsCustomObject]@{
+  [PSCustomObject]@{
     ClassName = "OxyPlot.Series.CandleStickSeries"
     Template = "XYSeries.template.ps1"
     OutFile = "CandleStickSeries.ps1"
