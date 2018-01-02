@@ -4,27 +4,12 @@ $script:WindowList = New-Object Collections.Generic.List[object]
 
 ############################################################
 
-function Test-WindowClosed {
-  param(
-    [System.Windows.Window]$Window
-  )
-
-  # ref.
-  # http://stackoverflow.com/questions/381973/how-do-you-tell-if-a-wpf-window-is-closed
-
-  $pi = [Windows.Window].GetProperty("IsDisposed",
-    [Reflection.BindingFlags]::NonPublic -bor [Reflection.BindingFlags]::Instance)
-  $pi.GetValue($Window)
-}
-
-############################################################
-
 function New-OxyWindow {
   [cmdletbinding()]
   param(
     [OxyPlot.PlotModel]$Model,
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "System.Windows.Window" -%>
-    [hashtable]$Options = @{}
+    [Hashtable]$Options = @{}
   )
 
   $OptionHash = @{ Title = "OxyPlot CLI" }
@@ -42,7 +27,7 @@ function New-OxyWindow {
     $w.Content = $g
   }
 
-  $script:WindowList.Add([pscustomobject]@{
+  $script:WindowList.Add([PSCustomObject]@{
     Window = $w
     PlotModel = $Model
   })
