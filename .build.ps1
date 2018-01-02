@@ -1,5 +1,5 @@
 
-task . LoadDevModule, Build, LocalImport
+task . LoadDevModule, TouchTemplate, Build, LocalImport
 
 task SetupOxyPlot {
   Install-Package OxyPlot.Core -Destination lib

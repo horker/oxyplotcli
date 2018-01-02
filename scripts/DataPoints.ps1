@@ -209,3 +209,27 @@ function Add-OxyCandleStickSeriesPoint {
   $series.Items.Add((New-OxyCandleStickSeriesPoint $X $High $Low $Open $Close))
 }
 
+############################################################
+# PieSeries
+
+function New-OxyPieSeriesPoint {
+  [cmdletbinding()]
+  param(
+    [string]$Label,
+    [double]$Value
+  )
+
+  New-Object OxyPlot.Series.PieSlice $Label, $Value
+}
+
+function Add-OxyPieSeriesPoint {
+  [cmdletbinding()]
+  param(
+    [OxyPlot.Series.PieSeries]$series,
+    [string]$Label,
+    [double]$Value
+  )
+
+  $series.Slices.Add((New-OxyPieSeriesPoint $Label $Value))
+}
+

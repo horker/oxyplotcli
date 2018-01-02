@@ -27,6 +27,7 @@ function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
 begin {
   $series = New-Object <% $ClassName %>
 
+<% if (!$NoAxis) { -%>
   $info = [PSCustomObject]@{
     XAxisTitle = $null
     YAxisTitle = $null
@@ -42,6 +43,7 @@ begin {
     $info.XAxisTitle = "<% $SeriesElement[0].Name %>"
     $info.YAxisTitle = "<% $SeriesElement[1].Name %>"
   }
+<% } -%>
 
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName $ClassName -Indent 2 -VariableName series -OptionHashName Options -%>
 
@@ -52,10 +54,12 @@ process {
   if ($null -ne $InputObject) {
     Add-Oxy<% $ClassName -replace  "^([^.]+\.)*", "" %>Point $series<% $SeriesElement | foreach { %> $InputObject.$<% $_.Name %>Name<% } %>
 
+<% if (!$NoAxis) { -%>
     if ($null -eq $info.XDataType) {
       $info.XDataType = $InputObject.$<% $SeriesElement[0].Name %>Name.GetType()
       $info.YDataType = $InputObject.$<% $SeriesElement[1].Name %>Name.GetType()
     }
+<% } -%>
   }
 }
 
@@ -64,22 +68,30 @@ end {
     foreach ($d in $Data) {
       New-Oxy<% $ClassName -replace  "^([^.]+\.)*", "" %>Point $series<% $SeriesElement | foreach { %> $d.<% $_.Name %>Name<% } %>
     }
+<% if (!$NoAxis) { -%>
     if ($null -eq $info.XDataType) {
       $info.XDataType = $Data[0].<% $SeriesElement[0].Name %>.GetType()
       $info.YDataType = $Data[0].<% $SeriesElement[1].Name %>.GetType()
     }
+<% } -%>
   }
   else {
     for ($i = 0; $i -lt $<% $SeriesElement[0].Name%>.Count; ++$i) {
       Add-Oxy<% $ClassName -replace  "^([^.]+\.)*", "" %>Point $series<% $SeriesElement | foreach { %> $<% $_.Name %>[$i]<% }%>
     }
 
-    $info.XDataType = $<% $SeriesElement[0].Name %>.GetType()
-    $info.YDataType = $<% $SeriesElement[1].Name %>.GetType()
+<% if (!$NoAxis) { -%>
+    $info.XDataType = $<% $SeriesElement[0].Name %>[0].GetType()
+    $info.YDataType = $<% $SeriesElement[1].Name %>[0].GetType()
+<% } -%>
   }
 
 #  Apply-Style "<% $ClassName %>" $l $MyInvocation $StyleName
 
+<% if (!$NoAxis) { -%>
   $series | Add-Member -PassThru NoteProperty _Info $info
+<% } else {-%>
+  $series
+<% } -%>
 }
 }

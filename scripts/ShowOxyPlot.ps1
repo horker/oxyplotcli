@@ -46,27 +46,32 @@ begin {
   else {
     $model = (Get-OxyWindow).PlotModel
   }
+
+  if ($null -ne $XAxis) {
+    $model.Axes.Add($XAxis)
+  }
+  if ($null -ne $YAxis) {
+    $model.Axes.Add($YAxis)
+  }
 }
 
 process {
   $model.Series.Add($Series)
 
-  if ($WindowAction -ne "Add" -and $null -eq $XAxis) {
-    if ($series.PSObject.Properties.Name -Contains "_Info") {
-      $XAxis = New-AxisAccordingToDataType $series._Info.XDataType $series._Info.XAxisTitle Bottom
-    }
+  if ($WindowAction -ne "Add" -and $null -eq $XAxis -and $series.PSObject.Properties.Name -Contains "_Info") {
+    $XAxis = New-AxisAccordingToDataType $series._Info.XDataType $series._Info.XAxisTitle Bottom
   }
 
-  if ($WindowAction -ne "Add" -and $null -eq $YAxis) {
-    if ($series.PSObject.Properties.Name -Contains "_Info") {
-      $YAxis = New-AxisAccordingToDataType $series._Info.YDataType $series._Info.YAxisTitle Left
-    }
+  if ($WindowAction -ne "Add" -and $null -eq $YAxis -and $series.PSObject.Properties.Name -Contains "_Info") {
+    $YAxis = New-AxisAccordingToDataType $series._Info.YDataType $series._Info.YAxisTitle Left
   }
 }
 
 end {
-  if ($WindowAction -ne "Add") {
+  if ($null -ne $XAxis) {
     $model.Axes.Add($XAxis)
+  }
+  if ($null -ne $YAxis) {
     $model.Axes.Add($YAxis)
   }
 

@@ -81,6 +81,16 @@ $SERIES_TEMPLATES = @(
       @{ Name = "Open"; Class = "double"; Axis = "Y2" },
       @{ Name = "Close"; Class = "double"; Axis = "Y" }
     )
+  },
+  @{
+    ClassName = "OxyPlot.Series.PieSeries"
+    Template = "XYSeries.template.ps1"
+    OutFile = "PieSeries.ps1"
+    NoAxis = $true
+    SeriesElement = @(
+      @{ Name = "Label"; Class = "string"; Axis = "" },
+      @{ Name = "Value"; Class = "double"; Axis = "" }
+    )
   }
 )
 
@@ -107,6 +117,8 @@ foreach ($t in $TEMPLATES) {
     }
 }
 
+Set-StrictMode -Off
+
 foreach ($t in $SERIES_TEMPLATES) {
   task "build_$($t.ClassName)" `
     -Inputs ($t.Template -replace "^", "$PSScriptRoot\..\templates\") `
@@ -117,6 +129,7 @@ foreach ($t in $SERIES_TEMPLATES) {
        process {
          $ClassName = $Task.Data.ClassName
          $SeriesElement = $Task.Data.SeriesElement
+         $NoAxis = $Task.Data.NoAxis
          Get-Content $_ | Invoke-TemplateEngine | Set-Content $2
       }
     }
