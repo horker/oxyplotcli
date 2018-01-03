@@ -12,7 +12,7 @@ $script:openWindow = {
   )
 
   if ($info["Xaml"].Length -gt 0) {
-    $reader = New-Object System.Xml.XmlNodeReader [xml]$info["Xaml"]
+    $reader = New-Object Xml.XmlNodeReader [xml]$info["Xaml"]
     $window = [Windows.Markup.XamlReader]::Load($reader)
   }
   else {
@@ -25,7 +25,7 @@ $script:openWindow = {
   }
 
   $info["Window"] = $window
-  $info.Event.Set()
+  $info["Event"].Set()
 
   $window.ShowDialog()
 }
@@ -147,8 +147,7 @@ function script:Refresh-WindowInfo {
   $array = New-Object Windows.Window[] $windows.Count
   $windows.CopyTo($array, 0)
   foreach ($w in $array) {
-    if (Test-WpfWindowClosed $w) {
-      Release-WpfWindowResource $w -ErrorAction SilentlyContinue
-    }
+    # This causes resource release for closed windows
+    Test-WpfWindowClosed $w
   }
 }
