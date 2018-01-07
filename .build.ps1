@@ -1,5 +1,5 @@
 
-task . LoadDevModule, Build, LocalImport
+task . LoadDevModule, Build, LocalImport, Test
 
 task SetupOxyPlot {
   Install-Package OxyPlot.Core -Destination lib
@@ -39,4 +39,8 @@ task Install {
 
 task TouchTemplate {
   (Get-Item "$PSScriptRoot\templates\XYSeries.template.ps1").LastWriteTime = Get-Date
+}
+
+task Test {
+  Invoke-Pester tests
 }

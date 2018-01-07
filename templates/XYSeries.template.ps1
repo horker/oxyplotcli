@@ -66,12 +66,12 @@ process {
 end {
   if ($PSCmdlet.ParameterSetName -eq "Composite") {
     foreach ($d in $Data) {
-      New-Oxy<% $ClassName -replace  "^([^.]+\.)*", "" %>Point $series<% $SeriesElement | foreach { %> $d.<% $_.Name %>Name<% } %>
+      Add-Oxy<% $ClassName -replace  "^([^.]+\.)*", "" %>Point $series<% $SeriesElement | foreach { %> $d.$<% $_.Name %>Name<% } %>
     }
 <% if (!$NoAxis) { -%>
     if ($null -eq $info.XDataType) {
-      $info.XDataType = $Data[0].<% $SeriesElement[0].Name %>.GetType()
-      $info.YDataType = $Data[0].<% $SeriesElement[1].Name %>.GetType()
+      $info.XDataType = $Data[0].$<% $SeriesElement[0].Name %>Name.GetType()
+      $info.YDataType = $Data[0].$<% $SeriesElement[1].Name %>Name.GetType()
     }
 <% } -%>
   }
