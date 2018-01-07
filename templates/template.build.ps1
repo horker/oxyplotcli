@@ -1,90 +1,152 @@
 Set-StrictMode -Version 3
 
+############################################################
+# Template files
+
 $TEMPLATES = @(
   "PlotModel.template.ps1",
   "OxyWindow.template.ps1"
 )
 
 ############################################################
+# Data point definitions
+
+$DATAPOINTS = @{}
+
+$DATAPOINTS.Line = @{
+  Cmdlet = "Add-OxyLineSeriesPoint"
+  Element = @(
+    @{ Name = "X"; Class = "object"; Axis = "X" },
+    @{ Name = "Y"; Class = "object"; Axis = "Y" }
+  )
+}
+
+$DATAPOINTS.Scatter = @{
+  Cmdlet = "Add-OxyScatterSeriesPoint"
+  Element = @(
+    @{ Name = "X"; Class = "object"; Axis = "X" },
+    @{ Name = "Y"; Class = "object"; Axis = "Y" },
+    @{ Name = "Size"; Class = "double" },
+    @{ Name = "Value"; Class = "double" }
+  )
+}
+
+$DATAPOINTS.ScatterError = @{
+  Cmdlet = "Add-OxyScatterErrorSeriesPoint"
+  Element = @(
+    @{ Name = "X"; Class = "object"; Axis = "X" },
+    @{ Name = "Y"; Class = "object"; Axis = "Y" },
+    @{ Name = "ErrorX"; Class = "object"; Axis = "X2" },
+    @{ Name = "ErrorY"; Class = "object"; Axis = "Y2" },
+    @{ Name = "Size"; Class = "double" },
+    @{ Name = "Value"; Class = "double" }
+  )
+}
+
+$DATAPOINTS.Area = @{
+  Cmdlet = "Add-OxyAreaSeriesPoint"
+  Element = @(
+    @{ Name = "X"; Class = "object"; Axis = "X" },
+    @{ Name = "Y"; Class = "object"; Axis = "Y" },
+    @{ Name = "X2"; Class = "object"; Axis = "X2" },
+    @{ Name = "Y2"; Class = "object"; Axis = "Y2" }
+  )
+}
+
+$DATAPOINTS.CandleStick = @{
+  Cmdlet = "Add-OxyCandleStickSeriesPoint"
+  Element = @(
+    @{ Name = "High"; Class = "double"; Axis = "Y2" },
+    @{ Name = "Low"; Class = "double"; Axis = "Y2" },
+    @{ Name = "Open"; Class = "double"; Axis = "Y2" },
+    @{ Name = "Close"; Class = "double"; Axis = "Y" }
+  )
+}
+
+$DATAPOINTS.Pie = @{
+  Cmdlet = "Add-OxyPieSeriesPoint"
+  Element = @(
+    @{ Name = "Label"; Class = "string" },
+    @{ Name = "Value"; Class = "double" },
+    @{ Name = "Fill"; Class = "string" },
+    @{ Name = "IsExploded"; Class = "object" }
+  )
+}
+
+([string[]]$DATAPOINTS.Keys) | foreach {
+  $value = [PsCustomObject]$DATAPOINTS.$_
+  $value.Element = @($value.Element | foreach { [PSCustomObject]$_ })
+  $DATAPOINTS.$_ = $value
+}
+
+############################################################
+# Series template definitions
 
 $SERIES_TEMPLATES = @(
   @{
-    ClassName = "OxyPlot.Series.LineSeries"
-    SeriesElement = @(
-      @{ Name = "X"; Class = "object"; Axis = "X" },
-      @{ Name = "Y"; Class = "object"; Axis = "Y" }
-    )
-  },
-  @{
-    ClassName = "OxyPlot.Series.TwoColorLineSeries"
-    SeriesElement = @(
-      @{ Name = "X"; Class = "object"; Axis = "X" },
-      @{ Name = "Y"; Class = "object"; Axis = "Y" }
-    )
-  },
-  @{
-    ClassName = "OxyPlot.Series.ScatterSeries"
-    SeriesElement = @(
-      @{ Name = "X"; Class = "object"; Axis = "X" },
-      @{ Name = "Y"; Class = "object"; Axis = "Y" },
-      @{ Name = "Size"; Class = "double" },
-      @{ Name = "Value"; Class = "double" }
-    )
-  },
-  @{
-    ClassName = "OxyPlot.Series.ScatterErrorSeries"
-    SeriesElement = @(
-      @{ Name = "X"; Class = "object"; Axis = "X" },
-      @{ Name = "Y"; Class = "object"; Axis = "Y" },
-      @{ Name = "ErrorX"; Class = "object"; Axis = "X2" },
-      @{ Name = "ErrorY"; Class = "object"; Axis = "Y2" },
-      @{ Name = "Size"; Class = "double" },
-      @{ Name = "Value"; Class = "double" }
-    )
-  },
-  @{
     ClassName = "OxyPlot.Series.AreaSeries"
-    SeriesElement = @(
-      @{ Name = "X"; Class = "object"; Axis = "X" },
-      @{ Name = "Y"; Class = "object"; Axis = "Y" },
-      @{ Name = "X2"; Class = "object"; Axis = "X2" },
-      @{ Name = "Y2"; Class = "object"; Axis = "Y2" }
-    )
+    SeriesElement = $DATAPOINTS.Area
   },
-  @{
-    ClassName = "OxyPlot.Series.TwoColorAreaSeries"
-    SeriesElement = @(
-      @{ Name = "X"; Class = "object"; Axis = "X" },
-      @{ Name = "Y"; Class = "object"; Axis = "Y" },
-      @{ Name = "X2"; Class = "object"; Axis = "X2" },
-      @{ Name = "Y2"; Class = "object"; Axis = "Y2" }
-    )
-  },
+
+  # BarSeries
+  # BoxPlotSeries
+  # CandleStickAndVolumeSeries
+
   @{
     ClassName = "OxyPlot.Series.CandleStickSeries"
-    SeriesElement = @(
-      @{ Name = "High"; Class = "double"; Axis = "Y2" },
-      @{ Name = "Low"; Class = "double"; Axis = "Y2" },
-      @{ Name = "Open"; Class = "double"; Axis = "Y2" },
-      @{ Name = "Close"; Class = "double"; Axis = "Y" }
-    )
+    SeriesElement = $DATAPOINTS.CandleStick
+  },
+
+  # ColumnSeries
+  # ContourSeries
+  # ErrorColumnSeries
+  # FunctionSeries
+  # HeapMapSeries
+  # HighLowSeries
+  # IntervalBarSeries
+
+  @{
+    ClassName = "OxyPlot.Series.LinearBarSeries"
+    SeriesElement = $DATAPOINTS.Line
+  },
+  @{
+    ClassName = "OxyPlot.Series.LineSeries"
+    SeriesElement = $DATAPOINTS.Line
   },
   @{
     ClassName = "OxyPlot.Series.PieSeries"
+    SeriesElement = $DATAPOINTS.Pie
     NoAxis = $true
-    SeriesElement = @(
-      @{ Name = "Label"; Class = "string" },
-      @{ Name = "Value"; Class = "double" },
-      @{ Name = "Fill"; Class = "string" },
-      @{ Name = "IsExploded"; Class = "object" }
-    )
+  }
+
+  # PolarHeapMapSeries
+  # RectangleBarSeries
+
+  @{
+    ClassName = "OxyPlot.Series.ScatterErrorSeries"
+    SeriesElement = $DATAPOINTS.ScatterError
+  },
+  @{
+    ClassName = "OxyPlot.Series.ScatterSeries"
+    SeriesElement = $DATAPOINTS.Scatter
+  },
+
+  # StairStepSeries
+  # StemSeries
+  # ThreeColorLineSeries
+  # TornadoBarSeries
+
+  @{
+    ClassName = "OxyPlot.Series.TwoColorAreaSeries"
+    SeriesElement = $DATAPOINTS.Area
+  },
+  @{
+    ClassName = "OxyPlot.Series.TwoColorLineSeries"
+    SeriesElement = $DATAPOINTS.Line
   }
 )
 
 $SERIES_TEMPLATES = $SERIES_TEMPLATES | foreach {
-  $_.SeriesElement = $_.SeriesElement | foreach {
-    [PSCustomObject]$_
-  }
   [PSCustomObject]$_
 }
 

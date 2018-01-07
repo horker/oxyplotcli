@@ -56,7 +56,7 @@ function New-OxyLineSeriesPoint {
 function Add-OxyLineSeriesPoint {
   [cmdletbinding()]
   param(
-    [OxyPlot.Series.LineSeries]$series,
+    [OxyPlot.Series.DataPointSeries]$series,
     [object]$X,
     [object]$Y
   )

@@ -1,14 +1,15 @@
-Set-StrictMode -version 3
+<% Set-StrictMode -Version 3 -%>
+Set-StrictMode -Version 3
 
 function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
   [cmdletbinding()]
   param(
-<% $SeriesElement | foreach { -%>
+<% $SeriesElement.Element | foreach { -%>
     [Parameter(ParameterSetName="ByElement")]
     [<% $_.Class %>[]]$<% $_.Name %> = @(),
 <% } -%>
 
-<% $SeriesElement | foreach { -%>
+<% $SeriesElement.Element | foreach { -%>
     [Parameter(ParameterSetName="Composite")]
     [string]$<% $_.Name %>Name = "<% $_.Name %>",
 <% } -%>
@@ -36,12 +37,12 @@ begin {
   }
 
   if ($PSCmdlet.ParameterSetName -eq "Composite") {
-    $info.XAxisTitle = $<% $SeriesElement[0].Name %>
-    $info.YAxisTitle = $<% $SeriesElement[1].Name %>
+    $info.XAxisTitle = $<% $SeriesElement.Element[0].Name %>
+    $info.YAxisTitle = $<% $SeriesElement.Element[1].Name %>
   }
   else {
-    $info.XAxisTitle = "<% $SeriesElement[0].Name %>"
-    $info.YAxisTitle = "<% $SeriesElement[1].Name %>"
+    $info.XAxisTitle = "<% $SeriesElement.Element[0].Name %>"
+    $info.YAxisTitle = "<% $SeriesElement.Element[1].Name %>"
   }
 <% } -%>
 
@@ -52,12 +53,12 @@ begin {
 
 process {
   if ($null -ne $InputObject) {
-    Add-Oxy<% $ClassName -replace  "^([^.]+\.)*", "" %>Point $series<% $SeriesElement | foreach { %> $InputObject.$<% $_.Name %>Name<% } %>
+    <% $SeriesElement.Cmdlet %> $series<% $SeriesElement.Element | foreach { %> $InputObject.$<% $_.Name %>Name<% } %>
 
 <% if (!$NoAxis) { -%>
     if ($null -eq $info.XDataType) {
-      $info.XDataType = $InputObject.$<% $SeriesElement[0].Name %>Name.GetType()
-      $info.YDataType = $InputObject.$<% $SeriesElement[1].Name %>Name.GetType()
+      $info.XDataType = $InputObject.$<% $SeriesElement.Element[0].Name %>Name.GetType()
+      $info.YDataType = $InputObject.$<% $SeriesElement.Element[1].Name %>Name.GetType()
     }
 <% } -%>
   }
@@ -66,23 +67,23 @@ process {
 end {
   if ($PSCmdlet.ParameterSetName -eq "Composite") {
     foreach ($d in $Data) {
-      Add-Oxy<% $ClassName -replace  "^([^.]+\.)*", "" %>Point $series<% $SeriesElement | foreach { %> $d.$<% $_.Name %>Name<% } %>
+      <% $SeriesElement.Cmdlet %> $series<% $SeriesElement.Element | foreach { %> $d.$<% $_.Name %>Name<% } %>
     }
 <% if (!$NoAxis) { -%>
     if ($null -eq $info.XDataType) {
-      $info.XDataType = $Data[0].$<% $SeriesElement[0].Name %>Name.GetType()
-      $info.YDataType = $Data[0].$<% $SeriesElement[1].Name %>Name.GetType()
+      $info.XDataType = $Data[0].$<% $SeriesElement.Element[0].Name %>Name.GetType()
+      $info.YDataType = $Data[0].$<% $SeriesElement.Element[1].Name %>Name.GetType()
     }
 <% } -%>
   }
   else {
-    for ($i = 0; $i -lt $<% $SeriesElement[0].Name%>.Count; ++$i) {
-      Add-Oxy<% $ClassName -replace  "^([^.]+\.)*", "" %>Point $series<% $SeriesElement | foreach { %> $<% $_.Name %>[$i]<% }%>
+    for ($i = 0; $i -lt $<% $SeriesElement.Element[0].Name%>.Count; ++$i) {
+      <% $SeriesElement.Cmdlet %> $series<% $SeriesElement.Element | foreach { %> $<% $_.Name %>[$i]<% }%>
     }
 
 <% if (!$NoAxis) { -%>
-    $info.XDataType = $<% $SeriesElement[0].Name %>[0].GetType()
-    $info.YDataType = $<% $SeriesElement[1].Name %>[0].GetType()
+    $info.XDataType = $<% $SeriesElement.Element[0].Name %>[0].GetType()
+    $info.YDataType = $<% $SeriesElement.Element[1].Name %>[0].GetType()
 <% } -%>
   }
 

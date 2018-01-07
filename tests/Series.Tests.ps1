@@ -69,18 +69,6 @@ Describe "OxyColor parameter" {
 
 Describe "Other series creation cmdlets" {
   it "accepts a series of points" {
-    $s = New-OxyTwoColorLineSeries -X $dataA -Y $dataB
-    $s | Should -BeOfType [OxyPlot.Series.TwoColorLineSeries]
-    $s.Points[0].X | Should -Be 1.5
-
-    $s = New-OxyScatterSeries -X $dataA -Y $dataB -Size $dataSize -Value $dataSize
-    $s | Should -BeOfType [OxyPlot.Series.ScatterSeries]
-    $s.Points[0].X | Should -Be 1.5
-
-    $s = New-OxyScatterErrorSeries -X $dataA -Y $dataB -ErrorX $dataB -ErrorY $dataA -Size $dataSize -Value $dataSize
-    $s | Should -BeOfType [OxyPlot.Series.ScatterErrorSeries]
-    $s.Points[0].X | Should -Be 1.5
-
     $s = New-OxyCandleStickSeries -High $dataA -Low $dataA -Open $dataA -Close $dataA
     $s | Should -BeOfType [OxyPlot.Series.CandleStickSeries]
     $s.Items[0].High | Should -Be 1.5
@@ -88,5 +76,17 @@ Describe "Other series creation cmdlets" {
     $s = New-OxyPieSeries -Label $dataLabel -Value $dataA
     $s | Should -BeOfType [OxyPlot.Series.PieSeries]
     $s.Slices[0].Value | Should -Be 1.5
+
+    $s = New-OxyScatterErrorSeries -X $dataA -Y $dataB -ErrorX $dataB -ErrorY $dataA -Size $dataSize -Value $dataSize
+    $s | Should -BeOfType [OxyPlot.Series.ScatterErrorSeries]
+    $s.Points[0].X | Should -Be 1.5
+
+    $s = New-OxyScatterSeries -X $dataA -Y $dataB -Size $dataSize -Value $dataSize
+    $s | Should -BeOfType [OxyPlot.Series.ScatterSeries]
+    $s.Points[0].X | Should -Be 1.5
+
+    $s = New-OxyTwoColorLineSeries -X $dataA -Y $dataB
+    $s | Should -BeOfType [OxyPlot.Series.TwoColorLineSeries]
+    $s.Points[0].X | Should -Be 1.5
   }
 }
