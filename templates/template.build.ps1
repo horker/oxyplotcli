@@ -77,7 +77,6 @@ $SERIES_TEMPLATES = @(
     Template = "XYSeries.template.ps1"
     OutFile = "CandleStickSeries.ps1"
     SeriesElement = @(
-      @{ Name = "X"; Class = "object"; Axis = "X" },
       @{ Name = "High"; Class = "double"; Axis = "Y2" },
       @{ Name = "Low"; Class = "double"; Axis = "Y2" },
       @{ Name = "Open"; Class = "double"; Axis = "Y2" },
