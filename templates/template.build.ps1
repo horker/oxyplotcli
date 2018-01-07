@@ -10,8 +10,6 @@ $TEMPLATES = @(
 $SERIES_TEMPLATES = @(
   @{
     ClassName = "OxyPlot.Series.LineSeries"
-    Template = "XYSeries.template.ps1"
-    OutFile = "LineSeries.ps1"
     SeriesElement = @(
       @{ Name = "X"; Class = "object"; Axis = "X" },
       @{ Name = "Y"; Class = "object"; Axis = "Y" }
@@ -19,8 +17,6 @@ $SERIES_TEMPLATES = @(
   },
   @{
     ClassName = "OxyPlot.Series.TwoColorLineSeries"
-    Template = "XYSeries.template.ps1"
-    OutFile = "TwoColorLineSeries.ps1"
     SeriesElement = @(
       @{ Name = "X"; Class = "object"; Axis = "X" },
       @{ Name = "Y"; Class = "object"; Axis = "Y" }
@@ -28,8 +24,6 @@ $SERIES_TEMPLATES = @(
   },
   @{
     ClassName = "OxyPlot.Series.ScatterSeries"
-    Template = "XYSeries.template.ps1"
-    OutFile = "ScatterSeries.ps1"
     SeriesElement = @(
       @{ Name = "X"; Class = "object"; Axis = "X" },
       @{ Name = "Y"; Class = "object"; Axis = "Y" },
@@ -39,8 +33,6 @@ $SERIES_TEMPLATES = @(
   },
   @{
     ClassName = "OxyPlot.Series.ScatterErrorSeries"
-    Template = "XYSeries.template.ps1"
-    OutFile = "ScatterErrorSeries.ps1"
     SeriesElement = @(
       @{ Name = "X"; Class = "object"; Axis = "X" },
       @{ Name = "Y"; Class = "object"; Axis = "Y" },
@@ -52,8 +44,6 @@ $SERIES_TEMPLATES = @(
   },
   @{
     ClassName = "OxyPlot.Series.AreaSeries"
-    Template = "XYSeries.template.ps1"
-    OutFile = "AreaSeries.ps1"
     SeriesElement = @(
       @{ Name = "X"; Class = "object"; Axis = "X" },
       @{ Name = "Y"; Class = "object"; Axis = "Y" },
@@ -63,8 +53,6 @@ $SERIES_TEMPLATES = @(
   },
   @{
     ClassName = "OxyPlot.Series.TwoColorAreaSeries"
-    Template = "XYSeries.template.ps1"
-    OutFile = "TwoColorAreaSeries.ps1"
     SeriesElement = @(
       @{ Name = "X"; Class = "object"; Axis = "X" },
       @{ Name = "Y"; Class = "object"; Axis = "Y" },
@@ -74,8 +62,6 @@ $SERIES_TEMPLATES = @(
   },
   @{
     ClassName = "OxyPlot.Series.CandleStickSeries"
-    Template = "XYSeries.template.ps1"
-    OutFile = "CandleStickSeries.ps1"
     SeriesElement = @(
       @{ Name = "High"; Class = "double"; Axis = "Y2" },
       @{ Name = "Low"; Class = "double"; Axis = "Y2" },
@@ -85,8 +71,6 @@ $SERIES_TEMPLATES = @(
   },
   @{
     ClassName = "OxyPlot.Series.PieSeries"
-    Template = "XYSeries.template.ps1"
-    OutFile = "PieSeries.ps1"
     NoAxis = $true
     SeriesElement = @(
       @{ Name = "Label"; Class = "string" },
@@ -124,11 +108,16 @@ foreach ($t in $TEMPLATES) {
 Set-StrictMode -Off
 
 $thisFile = "$PSScriptRoot\..\templates\template.build.ps1"
+$defaultTemplate = "XYSeries.template.ps1"
 
 foreach ($t in $SERIES_TEMPLATES) {
+  $template = $t.Template
+  if ($null -eq $template) {
+    $template = $defaultTemplate
+  }
   task "build_$($t.ClassName)" `
-    -Inputs ($t.Template -replace "^", "$PSScriptRoot\..\templates\"), $thisFile `
-    -Outputs ($t.OutFile -replace "^", "$PSScriptRoot\..\OxyPlotCli\") `
+    -Inputs ($template -replace "^", "$PSScriptRoot\..\templates\"), $thisFile `
+    -Outputs ($t.ClassName -replace "(.+)", "$PSScriptRoot\..\OxyPlotCli\`$1.ps1") `
     -Data $t `
     -Jobs {
       $ClassName = $Task.Data.ClassName

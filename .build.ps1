@@ -1,5 +1,5 @@
 
-task . LoadDevModule, Build, LocalImport, Test
+task . Build, LocalImport, Test
 
 task SetupOxyPlot {
   Install-Package OxyPlot.Core -Destination lib
@@ -11,19 +11,15 @@ task SetupOxyPlot {
   (Get-Item "$PSScriptRoot\lib\OxyPlot.Wpf.*\lib\net40\OxyPlot.Wpf.dll").CopyTo("$PSScriptRoot\OxyPlotCli\lib\OxyPlot.Wpf.dll")
 }
 
-task LoadDevModule {
-  Import-Module HorkerTemplateEngine
-  OxyPlotCli\AssemblyLoader.ps1
-}
-
 task Build {
   Copy-Item -Recurse -Force "$PSScriptRoot\scripts\*" "$PSScriptRoot\OxyPlotCli"
 
+  Import-Module HorkerTemplateEngine
   Invoke-Build -File "$PSScriptRoot\templates\template.build.ps1"
 }
 
 task LocalImport {
-  Import-Module .\OxyPlotCli -force
+  Import-Module .\OxyPlotCli -Force
 }
 
 task Install {
