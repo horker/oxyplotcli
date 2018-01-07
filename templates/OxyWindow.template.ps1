@@ -1,6 +1,6 @@
 Set-StrictMode -Version 3
 
-$script:WindowList = New-Object Collections.Generic.List[object]
+$script:PlotModelList = New-Object Collections.Generic.List[OxyPlot.PlotModel]
 
 ############################################################
 
@@ -27,10 +27,7 @@ function New-OxyWindow {
     $w.Content = $g
   }
 
-  $script:WindowList.Add([PSCustomObject]@{
-    Window = $w
-    PlotModel = $Model
-  })
+  $script:PlotModelList.Add($Model)
 
   $w
 }
@@ -41,14 +38,14 @@ function Close-OxytWindow {
     [int]$Index = -1
   )
 
-  $list = Get-OxyWindowList
+  $list = Get-WpfWindowList
   if ($Index = -1) {
     $Index = $list.Count - 1
   }
-  $w = $list[$Index].Window
+  $w = $list[$Index]
   Close-WpfWindow $w
 
-  $sciprt:WindowList.RemoveAt($Index)
+  $sciprt:PlotModel.Remove($w)
 }
 
 function Get-OxyWindow {
@@ -79,13 +76,5 @@ function Get-OxyWindowList {
   [cmdletbinding()]
   param()
 
-  Update-OxyWindowList
-  ,$script:WindowList
-}
-
-function Update-OxyWindowList {
-  [cmdletbinding()]
-  param()
-
-  [void]$script:WindowList.RemoveAll({ Test-WindowClosed $args[0].Window })
+  Get-WpfWindowList
 }

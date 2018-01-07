@@ -148,6 +148,6 @@ function script:Refresh-WindowInfo {
   $windows.CopyTo($array, 0)
   foreach ($w in $array) {
     # This causes resource release for closed windows
-    Test-WpfWindowClosed $w
+    $null = Test-WpfWindowClosed $w
   }
 }
