@@ -152,10 +152,6 @@ $SERIES_TEMPLATES = $SERIES_TEMPLATES | foreach {
 
 ############################################################
 
-task . (@($TEMPLATES -replace "^", "build_") + @($SERIES_TEMPLATES.ClassName -replace "^", "build_"))
-
-############################################################
-
 foreach ($t in $TEMPLATES) {
   task "build_$t" `
     -Inputs ($t -replace "^", "$PSScriptRoot\..\templates\") `
@@ -167,15 +163,13 @@ foreach ($t in $TEMPLATES) {
 
 ############################################################
 
-Set-StrictMode -Off
-
 $thisFile = "$PSScriptRoot\..\templates\template.build.ps1"
 $defaultTemplate = "XYSeries.template.ps1"
 
 foreach ($t in $SERIES_TEMPLATES) {
-  $template = $t.Template
-  if ($null -eq $template) {
-    $template = $defaultTemplate
+  $template = $defaultTemplate
+  if ($t.PSObject.Properties.Name -Contains "Template") {
+    $template = $t.Template
   }
   task "build_$($t.ClassName)" `
     -Inputs ($template -replace "^", "$PSScriptRoot\..\templates\"), $thisFile `
@@ -184,7 +178,27 @@ foreach ($t in $SERIES_TEMPLATES) {
     -Jobs {
       $ClassName = $Task.Data.ClassName
       $SeriesElement = $Task.Data.SeriesElement
-      $NoAxis = $Task.Data.NoAxis
+      $NoAxis = $false
+      if ($Task.Data.PSObject.Properties.Name -Contains "NoAxis") {
+        $NoAxis = $Task.Data.NoAxis
+      }
       Get-Content $Inputs[0] | Invoke-TemplateEngine | Set-Content $Outputs
     }
 }
+
+############################################################
+
+$seriesCmdlets = $SERIES_TEMPLATES | foreach {
+  $_.ClassName -replace "^(.+\.)*(.+)", '"New-Oxy$2"'
+} | Sort
+
+task "build_OxyPlotCli.psd1" `
+  -Inputs "$PSScriptRoot\..\templates\OxyPlotCli.template.psd1", $thisFile `
+  -Outputs "$PSScriptRoot\..\OxyPlotCli\OxyPlotCli.psd1" `
+  -Jobs {
+    Get-Content $Inputs[0] | Invoke-TemplateEngine -processorfile temp.ps1 | Set-Content $Outputs
+  }
+
+############################################################
+
+task . (@($TEMPLATES -replace "^", "build_") + @($SERIES_TEMPLATES.ClassName -replace "^", "build_") + @("build_OxyPlotCli.psd1"))
