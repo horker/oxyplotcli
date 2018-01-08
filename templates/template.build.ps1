@@ -189,7 +189,11 @@ foreach ($t in $SERIES_TEMPLATES) {
 ############################################################
 
 $seriesCmdlets = $SERIES_TEMPLATES | foreach {
-  $_.ClassName -replace "^(.+\.)*(.+)", '"New-Oxy$2"'
+  $_.ClassName -replace "^(.+\.)*(.+)", 'New-Oxy$2'
+} | Sort
+
+$seriesAliases = $seriesCmdlets | foreach {
+  ($_ -replace "^New-(.+)Series$", '$1').ToLower()
 } | Sort
 
 task "build_OxyPlotCli.psd1" `
