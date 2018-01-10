@@ -4,26 +4,60 @@ $global:OxyPlotCliWindowPreference = "New"
 
 ############################################################
 
-function New-AxisAccordingToDataType {
+function Get-AxisObject {
   param(
-    [Reflection.TypeInfo]$Type,
-    [string]$Title,
-    [OxyPlot.Axes.AxisPosition]$Position
+    [string]$AxisType,
+    [Reflection.TypeInfo]$DataType
   )
 
-  if ($Type -eq [DateTime]) { $axisType = "OxyPlot.Axes.DateTimeAxis" }
-  elseif ($Type -is [TimeSpan]) { $axisType = "OxyPlot.Axes.TimeSpanAxis" }
-  else { $axisType = "OxyPlot.Axes.LinearAxis" }
-
-  $axis = New-Object $axisType
-
-  $axis.Position = $Position
-
-  if ($null -ne $Title) {
-    $axis.Title = $Title
+  if ($AxisType -eq "none") {
+    return $null
   }
 
-  $axis
+  if ($AxisType -eq "linear") {
+    if ($DataType -eq [DateTime]) { $AxisType = "OxyPlot.Axes.DateTimeAxis" }
+    elseif ($DataType -is [TimeSpan]) { $AxisType = "OxyPlot.Axes.TimeSpanAxis" }
+    else { $AxisType = "OxyPlot.Axes.LinearAxis" }
+  }
+
+  New-Object $AxisType
+}
+
+function New-DefaultAxes {
+  param(
+    [OxyPlot.Series.Series]$Series
+  )
+
+  $result = @()
+
+  # bottom axis
+  $axis = Get-AxisObject $Series._Info.BottomAxisType $Series._Info.XDataType
+  if ($axis) {
+    $axis.Position = "Bottom"
+    if ($Series._Info.XAxisTitle) {
+      $axis.Title = $Series._Info.XAxisTitle
+    }
+    $result = @($axis)
+  }
+
+  # left axis
+  $axis = Get-AxisObject $Series._Info.LeftAxisType $Series._Info.YDataType
+  if ($axis) {
+    $axis.Position = "Left"
+    if ($Series._Info.YAxisTitle) {
+      $axis.Title = $Series._Info.YAxisTitle
+    }
+    $result = $result + $axis
+  }
+
+  # right axis
+  $axis = Get-AxisObject $Series._Info.RightAxisType ([double])
+  if ($axis) {
+    $axis.Position = "Right"
+    $result = $result + $axis
+  }
+
+  $result
 }
 
 ############################################################
@@ -35,8 +69,7 @@ function Show-OxyPlot {
     [OxyPlot.Series.Series]$Series,
     [string]$StyleName,
     [string]$WindowAction = $OxyPlotCliWindowPreference,
-    [OxyPlot.Axes.Axis]$XAxis,
-    [OxyPlot.Axes.Axis]$YAxis
+    [OxyPlot.Axes.Axis[]]$Axes
   )
 
 begin {
@@ -47,34 +80,23 @@ begin {
     $model = (Get-OxyWindow).PlotModel
   }
 
-  if ($null -ne $XAxis) {
-    $model.Axes.Add($XAxis)
-  }
-  if ($null -ne $YAxis) {
-    $model.Axes.Add($YAxis)
+  foreach ($a in $Axes) {
+    $model.Axes.Add($a)
   }
 }
 
 process {
   $model.Series.Add($Series)
 
-  if ($WindowAction -ne "Add" -and $null -eq $XAxis -and $series.PSObject.Properties.Name -Contains "_Info") {
-    $XAxis = New-AxisAccordingToDataType $series._Info.XDataType $series._Info.XAxisTitle Bottom
-  }
-
-  if ($WindowAction -ne "Add" -and $null -eq $YAxis -and $series.PSObject.Properties.Name -Contains "_Info") {
-    $YAxis = New-AxisAccordingToDataType $series._Info.YDataType $series._Info.YAxisTitle Left
+  if ($model.Axes.Count -eq 0) {
+    $Axes = New-DefaultAxes $Series
+    foreach ($a in $Axes) {
+      $model.Axes.Add($a)
+    }
   }
 }
 
 end {
-  if ($null -ne $XAxis) {
-    $model.Axes.Add($XAxis)
-  }
-  if ($null -ne $YAxis) {
-    $model.Axes.Add($YAxis)
-  }
-
   switch ($WindowAction) {
     "New" {
       $w = New-OxyWindow $model -Title $MyInvocation.Line

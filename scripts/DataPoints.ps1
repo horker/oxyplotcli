@@ -43,16 +43,6 @@ function New-OxyDataPoint {
 ############################################################
 # LineSeries
 
-function New-OxyLineSeriesPoint {
-  [cmdletbinding()]
-  param(
-    [object]$X,
-    [object]$Y
-  )
-
-  New-OxyDataPoint $X $Y
-}
-
 function Add-OxyLineSeriesPoint {
   [cmdletbinding()]
   param(
@@ -61,51 +51,12 @@ function Add-OxyLineSeriesPoint {
     [object]$Y
   )
 
-  $series.Points.Add((New-OxyLineSeriesPoint $X $Y))
-}
-
-############################################################
-# TwoColorLineSeries
-
-function New-OxyTwoColorLineSeriesPoint {
-  [cmdletbinding()]
-  param(
-    [object]$X,
-    [object]$Y
-  )
-
-  New-OxyDataPoint $X $Y
-}
-
-function Add-OxyTwoColorLineSeriesPoint {
-  [cmdletbinding()]
-  param(
-    [OxyPlot.Series.LineSeries]$series,
-    [object]$X,
-    [object]$Y
-  )
-
-  $series.Points.Add((New-OxyLineSeriesPoint $X $Y))
+  $p = New-Object OxyPlot.DataPoint (Convert-PlotValue $X), (Convert-PlotValue $Y)
+  $series.Points.Add($p)
 }
 
 ############################################################
 # ScatterSeries
-
-function New-OxyScatterSeriesPoint {
-  [cmdletbinding()]
-  param(
-    [object]$X,
-    [object]$Y,
-    [double]$Size,
-    [double]$Value,
-    [object]$Tag
-  )
-
-  if ($Size -eq 0) {
-    $Size = 5
-  }
-  New-Object OxyPlot.Series.ScatterPoint (Convert-PlotValue $X), (Convert-PlotValue $Y), $Size, $Value, $Tag
-}
 
 function Add-OxyScatterSeriesPoint {
   [cmdletbinding()]
@@ -118,29 +69,15 @@ function Add-OxyScatterSeriesPoint {
     [object]$Tag
   )
 
-  $series.Points.Add((New-OxyScatterSeriesPoint $X $Y $Size $Value $Tag))
+  if ($Size -eq 0) {
+    $Size = 5
+  }
+  $p = New-Object OxyPlot.Series.ScatterPoint (Convert-PlotValue $X), (Convert-PlotValue $Y), $Size, $Value, $Tag
+  $series.Points.Add($p)
 }
 
 ############################################################
 # ScatterErrorSeries
-
-function New-OxyScatterErrorSeriesPoint {
-  [cmdletbinding()]
-  param(
-    [object]$X,
-    [object]$Y,
-    [object]$ErrorX,
-    [object]$ErrorY,
-    [double]$Size,
-    [double]$Value,
-    [object]$Tag
-  )
-
-  if ($Size -eq 0) {
-    $Size = 5
-  }
-  New-Object OxyPlot.Series.ScatterErrorPoint (Convert-PlotValue $X), (Convert-PlotValue $Y), (Convert-PlotValue $ErrorX), (Convert-PlotValue $ErrorY), $Size, $Value, $Tag
-}
 
 function Add-OxyScatterErrorSeriesPoint {
   [cmdletbinding()]
@@ -155,7 +92,11 @@ function Add-OxyScatterErrorSeriesPoint {
     [object]$Tag
   )
 
-  $series.Points.Add((New-OxyScatterErrorSeriesPoint $X $Y $ErrorX $ErrorY $Size $Value $Tag))
+  if ($Size -eq 0) {
+    $Size = 5
+  }
+  $p = New-Object OxyPlot.Series.ScatterErrorPoint (Convert-PlotValue $X), (Convert-PlotValue $Y), (Convert-PlotValue $ErrorX), (Convert-PlotValue $ErrorY), $Size, $Value, $Tag
+  $series.Points.Add($p)
 }
 
 ############################################################
@@ -178,44 +119,12 @@ function Add-OxyAreaSeriesPoint {
 }
 
 ############################################################
-# TwoColorAreaSeries
-
-function Add-OxyTwoColorAreaSeriesPoint {
-  [cmdletbinding()]
-  param(
-    [OxyPlot.Series.AreaSeries]$series,
-    [object]$X,
-    [object]$Y,
-    [object]$X2,
-    [object]$Y2
-  )
-
-  $series.Points.Add((New-OxyDataPoint $X $Y))
-  if ($null -ne $X2 -and $null -ne $Y2) {
-    $series.Points2.Add((New-OxyDataPoint $X2 $Y2))
-  }
-}
-
-############################################################
 # CandleStickSeries
-
-function New-OxyCandleStickSeriesPoint {
-  [cmdletbinding()]
-  param(
-    [object]$X,
-    [double]$High,
-    [double]$Low,
-    [double]$Open,
-    [double]$Close
-  )
-
-  New-Object OxyPlot.Series.HighLowItem (Convert-PlotValue $X), $High, $Low, $Open, $Close
-}
 
 function Add-OxyCandleStickSeriesPoint {
   [cmdletbinding()]
   param(
-    [OxyPlot.Series.CandleStickSeries]$series,
+    [OxyPlot.Series.XYAxisSeries]$series,
     [object]$X,
     [double]$High,
     [double]$Low,
@@ -223,15 +132,17 @@ function Add-OxyCandleStickSeriesPoint {
     [double]$Close
   )
 
-  $series.Items.Add((New-OxyCandleStickSeriesPoint $X $High $Low $Open $Close))
+  $p = New-Object OxyPlot.Series.HighLowItem (Convert-PlotValue $X), $High, $Low, $Open, $Close
+  $series.Items.Add($p)
 }
 
 ############################################################
 # PieSeries
 
-function New-OxyPieSeriesPoint {
+function Add-OxyPieSeriesPoint {
   [cmdletbinding()]
   param(
+    [OxyPlot.Series.PieSeries]$series,
     [string]$Label,
     [double]$Value,
     [string]$Fill,
@@ -246,19 +157,147 @@ function New-OxyPieSeriesPoint {
     $slice.IsExploded = ConvertTo-Bool $IsExploded
   }
 
-  $slice
+  $series.Slices.Add($slice)
 }
 
-function Add-OxyPieSeriesPoint {
+############################################################
+# BarSeries
+
+function Add-OxyBarSeriesPoint {
   [cmdletbinding()]
   param(
-    [OxyPlot.Series.PieSeries]$series,
-    [string]$Label,
-    [double]$Value,
-    [string]$Fill,
-    [object]$IsExploded
+    [OxyPlot.Series.BarSeries]$Series,
+    [object]$Value,
+    [int]$CategoryIndex = -1
   )
 
-  $series.Slices.Add((New-OxyPieSeriesPoint $Label $Value $Fill $IsExploded))
+  $p = New-Object OxyPlot.Series.BarItem (Convert-PlotValue $Value), $CategoryIndex
+  $series.Items.Add($p)
+}
+
+############################################################
+# ColumnSeries
+
+function Add-OxyColumnSeriesPoint {
+  [cmdletbinding()]
+  param(
+    [OxyPlot.Series.ColumnSeries]$Series,
+    [object]$Value,
+    [int]$CategoryIndex = -1
+  )
+
+  $p = New-Object OxyPlot.Series.ColumnItem (Convert-PlotValue $Value), $CategoryIndex
+  $series.Items.Add($p)
+}
+
+############################################################
+# ErrorColumnSeries
+
+function Add-OxyErrorColumnSeriesPoint {
+  [cmdletbinding()]
+  param(
+    [OxyPlot.Series.ErrorColumnSeries]$Series,
+    [object]$Value,
+    [object]$Error,
+    [int]$CategoryIndex = 1
+  )
+
+  $p = New-Object OxyPlot.Series.ErrorColumnItem (Convert-PlotValue $Value), (Convert-PlotValue $Error), $CategoryIndex
+  $series.Items.Add($p)
+}
+
+############################################################
+# IntervalBarSeries
+
+function Add-OxyIntervalBarSeriesPoint {
+  [cmdletbinding()]
+  param(
+    [OxyPlot.Series.IntervalBarSeries]$Series,
+    [object]$Start,
+    [object]$End,
+    [string]$Title
+  )
+
+  $p = New-Object OxyPlot.Series.IntervalBarItem (Convert-PlotValue $Start), (Convert-PlotValue $End), $Title
+  $series.Items.Add($p)
+}
+
+############################################################
+# RectangleBarSeries
+
+function Add-OxyRectangleBarSeriesPoint {
+  [cmdletbinding()]
+  param(
+    [OxyPlot.Series.RectangleBarSeries]$Series,
+    [object]$X0,
+    [object]$Y0,
+    [object]$X1,
+    [object]$Y1
+  )
+
+  $p = New-Object OxyPlot.Series.RectangleBarItem (Convert-PlotValue $X0), (Convert-PlotValue $Y0), (Convert-PlotValue $X1), (Convert-PlotValue $Y1)
+  $series.Items.Add($p)
+}
+
+############################################################
+# TornadoBarSeries
+
+function Add-OxyTornadoBarSeriesPoint {
+  [cmdletbinding()]
+  param(
+    [OxyPlot.Series.TornadoBarSeries]$Series,
+    [object]$Minimum,
+    [object]$Maximum,
+    [object]$BaseValue,
+    [string]$MinimumColor,
+    [string]$MaximumColor
+  )
+
+  $p = New-Object OxyPlot.Series.TornadoBarItem
+  $p.Minimum = (Convert-PlotValue $Minimum)
+  $p.Maximum = (Convert-PlotValue $Maximum)
+  $p.BaseValue = (Convert-PlotValue $BaseValue)
+  $p.MinimumColor = New-OxyColor $MinimumColor
+  $p.MaximumColor = New-OxyColor $MaximumColor
+  $series.Items.Add($p)
+}
+
+############################################################
+# CandleStickAndVolumeSeries
+
+function Add-OxyCandleStickAndVolumeSeriesPoint {
+  [cmdletbinding()]
+  param(
+    [OxyPlot.Series.XYAxisSeries]$series,
+    [object]$X,
+    [double]$Open,
+    [double]$High,
+    [double]$Low,
+    [double]$Close,
+    [double]$BuyVolume,
+    [double]$SellVolume
+  )
+
+  $p = New-Object OxyPlot.Series.OhlcvItem (Convert-PlotValue $X), $Open, $High, $Low, $Close, $BuyVolume, $SellVolume
+  $series.Items.Add($p)
+}
+
+############################################################
+# BoxPlotSeries
+
+function Add-OxyBoxPlotSeriesPoint {
+  [cmdletbinding()]
+  param(
+    [OxyPlot.Series.BoxPlotSeries]$series,
+    [object]$X,
+    [double]$LowerWhisker,
+    [double]$BoxBottom,
+    [double]$Median,
+    [double]$BoxTop,
+    [double]$UpperWhistker
+  )
+
+  $p = New-Object OxyPlot.Series.BoxPlotItem (Convert-PlotValue $X), $LowerWhisker, $BoxBottom, $Median, $BoxTop, $UpperWhistker
+  $series.Items.Add($p)
 }
 

@@ -40,3 +40,7 @@ task TouchTemplate {
 task Test {
   Invoke-Pester tests
 }
+
+task Clean {
+  Remove-Item -Force "$PSScriptRoot\OxyPlotCli\*.ps1"
+}

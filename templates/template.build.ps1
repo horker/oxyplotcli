@@ -56,6 +56,7 @@ $DATAPOINTS.Area = @{
 $DATAPOINTS.CandleStick = @{
   Cmdlet = "Add-OxyCandleStickSeriesPoint"
   Element = @(
+    @{ Name = "X"; Class = "object"; Axis = "X" },
     @{ Name = "High"; Class = "double"; Axis = "Y2" },
     @{ Name = "Low"; Class = "double"; Axis = "Y2" },
     @{ Name = "Open"; Class = "double"; Axis = "Y2" },
@@ -70,6 +71,86 @@ $DATAPOINTS.Pie = @{
     @{ Name = "Value"; Class = "double" },
     @{ Name = "Fill"; Class = "string" },
     @{ Name = "IsExploded"; Class = "object" }
+  )
+}
+
+$DATAPOINTS.Bar = @{
+  Cmdlet = "Add-OxyBarSeriesPoint"
+  Element = @(
+    @{ Name = "Value"; Class = "object" },
+    @{ Name = "CategoryIndex"; Class = "int" }
+  )
+}
+
+$DATAPOINTS.Column = @{
+  Cmdlet = "Add-OxyColumnSeriesPoint"
+  Element = @(
+    @{ Name = "Value"; Class = "object" },
+    @{ Name = "CategoryIndex"; Class = "int" }
+  )
+}
+
+$DATAPOINTS.ErrorColumn = @{
+  Cmdlet = "Add-OxyErrorColumnSeriesPoint"
+  Element = @(
+    @{ Name = "Value"; Class = "object" },
+    @{ Name = "Error"; Class = "object" },
+    @{ Name = "CategoryIndex"; Class = "int" }
+  )
+}
+
+$DATAPOINTS.IntervalBar = @{
+  Cmdlet = "Add-OxyIntervalBarSeriesPoint"
+  Element = @(
+    @{ Name = "Start"; Class = "object" },
+    @{ Name = "End"; Class = "object" },
+    @{ Name = "BarTitle"; PropertyName = "Title"; Class = "string" } # renamed from Title to avoid conflict against the Series.InternalBarSeries property
+  )
+}
+
+$DATAPOINTS.RectangleBar = @{
+  Cmdlet = "Add-OxyRectangleBarSeriesPoint"
+  Element = @(
+    @{ Name = "X0"; Class = "object" },
+    @{ Name = "Y0"; Class = "object" },
+    @{ Name = "X1"; Class = "object" },
+    @{ Name = "Y1"; Class = "object" }
+  )
+}
+
+#$DATAPOINTS.TornadoBar = @{
+#  Cmdlet = "Add-OxyTornadoBarSeriesPoint"
+#  Element = @(
+#    @{ Name = "Minimum"; Class = "object" },
+#    @{ Name = "Maximum"; Class = "object" },
+#    @{ Name = "BaseValue"; Class = "object" },
+#    @{ Name = "MinimumColor"; Class = "string" },
+#    @{ Name = "MinimumColor"; Class = "string" }
+#  )
+#}
+
+$DATAPOINTS.CandleStickAndVolume = @{
+  Cmdlet = "Add-OxyCandleStickAndVolumeSeriesPoint"
+  Element = @(
+    @{ Name = "X"; Class = "object" },
+    @{ Name = "Open"; Class = "double" },
+    @{ Name = "High"; Class = "double" },
+    @{ Name = "Low"; Class = "double" },
+    @{ Name = "Close"; Class = "double" },
+    @{ Name = "BuyVolume"; Class = "double" },
+    @{ Name = "SellVolume"; Class = "double" }
+  )
+}
+
+$DATAPOINTS.BoxPlot = @{
+  Cmdlet = "Add-OxyBoxPlotSeriesPoint"
+  Element = @(
+    @{ Name = "X"; Class = "object" },
+    @{ Name = "LowerWhisker"; Class = "double" },
+    @{ Name = "BoxBottom"; Class = "double" },
+    @{ Name = "Median"; Class = "double" },
+    @{ Name = "BoxTop"; Class = "double" },
+    @{ Name = "UpperWhisker"; Class = "double" }
   )
 }
 
@@ -88,61 +169,125 @@ $SERIES_TEMPLATES = @(
     SeriesElement = $DATAPOINTS.Area
   },
 
-  # BarSeries
-  # BoxPlotSeries
-  # CandleStickAndVolumeSeries
+  @{
+    ClassName = "OxyPlot.Series.BarSeries"
+    SeriesElement = $DATAPOINTS.Bar
+    LeftAxisType = "OxyPlot.Axes.CategoryAxis"
+  },
+
+  @{
+    ClassName = "OxyPlot.Series.BoxPlotSeries"
+    SeriesElement = $DATAPOINTS.BoxPlot
+  },
+
+  @{
+    ClassName = "OxyPlot.Series.CandleStickAndVolumeSeries"
+    SeriesElement = $DATAPOINTS.CandleStickAndVolume
+    RightAxisType = "OxyPlot.Axes.LinearAxis"
+  },
 
   @{
     ClassName = "OxyPlot.Series.CandleStickSeries"
     SeriesElement = $DATAPOINTS.CandleStick
   },
 
-  # ColumnSeries
+  @{
+    ClassName = "OxyPlot.Series.ColumnSeries"
+    SeriesElement = $DATAPOINTS.Column
+    BottomAxisType = "OxyPlot.Axes.CategoryAxis"
+  },
+
   # ContourSeries
-  # ErrorColumnSeries
+
+  @{
+    ClassName = "OxyPlot.Series.ErrorColumnSeries"
+    SeriesElement = $DATAPOINTS.ErrorColumn
+    BottomAxisType = "OxyPlot.Axes.CategoryAxis"
+  },
+
   # FunctionSeries
   # HeapMapSeries
-  # HighLowSeries
-  # IntervalBarSeries
+
+  @{
+    ClassName = "OxyPlot.Series.HighLowSeries"
+    SeriesElement = $DATAPOINTS.CandleStick
+  },
+
+  @{
+    ClassName = "OxyPlot.Series.IntervalBarSeries"
+    SeriesElement = $DATAPOINTS.IntervalBar
+    LeftAxisType = "OxyPlot.Axes.CategoryAxis"
+  },
 
   @{
     ClassName = "OxyPlot.Series.LinearBarSeries"
     SeriesElement = $DATAPOINTS.Line
+    LeftAxisType = "OxyPlot.Axes.CategoryAxis"
   },
+
   @{
     ClassName = "OxyPlot.Series.LineSeries"
     SeriesElement = $DATAPOINTS.Line
   },
+
   @{
     ClassName = "OxyPlot.Series.PieSeries"
     SeriesElement = $DATAPOINTS.Pie
-    NoAxis = $true
+    BottomAxisType = "none"
+    LeftAxisType = "none"
   }
 
   # PolarHeapMapSeries
-  # RectangleBarSeries
+
+  @{
+    ClassName = "OxyPlot.Series.RectangleBarSeries"
+    SeriesElement = $DATAPOINTS.RectangleBar
+    LeftAxisType = "OxyPlot.Axes.CategoryAxis"
+  },
 
   @{
     ClassName = "OxyPlot.Series.ScatterErrorSeries"
     SeriesElement = $DATAPOINTS.ScatterError
   },
+
   @{
     ClassName = "OxyPlot.Series.ScatterSeries"
     SeriesElement = $DATAPOINTS.Scatter
   },
 
-  # StairStepSeries
-  # StemSeries
-  # ThreeColorLineSeries
-  # TornadoBarSeries
+  @{
+    ClassName = "OxyPlot.Series.StairStepSeries"
+    SeriesElement = $DATAPOINTS.Line
+  },
+
+  @{
+    ClassName = "OxyPlot.Series.StemSeries"
+    SeriesElement = $DATAPOINTS.Line
+  },
+
+  @{
+    ClassName = "OxyPlot.Series.ThreeColorLineSeries"
+    SeriesElement = $DATAPOINTS.Line
+  },
 
   @{
     ClassName = "OxyPlot.Series.TwoColorAreaSeries"
     SeriesElement = $DATAPOINTS.Area
   },
+
   @{
     ClassName = "OxyPlot.Series.TwoColorLineSeries"
     SeriesElement = $DATAPOINTS.Line
+  }
+
+#  @{
+#    ClassName = "OxyPlot.Series.TornadoBarSeries"
+#    SeriesElement = $DATAPOINTS.TornadoBar
+#  }
+
+  @{
+    ClassName = "OxyPlot.Series.VolumeSeries"
+    SeriesElement = $DATAPOINTS.CandleStickAndVolume
   }
 )
 
@@ -178,9 +323,19 @@ foreach ($t in $SERIES_TEMPLATES) {
     -Jobs {
       $ClassName = $Task.Data.ClassName
       $SeriesElement = $Task.Data.SeriesElement
-      $NoAxis = $false
-      if ($Task.Data.PSObject.Properties.Name -Contains "NoAxis") {
-        $NoAxis = $Task.Data.NoAxis
+
+      # AxisType
+      $BottomAxisType = "linear"
+      $LeftAxisType = "linear"
+      $RightAxisType = "none"
+      if ($Task.Data.PSObject.Properties.Name -Contains "BottomAxisType") {
+        $BottomAxisType = $Task.Data.BottomAxisType
+      }
+      if ($Task.Data.PSObject.Properties.Name -Contains "LeftAxisType") {
+        $LeftAxisType = $Task.Data.LeftAxisType
+      }
+      if ($Task.Data.PSObject.Properties.Name -Contains "RightAxisType") {
+        $RightAxisType = $Task.Data.RightAxisType
       }
       Get-Content $Inputs[0] | Invoke-TemplateEngine | Set-Content $Outputs
     }
@@ -200,7 +355,7 @@ task "build_OxyPlotCli.psd1" `
   -Inputs "$PSScriptRoot\..\templates\OxyPlotCli.template.psd1", $thisFile `
   -Outputs "$PSScriptRoot\..\OxyPlotCli\OxyPlotCli.psd1" `
   -Jobs {
-    Get-Content $Inputs[0] | Invoke-TemplateEngine -processorfile temp.ps1 | Set-Content $Outputs
+    Get-Content $Inputs[0] | Invoke-TemplateEngine | Set-Content $Outputs
   }
 
 ############################################################
