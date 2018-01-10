@@ -89,33 +89,3 @@ function Get-LabelFromLabelData {
 
   ,$result
 }
-
-############################################################
-# OxyPlot.OxyColor helper
-
-$script:colors = Import-Csv (Join-Path $PSScriptRoot "colors.tsv") -Delimiter "`t"
-$script:colorHash = @{}
-$colors | foreach { $script:colorHash[$_.Name] = $_.Code }
-
-function Get-OxyColorList {
-  [cmdletbinding()]
-  param()
-  $script:colors
-}
-
-function New-OxyColor {
-  [cmdletbinding()]
-  param(
-    [string]$ColorName
-  )
-
-  $code = $script:colorHash[$ColorName]
-  if ($code) {
-    $ColorName = $code
-  }
-  elseif ($ColorName -notmatch "^#") {
-    $ColorName = "#" + $ColorName
-  }
-
-  [OxyPlot.OxyColor]::Parse($ColorName)
-}

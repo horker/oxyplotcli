@@ -9,10 +9,11 @@ param(
 
 Set-StrictMode -version 3
 
-$colors = Import-Csv (Join-Path $PSScriptRoot ..\OxyPlotCli\colors.tsv) -Delimiter "`t"
+. scripts\OxyColor.ps1
 
-$colorValidateAttribute =
-  "[ValidatePattern('$($colors.Name -join "|")|(#?[0-9a-f]{1,8})')]"
+$colorNames = Get-OxyColorList
+
+$colorValidateAttribute = "[ValidatePattern('$($colorNames -join "|")|(#?[0-9a-f]{1,8})')]"
 
 $obj = New-Object $ClassName
 
