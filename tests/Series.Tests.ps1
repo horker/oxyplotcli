@@ -19,24 +19,24 @@ Describe "New-OxyLineSeries" {
     $s = $data | New-OxyLineSeries -XName A -YName B
   }
 
-  it "takes a series of points through pipeline" {
+  It "takes a series of points through pipeline" {
     $s | Should -BeOfType [OxyPlot.Series.LineSeries]
     $s.Points.Count | Should -Be 3
     $s.Points[0].X | Should -Be 1.5
     $s.Points[2].Y | Should -Be -1.5
   }
 
-  it "takes a series of points by parameters" {
+  It "takes a series of points by parameters" {
     $s2 = New-OxyLineSeries -X $dataA -Y $dataB
     $s2.Points | Should -Be $s.Points
   }
 
-  it "takes a series of points by parameters (-Data)" {
+  It "takes a series of points by parameters (-Data)" {
     $s2 = New-OxyLineSeries -XName A -YName B -Data $data
     $s2.Points | Should -Be $s.Points
   }
 
-  it "accepts object properties as parameters" {
+  It "accepts object properties as parameters" {
     $s2 = New-OxyLineSeries -X $dataA -Y $dataB -Smooth $true -LineStyle dash
     $s2.Smooth | Should -Be $true
     $s2.LineStyle | Should -Be "dash"
@@ -45,18 +45,18 @@ Describe "New-OxyLineSeries" {
 
 Describe "OxyColor parameter" {
 
-  it "accepts a color name" {
+  It "accepts a color name" {
     $s = New-OxyLineSeries -X $dataA -Y $dataB -Color white
     $s.Color | Should -Be ([OxyPlot.OxyColor]::Parse("#ffffff"))
 
     $s = New-OxyLineSeries -X $dataA -Y $dataB -Color transparent
-    $s.Color | Should -Be ([OxyPlot.OxyColor]::Parse("#00000000"))
+    $s.Color | Should -Be ([OxyPlot.OxyColor]::Parse("#00ffffff"))
 
-    $s = New-OxyLineSeries -X $dataA -Y $dataB -Color red
+    $s = New-OxyLineSeries -X $dataA -Y $dataB -Color RED
     $s.Color | Should -Be ([OxyPlot.OxyColor]::Parse("#ff0000"))
   }
 
-  it "accepts in a hexadecimal style" {
+  It "accepts in a hexadecimal style" {
     $s = New-OxyLineSeries -X $dataA -Y $dataB -Color "#8090a0"
     $s.Color | Should -Be ([OxyPlot.OxyColor]::Parse("#8090a0"))
 
@@ -64,28 +64,28 @@ Describe "OxyColor parameter" {
     $s.Color | Should -Be ([OxyPlot.OxyColor]::Parse("#8090a0"))
   }
 
-  it "raises an error for invalid parameter" {
+  It "raises an error for invalid parameter" {
     { $s = New-OxyLineSeries -X $dataA -Y $dataB -Color xxxx } | Should -Throw "Cannot validate"
   }
 }
 
 Describe "series creation cmdlets" {
 
-  it "can create a AreaSeries object" {
+  It "can create a AreaSeries object" {
     $s = New-OxyAreaSeries -X 1,2 -Y 3,4 -X2 5,6 -Y2 7,8
     $s | Should -BeOfType [OxyPlot.Series.AreaSeries]
     $s.Points[0].X | Should -Be 1
     $s.Points2[1].Y | Should -Be 8
   }
 
-  it "can create a BarSeries object" {
+  It "can create a BarSeries object" {
     $s = New-OxyBarSeries -Value 1,2 -CategoryIndex 3,4
     $s | Should -BeOfType [OxyPlot.Series.BarSeries]
     $s.Items[0].Value | Should -Be 1
     $s.Items[1].CategoryIndex | Should -Be 4
   }
 
-  it "can create a BoxPlotSeries object" {
+  It "can create a BoxPlotSeries object" {
     $s = New-OxyBoxPlotSeries `
       -X 1,2,3,4,5,6 `
       -LowerWhisker 11,12,13,14,15,16 `
@@ -102,7 +102,7 @@ Describe "series creation cmdlets" {
     $s.Items[5].UpperWhisker | Should -Be 56
   }
 
-  it "can create a CandleStickAndVolumeSeries object" {
+  It "can create a CandleStickAndVolumeSeries object" {
     $s = New-OxyCandleStickAndVolumeSeries `
       -X 1,2,3,4,5,6 `
       -Open 11,12,16,16,16,16 `
@@ -121,7 +121,7 @@ Describe "series creation cmdlets" {
     $s.Items[0].SellVolume | Should -Be 61
   }
 
-  it "can create a CandleStickSeries object" {
+  It "can create a CandleStickSeries object" {
     $s = New-OxyCandleStickSeries `
       -X 1,2,3,4,5 `
       -High 11,12,16,16,16 `
@@ -136,20 +136,20 @@ Describe "series creation cmdlets" {
     $s.Items[4].Close | Should -Be 45
   }
 
-  it "can create a ColumnSeries object" {
+  It "can create a ColumnSeries object" {
     $s = New-OxyColumnSeries -Value 1,2 -CategoryIndex 3,4
     $s.Items[0].Value | Should -Be 1
     $s.Items[1].CategoryIndex | Should -Be 4
   }
 
-  it "can create an ErrorColumnSeries object" {
+  It "can create an ErrorColumnSeries object" {
     $s = New-OxyErrorColumnSeries -Value 1,2,3 -Error 4,5,6 -CategoryIndex 7,8,9
     $s.Items[0].Value | Should -Be 1
     $s.Items[1].Error | Should -Be 5
     $s.Items[2].CategoryIndex | Should -Be 9
   }
 
-  it "can create a HighLowSeries object" {
+  It "can create a HighLowSeries object" {
     $s = New-OxyHighLowSeries `
       -X 1,2,3,4,5 `
       -High 11,12,16,16,16 `
@@ -164,7 +164,7 @@ Describe "series creation cmdlets" {
     $s.Items[4].Close | Should -Be 45
   }
 
-  it "can create an IntervalBarSeries object" {
+  It "can create an IntervalBarSeries object" {
     $s = New-OxyIntervalBarSeries `
       -Start 1,2,3 `
       -End 11,12,13 `
@@ -175,21 +175,21 @@ Describe "series creation cmdlets" {
     $s.Items[2].Title | Should -Be 23
   }
 
-  it "can create a LinearBarSeries object" {
+  It "can create a LinearBarSeries object" {
     $s = New-OxyLinearBarSeries -X 1,2 -Y 3,4
     $s | Should -BeOfType [OxyPlot.Series.LinearBarSeries]
     $s.Points[0].X | Should -Be 1
     $s.Points[1].Y | Should -Be 4
   }
 
-  it "can create a PieSeries object" {
+  It "can create a PieSeries object" {
     $s = New-OxyPieSeries -Label "aa", "bb" -Value 1,2
     $s | Should -BeOfType [OxyPlot.Series.PieSeries]
     $s.Slices[0].Label | Should -Be "aa"
     $s.Slices[1].Value | Should -Be 2
   }
 
-  it "can create a RectangleBarSeries object" {
+  It "can create a RectangleBarSeries object" {
     $s = New-OxyRectangleBarSeries `
       -X0 1,2,3,4 `
       -Y0 11,12,13,14 `
@@ -202,54 +202,54 @@ Describe "series creation cmdlets" {
     $s.Items[3].Y1 | Should -Be 34
   }
 
-  it "can create a ScatterErrorSeries object" {
+  It "can create a ScatterErrorSeries object" {
     $s = New-OxyScatterErrorSeries -X $dataA -Y $dataB -ErrorX $dataB -ErrorY $dataA -Size $dataSize -Value $dataSize
     $s | Should -BeOfType [OxyPlot.Series.ScatterErrorSeries]
     $s.Points[0].X | Should -Be 1.5
   }
 
-  it "can create a ScatterSeries object" {
+  It "can create a ScatterSeries object" {
     $s = New-OxyScatterSeries -X $dataA -Y $dataB -Size $dataSize -Value $dataSize
     $s | Should -BeOfType [OxyPlot.Series.ScatterSeries]
     $s.Points[0].X | Should -Be 1.5
   }
 
-  it "can create a StairStepSeries object" {
+  It "can create a StairStepSeries object" {
     $s = New-OxyStairStepSeries -X 1,2 -Y 3,4
     $s | Should -BeOfType [OxyPlot.Series.StairStepSeries]
     $s.Points[0].X | Should -Be 1
     $s.Points[1].Y | Should -Be 4
   }
 
-  it "can create a StemSeries object" {
+  It "can create a StemSeries object" {
     $s = New-OxyStemSeries -X 1,2 -Y 3,4
     $s | Should -BeOfType [OxyPlot.Series.StemSeries]
     $s.Points[0].X | Should -Be 1
     $s.Points[1].Y | Should -Be 4
   }
 
-  it "can create a ThreeColorLineSeries object" {
+  It "can create a ThreeColorLineSeries object" {
     $s = New-OxyThreeColorLineSeries -X 1,2 -Y 3,4
     $s | Should -BeOfType [OxyPlot.Series.ThreeColorLineSeries]
     $s.Points[0].X | Should -Be 1
     $s.Points[1].Y | Should -Be 4
   }
 
-  it "can create a TwoColorAreaSeries object" {
+  It "can create a TwoColorAreaSeries object" {
     $s = New-OxyTwoColorAreaSeries -X 1,2 -Y 3,4
     $s | Should -BeOfType [OxyPlot.Series.TwoColorAreaSeries]
     $s.Points[0].X | Should -Be 1
     $s.Points[1].Y | Should -Be 4
   }
 
-  it "can create a TowColorLineSeries object" {
+  It "can create a TowColorLineSeries object" {
     $s = New-OxyTwoColorLineSeries -X 1,2 -Y 3,4
     $s | Should -BeOfType [OxyPlot.Series.TwoColorLineSeries]
     $s.Points[0].X | Should -Be 1
     $s.Points[1].Y | Should -Be 4
   }
 
-  it "can create a VolumeSeries object" {
+  It "can create a VolumeSeries object" {
     $s = New-OxyVolumeSeries `
       -X 1,2,3,4,5,6 `
       -Open 11,12,16,16,16,16 `
