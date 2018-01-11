@@ -16,6 +16,7 @@ task Build {
 
   Import-Module HorkerTemplateEngine
   Invoke-Build -File "$PSScriptRoot\templates\template.build.ps1"
+  Invoke-Build -File "$PSScriptRoot\templates\Axis.build.ps1"
 }
 
 task LocalImport {

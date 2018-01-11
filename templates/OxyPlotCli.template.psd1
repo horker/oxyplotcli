@@ -96,15 +96,15 @@ FunctionsToExport = @(
   "Update-OxyPlotModel"
 
   # Axis classes
-#  "New-OxyLinearAxis"
-#  "New-OxyLogarithmicAxis"
-#  "New-OxyDateTimeAxis"
-#  "New-OxyTimeSpanAxis"
-#  "New-OxyCategoryAxis"
-#  "New-OxyLinearColorAxis"
-#  "New-OxyRangeColorAxis"
-#  "New-OxyMagnitudeAxis"
-#  "New-OxyAngleAxis"
+  "New-OxyAngleAxis"
+  "New-OxyCategoryAxis"
+  "New-OxyDateTimeAxis"
+  "New-OxyLinearAxis"
+  "New-OxyLinearColorAxis"
+  "New-OxyLogarithmicAxis"
+  "New-OxyMagnitudeAxis"
+  "New-OxyRangeColorAxis"
+  "New-OxyTimeSpanAxis"
 
   # Series classes
   <% ($seriesCmdlets -replace "(.+)", '"$1"') -join "`r`n  " %>
