@@ -28,6 +28,10 @@ function New-DefaultAxes {
     [OxyPlot.Series.Series]$Series
   )
 
+  if ($Series.PSObject.Properties -Contains "_Info") {
+    return @()
+  }
+
   $result = @()
 
   # bottom axis
@@ -65,7 +69,9 @@ function New-DefaultAxes {
 function Show-OxyPlot {
   [cmdletbinding()]
   param(
-    [Parameter(ValueFromPipeline=$true)]
+    [Parameter(ParameterSetName="PlotModel", ValueFromPipeline=$true)]
+    [OxyPlot.PlotModel]$PlotModel,
+    [Parameter(ParameterSetName="Series", ValueFromPipeline=$true)]
     [OxyPlot.Series.Series]$Series,
     [string]$StyleName,
     [string]$WindowAction = $OxyPlotCliWindowPreference,
@@ -73,44 +79,54 @@ function Show-OxyPlot {
   )
 
 begin {
-  if ($WindowAction -ne "Add") {
-    $model = New-Object OxyPlot.PlotModel
-  }
-  else {
-    $model = (Get-OxyWindow).PlotModel
+  if ($PSCmdlet.ParameterSetName -eq "PlotModel" -and $WindowAction -eq "Add") {
+    Write-Error "When -PlotModel is given, -WindowAction should not be 'Add'"
+    return
   }
 
-  foreach ($a in $Axes) {
-    $model.Axes.Add($a)
-  }
-}
-
-process {
-  $model.Series.Add($Series)
-
-  if ($model.Axes.Count -eq 0) {
-    $Axes = New-DefaultAxes $Series
-    foreach ($a in $Axes) {
-      $model.Axes.Add($a)
+  if ($PSCmdlet.ParameterSetName -eq "Series") {
+    if ($WindowAction -ne "Add") {
+      $PlotModel = New-Object OxyPlot.PlotModel
+    }
+    else {
+      $PlotModel = (Get-OxyWindow).PlotModel
     }
   }
 }
 
+process {
+  if ($null -ne $Series) {
+    $PlotModel.Series.Add($Series)
+  }
+}
+
 end {
+  foreach ($a in $Axes) {
+    $PlotModel.Axes.Add($a)
+  }
+
+  if ($PlotModel.Axes.Count -eq 0) {
+    $s = $PlotModel.Series[0]
+    $Axes = New-DefaultAxes $s
+    foreach ($a in $Axes) {
+      $PlotModel.Axes.Add($a)
+    }
+  }
+
   switch ($WindowAction) {
     "New" {
-      $w = New-OxyWindow $model -Title $MyInvocation.Line
+      $w = New-OxyWindow $PlotModel -Title $MyInvocation.Line
     }
     "Reuse" {
       $w = Get-OxyWindow
       $window = $w.Window
       $view = $w.PlotModel.PlotView
       Invoke-WpfWindowAction $window {
-        $view.Model = $model
+        $view.Model = $PlotModel
       }
     }
     "Add" {
-      Update-OxyPlotModel $model
+      Update-OxyPlotModel $PlotModel
     }
   }
 }
