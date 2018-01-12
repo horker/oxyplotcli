@@ -1,9 +1,5 @@
 Set-StrictMode -Version 3
 
-$script:PlotModelList = New-Object Collections.Generic.List[OxyPlot.PlotModel]
-
-############################################################
-
 function New-OxyWindow {
   [cmdletbinding()]
   param(
@@ -18,34 +14,28 @@ function New-OxyWindow {
 
   $w = New-WpfWindow -Options $OptionHash
 
-  Invoke-WpfWindowAction $w {
-    $view = New-Object OxyPlot.Wpf.PlotView
-    $view.Model = $Model
+  if ($Model -ne $null) {
+    Invoke-WpfWindowAction $w {
+      $view = New-Object OxyPlot.Wpf.PlotView
+      $view.Model = $Model
 
-    $g = New-Object Windows.Controls.Grid
-    $g.Children.Add($view)
-    $w.Content = $g
+      $g = New-Object Windows.Controls.Grid
+      $g.Children.Add($view)
+      $w.Content = $g
+    }
   }
-
-  $script:PlotModelList.Add($Model)
 
   $w
 }
 
-function Close-OxytWindow {
+function Close-OxyWindow {
   [cmdletbinding()]
   param(
     [int]$Index = -1
   )
 
-  $list = Get-WpfWindowList
-  if ($Index = -1) {
-    $Index = $list.Count - 1
-  }
-  $w = $list[$Index]
+  $w = Get-OxyWindow $Index
   Close-WpfWindow $w
-
-  $sciprt:PlotModel.Remove($w)
 }
 
 function Get-OxyWindow {
@@ -55,10 +45,11 @@ function Get-OxyWindow {
   )
 
   $list = Get-OxyWindowList
-  if ($list.Count -eq 0) {
+  if ($null -eq $list) {
     Write-Error "No active OxyPlot windows"
     return
   }
+  $list = @($list)
 
   if ($Index = -1) {
     $Index = $list.Count - 1

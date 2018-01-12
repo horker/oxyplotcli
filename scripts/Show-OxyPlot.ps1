@@ -1,9 +1,5 @@
 Set-StrictMode -Version 3
 
-$global:OxyPlotCliWindowPreference = "New"
-
-############################################################
-
 function Get-AxisObject {
   param(
     [string]$AxisType,
@@ -74,60 +70,57 @@ function Show-OxyPlot {
     [Parameter(ParameterSetName="Series", ValueFromPipeline=$true)]
     [OxyPlot.Series.Series]$Series,
     [string]$StyleName,
-    [string]$WindowAction = $OxyPlotCliWindowPreference,
-    [OxyPlot.Axes.Axis[]]$Axes
+    [OxyPlot.Axes.Axis[]]$Axes,
+    [switch]$Reuse
   )
 
 begin {
-  if ($PSCmdlet.ParameterSetName -eq "PlotModel" -and $WindowAction -eq "Add") {
-    Write-Error "When -PlotModel is given, -WindowAction should not be 'Add'"
-    return
-  }
-
-  if ($PSCmdlet.ParameterSetName -eq "Series") {
-    if ($WindowAction -ne "Add") {
-      $PlotModel = New-Object OxyPlot.PlotModel
-    }
-    else {
-      $PlotModel = (Get-OxyWindow).PlotModel
-    }
-  }
+  $model = $null
 }
 
 process {
-  if ($null -ne $Series) {
-    $PlotModel.Series.Add($Series)
+  if ($model -eq $null) {
+    if ($PSCmdlet.ParameterSetName -eq "Series") {
+      $model = New-Object OxyPlot.PlotModel
+    }
+    else {
+      $model = $PlotModel
+    }
+  }
+  if ($Series -ne $null) {
+    $model.Series.Add($Series)
   }
 }
 
 end {
   foreach ($a in $Axes) {
-    $PlotModel.Axes.Add($a)
+    $model.Axes.Add($a)
   }
 
-  if ($PlotModel.Axes.Count -eq 0) {
-    $s = $PlotModel.Series[0]
+  if ($model.Axes.Count -eq 0) {
+    $s = $model.Series[0]
     $Axes = New-DefaultAxes $s
     foreach ($a in $Axes) {
-      $PlotModel.Axes.Add($a)
+      $model.Axes.Add($a)
     }
   }
 
-  switch ($WindowAction) {
-    "New" {
-      $w = New-OxyWindow $PlotModel -Title $MyInvocation.Line
-    }
-    "Reuse" {
-      $w = Get-OxyWindow
-      $window = $w.Window
-      $view = $w.PlotModel.PlotView
-      Invoke-WpfWindowAction $window {
-        $view.Model = $PlotModel
-      }
-    }
-    "Add" {
-      Update-OxyPlotModel $PlotModel
-    }
+  if ($Reuse) {
+    $w = Get-OxyWindow
+  }
+  else {
+    $w = New-OxyWindow -Title $MyInvocation.Line
+  }
+
+  Invoke-WpfWindowAction $w {
+    $w.Activate()
+
+    $view = New-Object OxyPlot.Wpf.PlotView
+    $view.Model = $model
+
+    $g = New-Object Windows.Controls.Grid
+    $g.Children.Add($view)
+    $w.Content = $g
   }
 }
 }

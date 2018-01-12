@@ -72,9 +72,10 @@ NestedModules = @(
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
-  # Base.ps1
+  # New-OxySequence
   "New-OxySequence"
-  "New-OxyDataPoint"
+
+  # OxyColor.ps1
   "Get-OxyColorList"
   "New-OxyColor"
 
@@ -85,7 +86,7 @@ FunctionsToExport = @(
   "Close-WpfWindow"
   "Get-WpfWindowList"
 
-  # Window.ps1
+  # OxyWindow.ps1
   "New-OxyWindow"
   "Close-OxyWindow"
   "Get-OxyWindow"
