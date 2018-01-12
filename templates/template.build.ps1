@@ -36,8 +36,8 @@ $DATAPOINTS.ScatterError = @{
   Element = @(
     @{ Name = "X"; Class = "object"; Axis = "X" },
     @{ Name = "Y"; Class = "object"; Axis = "Y" },
-    @{ Name = "ErrorX"; Class = "object"; Axis = "X2" },
-    @{ Name = "ErrorY"; Class = "object"; Axis = "Y2" },
+    @{ Name = "ErrorX"; Class = "object" },
+    @{ Name = "ErrorY"; Class = "object" },
     @{ Name = "Size"; Class = "double" },
     @{ Name = "Value"; Class = "double" }
   )
@@ -48,8 +48,8 @@ $DATAPOINTS.Area = @{
   Element = @(
     @{ Name = "X"; Class = "object"; Axis = "X" },
     @{ Name = "Y"; Class = "object"; Axis = "Y" },
-    @{ Name = "X2"; Class = "object"; Axis = "X2" },
-    @{ Name = "Y2"; Class = "object"; Axis = "Y2" }
+    @{ Name = "X2"; Class = "object" },
+    @{ Name = "Y2"; Class = "object" }
   )
 }
 
@@ -57,9 +57,9 @@ $DATAPOINTS.CandleStick = @{
   Cmdlet = "Add-OxyCandleStickSeriesPoint"
   Element = @(
     @{ Name = "X"; Class = "object"; Axis = "X" },
-    @{ Name = "High"; Class = "double"; Axis = "Y2" },
-    @{ Name = "Low"; Class = "double"; Axis = "Y2" },
-    @{ Name = "Open"; Class = "double"; Axis = "Y2" },
+    @{ Name = "High"; Class = "double" },
+    @{ Name = "Low"; Class = "double" },
+    @{ Name = "Open"; Class = "double" },
     @{ Name = "Close"; Class = "double"; Axis = "Y" }
   )
 }
@@ -77,25 +77,25 @@ $DATAPOINTS.Pie = @{
 $DATAPOINTS.Bar = @{
   Cmdlet = "Add-OxyBarSeriesPoint"
   Element = @(
-    @{ Name = "Value"; Class = "object" },
-    @{ Name = "CategoryIndex"; Class = "int" }
+    @{ Name = "Value"; Class = "object"; Axis = "Y" },
+    @{ Name = "CategoryIndex"; Class = "int"; Axis = "X" }
   )
 }
 
 $DATAPOINTS.Column = @{
   Cmdlet = "Add-OxyColumnSeriesPoint"
   Element = @(
-    @{ Name = "Value"; Class = "object" },
-    @{ Name = "CategoryIndex"; Class = "int" }
+    @{ Name = "Value"; Class = "object"; Axis = "X" },
+    @{ Name = "CategoryIndex"; Class = "int"; Axis = "Y" }
   )
 }
 
 $DATAPOINTS.ErrorColumn = @{
   Cmdlet = "Add-OxyErrorColumnSeriesPoint"
   Element = @(
-    @{ Name = "Value"; Class = "object" },
+    @{ Name = "Value"; Class = "object"; Axis = "X" },
     @{ Name = "Error"; Class = "object" },
-    @{ Name = "CategoryIndex"; Class = "int" }
+    @{ Name = "CategoryIndex"; Class = "int"; Axis = "Y" }
   )
 }
 
@@ -104,15 +104,15 @@ $DATAPOINTS.IntervalBar = @{
   Element = @(
     @{ Name = "Start"; Class = "object" },
     @{ Name = "End"; Class = "object" },
-    @{ Name = "BarTitle"; PropertyName = "Title"; Class = "string" } # renamed from Title to avoid conflict against the Series.InternalBarSeries property
+    @{ Name = "BarTitle"; Class = "string" } # renamed from Title to avoid conflict against the Series.InternalBarSeries property
   )
 }
 
 $DATAPOINTS.RectangleBar = @{
   Cmdlet = "Add-OxyRectangleBarSeriesPoint"
   Element = @(
-    @{ Name = "X0"; Class = "object" },
-    @{ Name = "Y0"; Class = "object" },
+    @{ Name = "X0"; Class = "object"; Axis = "X" },
+    @{ Name = "Y0"; Class = "object"; Axis = "Y" },
     @{ Name = "X1"; Class = "object" },
     @{ Name = "Y1"; Class = "object" }
   )
@@ -132,11 +132,11 @@ $DATAPOINTS.RectangleBar = @{
 $DATAPOINTS.CandleStickAndVolume = @{
   Cmdlet = "Add-OxyCandleStickAndVolumeSeriesPoint"
   Element = @(
-    @{ Name = "X"; Class = "object" },
+    @{ Name = "X"; Class = "object"; Axis = "X" },
     @{ Name = "Open"; Class = "double" },
     @{ Name = "High"; Class = "double" },
     @{ Name = "Low"; Class = "double" },
-    @{ Name = "Close"; Class = "double" },
+    @{ Name = "Close"; Class = "double"; Axis = "Y" },
     @{ Name = "BuyVolume"; Class = "double" },
     @{ Name = "SellVolume"; Class = "double" }
   )
@@ -145,10 +145,10 @@ $DATAPOINTS.CandleStickAndVolume = @{
 $DATAPOINTS.BoxPlot = @{
   Cmdlet = "Add-OxyBoxPlotSeriesPoint"
   Element = @(
-    @{ Name = "X"; Class = "object" },
+    @{ Name = "X"; Class = "object"; Axis = "X" },
     @{ Name = "LowerWhisker"; Class = "double" },
     @{ Name = "BoxBottom"; Class = "double" },
-    @{ Name = "Median"; Class = "double" },
+    @{ Name = "Median"; Class = "double"; Axis = "Y" },
     @{ Name = "BoxTop"; Class = "double" },
     @{ Name = "UpperWhisker"; Class = "double" }
   )
@@ -323,6 +323,8 @@ foreach ($t in $SERIES_TEMPLATES) {
     -Jobs {
       $ClassName = $Task.Data.ClassName
       $SeriesElement = $Task.Data.SeriesElement
+      $XAxisElement = $SeriesElement.Element | where { $_.PSObject.Properties.Name -Contains "Axis" -and $_.Axis -eq "X" }
+      $YAxisElement = $SeriesElement.Element | where { $_.PSObject.Properties.Name -Contains "Axis" -and $_.Axis -eq "Y" }
 
       # AxisType
       $BottomAxisType = "linear"

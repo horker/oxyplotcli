@@ -31,9 +31,18 @@ Describe "New-OxyLineSeries" {
     $s2.Points | Should -Be $s.Points
   }
 
-  It "takes a series of points by parameters (-Data)" {
-    $s2 = New-OxyLineSeries -XName A -YName B -Data $data
+  It "takes a data set in two ways at once" {
+    $s2 = $data | New-OxyLineSeries -X $dataA -YName B
     $s2.Points | Should -Be $s.Points
+  }
+
+  It "takes a data set in two ways at once" {
+    $s2 = $data | New-OxyLineSeries -X $dataA -YName B
+    $s2.Points | Should -Be $s.Points
+  }
+
+  It "raises an error if a data set of a parameter is given in two ways" {
+    { $s2 = $data | New-OxyLineSeries -X $dataA -XName A -Y $Datab } | Should -Throw "in two ways"
   }
 
   It "accepts object properties as parameters" {
