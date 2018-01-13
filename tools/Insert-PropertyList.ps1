@@ -9,7 +9,7 @@ param(
 
 Set-StrictMode -version 3
 
-. $PSScriptRoot\..\scripts\OxyColor.ps1
+. $PSScriptRoot\..\scripts\Misc.ps1
 
 $colorNames = Get-OxyColorList
 
@@ -36,6 +36,9 @@ foreach ($p in $props) {
       if ($class -eq "OxyPlot.OxyColor") {
         $results.Add("$indent$colorValidateAttribute[string]`$$name,")
       }
+      elseif ($class -eq "OxyPlot.OxyThickness") {
+        $results.Add("$indent[double[]]`$$name,")
+      }
       else {
         $results.Add("$indent[$class]`$$name,")
       }
@@ -43,6 +46,9 @@ foreach ($p in $props) {
     "assign" {
       if ($class -eq "OxyPlot.OxyColor") {
         $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$name')) { `$$VariableName.$name = New-OxyColor `$$name }")
+      }
+      elseif ($class -eq "OxyPlot.OxyThickness") {
+        $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$name')) { `$$VariableName.$name = New-OxyThickness `$$name }")
       }
       else {
         $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$name')) { `$$VariableName.$name = `$$name }")

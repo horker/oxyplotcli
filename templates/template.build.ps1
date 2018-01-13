@@ -297,12 +297,14 @@ $SERIES_TEMPLATES = $SERIES_TEMPLATES | foreach {
 
 ############################################################
 
+$TOOL = "$PSScriptRoot\..\tools\Insert-PropertyList.ps1"
+
 foreach ($t in $TEMPLATES) {
   task "build_$t" `
-    -Inputs ($t -replace "^", "$PSScriptRoot\..\templates\") `
+    -Inputs ($t -replace "^", "$PSScriptRoot\..\templates\"), $TOOL `
     -Outputs ($t -replace "^(.+)\.template\.ps1$", "$PSScriptRoot\..\OxyPlotCli\`$1.ps1") `
     -Jobs {
-      Get-Content $Inputs | Invoke-TemplateEngine | Set-Content $Outputs
+      Get-Content $Inputs[0] | Invoke-TemplateEngine | Set-Content $Outputs
     }
 }
 

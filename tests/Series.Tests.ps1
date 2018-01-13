@@ -78,6 +78,31 @@ Describe "OxyColor parameter" {
   }
 }
 
+Describe "OxyThickness parameter" {
+
+  It "accepts one value of thickness" {
+    $p = New-OxyPlotModel -PlotMargins 0.1
+    $p.PlotMargins | Should -BeOfType [OxyPlot.OxyThickness]
+    $p.PlotMargins | Should -Be (New-Object OxyPlot.OxyThickness 0.1)
+  }
+
+  It "accepts two values of thickness" {
+    $p = New-OxyPlotModel -PlotMargins 0.1, 0.2
+    $p.PlotMargins | Should -BeOfType [OxyPlot.OxyThickness]
+    $p.PlotMargins | Should -Be (New-Object OxyPlot.OxyThickness 0.1, 0.2, 0.1, 0.2)
+  }
+
+  It "doesn't accept three values of thickness" {
+    { New-OxyPlotModel -PlotMargins 0.1, 0.2, 0.3 } | Should -Throw "Illegal thickness"
+  }
+
+  It "accepts four values of thickness" {
+    $p = New-OxyPlotModel -PlotMargins 0.1, 0.2, 0.3, 0.4
+    $p.PlotMargins | Should -BeOfType [OxyPlot.OxyThickness]
+    $p.PlotMargins | Should -Be (New-Object OxyPlot.OxyThickness 0.1, 0.2, 0.3, 0.4)
+  }
+}
+
 Describe "series creation cmdlets" {
 
   It "can create a AreaSeries object" {
