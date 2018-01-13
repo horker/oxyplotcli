@@ -30,6 +30,8 @@ function ConvertTo-Bool {
   [bool]$value
 }
 
+############################################################
+
 function New-OxyDataPoint {
   [cmdletbinding()]
   param(

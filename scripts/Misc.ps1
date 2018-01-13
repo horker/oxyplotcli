@@ -43,8 +43,14 @@ function Get-OxyColorList {
 function New-OxyColor {
   [cmdletbinding()]
   param(
-    [string]$ColorName
+    [string]$ColorName,
+    [double]$Alpha = -1
   )
+
+  if ($ColorName -match "^(\w+)-(\d+)$") {
+    $ColorName = $matches[1]
+    $Alpha = $matches[2] / 100.0
+  }
 
   $code = $script:colorHash[$ColorName.ToLower()]
   if ($code) {
@@ -54,7 +60,13 @@ function New-OxyColor {
     $ColorName = "#" + $ColorName
   }
 
-  [OxyPlot.OxyColor]::Parse($ColorName)
+  $color = [OxyPlot.OxyColor]::Parse($ColorName)
+
+  if ($Alpha -ne -1) {
+    $color = [OxyPlot.OxyColor]::FromAColor([byte](255.0 * $Alpha), $color)
+  }
+
+  $color
 }
 
 ############################################################

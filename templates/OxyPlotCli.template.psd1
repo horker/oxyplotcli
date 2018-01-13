@@ -72,10 +72,8 @@ NestedModules = @(
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
-  # New-OxySequence
+  # Misc.ps1
   "New-OxySequence"
-
-  # OxyColor.ps1
   "Get-OxyColorList"
   "New-OxyColor"
 
@@ -94,6 +92,9 @@ FunctionsToExport = @(
   "Add-OxyPlotViewInGrid"
   "Add-OxyPlotModelToPlotView"
 
+  # DataPoint.ps1
+  "New-OxyDataPoint"
+
   # PlotModel.ps1
   "New-OxyPlotModel"
   "Update-OxyPlotModel"
@@ -108,6 +109,18 @@ FunctionsToExport = @(
   "New-OxyMagnitudeAxis"
   "New-OxyRangeColorAxis"
   "New-OxyTimeSpanAxis"
+
+  # Annotation classes
+  "New-OxyImageAnnotation"
+  "New-OxyArrowAnnotation"
+  "New-OxyTextAnnotation"
+  "New-OxyFunctionAnnotation"
+  "New-OxyLineAnnotation"
+  "New-OxyPolylineAnnotation"
+  "New-OxyEllipseAnnotation"
+  "New-OxyPointAnnotation"
+  "New-OxyPolygonAnnotation"
+  "New-OxyRectangleAnnotation"
 
   # Series classes
   <% ($seriesCmdlets -replace "(.+)", '"$1"') -join "`r`n  " %>
