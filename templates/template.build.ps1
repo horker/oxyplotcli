@@ -4,8 +4,9 @@ Set-StrictMode -Version 3
 # Template files
 
 $TEMPLATES = @(
-  "PlotModel.template.ps1",
+  "PlotModel.template.ps1"
   "OxyWindow.template.ps1"
+  "OxyPlot.Series.FunctionSeries.template.ps1"
 )
 
 ############################################################
@@ -205,8 +206,7 @@ $SERIES_TEMPLATES = @(
     BottomAxisType = "OxyPlot.Axes.CategoryAxis"
   },
 
-  # FunctionSeries
-  # HeapMapSeries
+  # HeatMapSeries
 
   @{
     ClassName = "OxyPlot.Series.HighLowSeries"

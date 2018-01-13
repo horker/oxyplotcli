@@ -183,6 +183,22 @@ Describe "series creation cmdlets" {
     $s.Items[2].CategoryIndex | Should -Be 9
   }
 
+  It "can create an FunctionSeries object" {
+    $s = New-OxyFunctionSeries -F { $x * 2 } -X0 0 -X1 1 -Dx 0.5
+    $s.Points.Count | Should -Be 3
+    $s.Points[0] | Should -Be (New-OxyDataPoint 0 0)
+    $s.Points[1] | Should -Be (New-OxyDataPoint 0.5 1.0)
+    $s.Points[2] | Should -Be (New-OxyDataPoint 1.0 2.0)
+  }
+
+  It "can create an FunctionSeries object (implicit form, N)" {
+    $s = New-OxyFunctionSeries -Fx { $t + 1.5 } -Fy { $t - 1.5 } -T0 0 -T1 1 -N 3
+    $s.Points.Count | Should -Be 3
+    $s.Points[0] | Should -Be (New-OxyDataPoint 1.5 -1.5)
+    $s.Points[1] | Should -Be (New-OxyDataPoint 2.0 -1.0)
+    $s.Points[2] | Should -Be (New-OxyDataPoint 2.5 -0.5)
+  }
+
   It "can create a HighLowSeries object" {
     $s = New-OxyHighLowSeries `
       -X 1,2,3,4,5 `

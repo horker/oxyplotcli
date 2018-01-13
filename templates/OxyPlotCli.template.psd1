@@ -124,6 +124,7 @@ FunctionsToExport = @(
 
   # Series classes
   <% ($seriesCmdlets -replace "(.+)", '"$1"') -join "`r`n  " %>
+  "New-OxyFunctionSeries"
 
   # ShowOxyPlot.ps1
   "Show-OxyPlot"
