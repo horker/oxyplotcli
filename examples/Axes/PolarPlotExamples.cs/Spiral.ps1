@@ -1,5 +1,5 @@
 ﻿$plotModel = New-OxyPlotModel `
-  -Title "Ploar plot" `
+  -Title "Polar plot" `
   -Subtitle "Archimedean spiral with equation r(θ) = θ for 0 < θ < 6π" `
   -PlotType Polar `
   -PlotAreaBorderThickness 0 `
