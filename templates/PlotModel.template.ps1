@@ -6,6 +6,7 @@ function New-OxyPlotModel {
     [Parameter(ValueFromPipeline=$true, Mandatory=$false)]
     [OxyPlot.Series.Series]$InputObject,
     [OxyPlot.Series.Series[]]$Series,
+    [OxyPlot.Axes.Axis[]]$Axis,
     [string]$StyleName,
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.PlotModel" -Indent 4 -%>
     [hashtable]$Option = @{}
@@ -24,6 +25,10 @@ process {
 end {
   foreach ($s in $Series) {
     $model.Series.Add($s)
+  }
+
+  foreach ($a in $Axis) {
+    $model.Axes.Add($a)
   }
 
 #  Apply-Style "PlotModel" $model $MyInvocation $StyleName
