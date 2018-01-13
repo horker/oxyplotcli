@@ -91,6 +91,8 @@ FunctionsToExport = @(
   "Close-OxyWindow"
   "Get-OxyWindow"
   "Get-OxyWindowList"
+  "Add-OxyPlotViewInGrid"
+  "Add-OxyPlotModelToPlotView"
 
   # PlotModel.ps1
   "New-OxyPlotModel"
