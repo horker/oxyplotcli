@@ -31,5 +31,5 @@ $models = $files | foreach {
   . ($_.FullName)
 }
 
-$w = New-OxyWindow -Title "Examples: $Path"
+$w = New-OxyWindow -Title "Examples: $Path" -ResizeMode CanResize
 $views = Add-OxyPlotViewInGrid $w -Columns $columnCount -Rows $rowCount -PlotModel $models -ShowGridlines $true
