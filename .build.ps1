@@ -13,6 +13,7 @@ task SetupOxyPlot {
 
 task Build {
   Copy-Item -Recurse -Force "$PSScriptRoot\scripts\*" "$PSScriptRoot\OxyPlotCli"
+  Copy-Item -Force "$PSScriptRoot\cs\WpfWindowCmdlets\bin\Release\WpfWindowCmdlets.dll" "$PSScriptRoot\OxyPlotCli"
 
   Import-Module HorkerTemplateEngine
   Invoke-Build -File "$PSScriptRoot\templates\template.build.ps1"

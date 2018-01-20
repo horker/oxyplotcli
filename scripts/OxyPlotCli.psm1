@@ -1,5 +1,7 @@
 Set-StrictMode -version 3
 
+Import-Module -Force $PSScriptRoot\WpfWindowCmdlets.dll
+
 Get-ChildItem $PSScriptRoot\*.ps1 | foreach { . $_.FullName }
 
 Get-Item function:\New-Oxy*Series  | where { $_ -match "^New-Oxy(\w+)Series(\w*)$" } | foreach {

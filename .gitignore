@@ -2,3 +2,8 @@ old/
 OxyPlotCli/
 lib/
 source/
+
+.vs/
+bin/
+obj/
+*.user
