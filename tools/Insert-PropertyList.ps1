@@ -17,10 +17,19 @@ $colorNames = Get-OxyColorList
 $colorValidateAttribute = "[ValidatePattern('$($colorNames -join "|")|(#?[0-9a-f]{1,8})')]"
 
 $indent = " " * $IndentWidth
+$results = New-Object Collections.Generic.List[string]
+
+############################################################
+
+if ($OutputType -eq "assign") {
+  $results.Add("$($indent)foreach (`$key in `$$OptionHashName.Keys) {")
+  $results.Add("$($indent)  `$$VariableName.`$key = `$$OptionHashName[`$key]")
+  $results.Add("$($indent)}")
+}
+
+############################################################
 
 $props = (Invoke-Expression "[$ClassName]").Assembly.GetType($ClassName).GetProperties() | where { $_.CanWrite }
-
-$results = New-Object Collections.Generic.List[string]
 
 foreach ($p in $props) {
   $name = $p.Name
@@ -50,12 +59,6 @@ foreach ($p in $props) {
       }
     }
   }
-}
-
-if ($OutputType -eq "assign") {
-  $results.Add("$($indent)foreach (`$key in `$$OptionHashName.Keys) {")
-  $results.Add("$($indent)  `$$VariableName.`$key = `$$OptionHashName[`$key]")
-  $results.Add("$($indent)}")
 }
 
 $results | foreach { $_ + "`r`n" }
