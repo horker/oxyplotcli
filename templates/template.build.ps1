@@ -7,6 +7,7 @@ $TEMPLATES = @(
   "PlotModel.template.ps1"
   "OxyWindow.template.ps1"
   "OxyPlot.Series.FunctionSeries.template.ps1"
+  "Show-OxyPlot.template.ps1"
 )
 
 ############################################################
@@ -311,6 +312,7 @@ foreach ($t in $TEMPLATES) {
 ############################################################
 
 $thisFile = "$PSScriptRoot\..\templates\template.build.ps1"
+$helperFile = "$PSScriptRoot\..\tools\Insert-PropertyList.ps1"
 $defaultTemplate = "XYSeries.template.ps1"
 
 foreach ($t in $SERIES_TEMPLATES) {
@@ -319,7 +321,7 @@ foreach ($t in $SERIES_TEMPLATES) {
     $template = $t.Template
   }
   task "build_$($t.ClassName)" `
-    -Inputs ($template -replace "^", "$PSScriptRoot\..\templates\"), $thisFile `
+    -Inputs ($template -replace "^", "$PSScriptRoot\..\templates\"), $thisFile, $helperFile `
     -Outputs ($t.ClassName -replace "(.+)", "$PSScriptRoot\..\OxyPlotCli\`$1.ps1") `
     -Data $t `
     -Jobs {

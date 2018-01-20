@@ -71,7 +71,17 @@ function Show-OxyPlot {
     [OxyPlot.Series.Series]$Series,
     [string]$StyleName,
     [OxyPlot.Axes.Axis[]]$Axes,
-    [switch]$Reuse
+    [switch]$Reuse,
+
+    [string]$AxType,
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.Axes.Axis" -Indent 4 -Prefix "Ax" -%>
+
+    [hashtable]$AxOptions = @{},
+
+    [string]$AyType,
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.Axes.Axis" -Indent 4 -Prefix "Ay" -%>
+
+    [hashtable]$AyOptions = @{}
   )
 
 begin {
@@ -97,12 +107,34 @@ end {
     $model.Axes.Add($a)
   }
 
+  if ($PSBoundParameters.ContainsKey("AxType")) {
+    $ax = Get-Axis $AxType
+    $model.Axes.Add($ax)
+  }
+
+  if ($PSBoundParameters.ContainsKey("AyType")) {
+    $ax = Get-Axis $AyType
+    $model.Axes.Add($ay)
+  }
+
   if ($model.Axes.Count -eq 0) {
     $s = $model.Series[0]
     $Axes = New-DefaultAxes $s
     foreach ($a in $Axes) {
       $model.Axes.Add($a)
     }
+  }
+
+  if ($model.Axes.Count -ge 1) {
+    $axis = $model.Axes[0]
+
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.Axes.Axis" -Indent 4 -VariableName axis -OptionHashName AxOptions -Prefix Ax -%>
+  }
+
+  if ($model.Axes.Count -ge 2) {
+    $axis = $model.Axes[1]
+
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.Axes.Axis" -Indent 4 -VariableName axis -OptionHashName AxOptions -Prefix Ay -%>
   }
 
   if ($Reuse) {

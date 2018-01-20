@@ -18,9 +18,14 @@ task Build {
   Invoke-Build -File "$PSScriptRoot\templates\template.build.ps1"
   Invoke-Build -File "$PSScriptRoot\templates\Axis.build.ps1"
 
-  Copy-Item "$PSScriptRoot\cs\WpfWindowCmdlets\bin\Release\WpfWindowCmdlets.dll" "$PSScriptRoot\OxyPlotCli"
-  Copy-Item "$PSScriptRoot\cs\OxyPlotCliHelpers\bin\Release\OxyPlotCliHelpers.dll" "$PSScriptRoot\OxyPlotCli"
-
+  try {
+    Copy-Item "$PSScriptRoot\cs\WpfWindowCmdlets\bin\Release\WpfWindowCmdlets.dll" "$PSScriptRoot\OxyPlotCli"
+  }
+  catch {}
+  try {
+    Copy-Item "$PSScriptRoot\cs\OxyPlotCliHelpers\bin\Release\OxyPlotCliHelpers.dll" "$PSScriptRoot\OxyPlotCli"
+  }
+  catch {}
 }
 
 task LocalImport {

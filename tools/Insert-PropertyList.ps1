@@ -4,7 +4,8 @@ param(
   [string]$ClassName,
   [string]$VariableName,
   [string]$OptionHashName,
-  [int]$IndentWidth
+  [int]$IndentWidth,
+  [string]$Prefix = ""
 )
 
 Set-StrictMode -version 3
@@ -15,43 +16,37 @@ $colorNames = Get-OxyColorList
 
 $colorValidateAttribute = "[ValidatePattern('$($colorNames -join "|")|(#?[0-9a-f]{1,8})')]"
 
-$obj = New-Object $ClassName
-
 $indent = " " * $IndentWidth
 
-$props =
-  $obj |
-  get-member |
-  where { $_.MemberType -match "Property" -and $_.Definition -match "set;" }
+$props = (Invoke-Expression "[$ClassName]").Assembly.GetType($ClassName).GetProperties() | where { $_.CanWrite }
 
 $results = New-Object Collections.Generic.List[string]
 
 foreach ($p in $props) {
-  [void]($p.Definition -match "^([^\s]+)\s+([^\s]+)")
-  $class = $matches[1]
   $name = $p.Name
+  $class = [string]$p.PropertyType
 
   switch ($OutputType) {
     "param" {
       if ($class -eq "OxyPlot.OxyColor") {
-        $results.Add("$indent$colorValidateAttribute[string]`$$name,")
+        $results.Add("$indent$colorValidateAttribute[string]`$$Prefix$name,")
       }
       elseif ($class -eq "OxyPlot.OxyThickness") {
-        $results.Add("$indent[double[]]`$$name,")
+        $results.Add("$indent[double[]]`$$Prefix$name,")
       }
       else {
-        $results.Add("$indent[$class]`$$name,")
+        $results.Add("$indent[$class]`$$Prefix$name,")
       }
     }
     "assign" {
       if ($class -eq "OxyPlot.OxyColor") {
-        $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$name')) { `$$VariableName.$name = New-OxyColor `$$name }")
+        $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = New-OxyColor `$$Prefix$name }")
       }
       elseif ($class -eq "OxyPlot.OxyThickness") {
-        $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$name')) { `$$VariableName.$name = New-OxyThickness `$$name }")
+        $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = New-OxyThickness `$$Prefix$name }")
       }
       else {
-        $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$name')) { `$$VariableName.$name = `$$name }")
+        $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = `$$Prefix$name }")
       }
     }
   }
