@@ -9,16 +9,35 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Windows;
 using System.Windows.Markup;
+using System.Windows.Media;
 using System.Reflection;
 
 namespace WpfWindowCmdlets
 {
-    class Util
+    public class Util
     {
         static public bool IsWindowClosed(Window w)
         {
             var prop = w.GetType().GetProperty("IsDisposed", BindingFlags.NonPublic | BindingFlags.Instance);
             return (bool)prop.GetValue(w);
+        }
+
+        static public void OpenWindow(List<Window> result, AutoResetEvent e)
+        {
+            var window = new Window();
+            window.AllowsTransparency = true;
+            window.Background = Brushes.Transparent;
+            window.WindowStyle = WindowStyle.None;
+            window.Width = 0;
+            window.Height = 0;
+            window.ResizeMode = ResizeMode.NoResize;
+            window.ShowInTaskbar = false;
+
+            result.Add(window);
+
+            e.Set();
+
+            window.ShowDialog();
         }
     }
 
@@ -50,27 +69,20 @@ namespace WpfWindowCmdlets
             _powerShell = PowerShell.Create();
             _powerShell.Runspace = runspace;
 
-            var data = new ArrayList();
-            var e = new ManualResetEvent(false);
-            data.Add(e);
+            var result = new List<Window>();
+            var e = new AutoResetEvent(false);
+
             _powerShell.AddScript(@"
-                param($data)
-                $window = New-Object Windows.Window
-                $window.AllowTransparency = $true
-                $window.Background = 'Transparent'
-                $window.WindowStyle = 'None'
-                $window.Width = 0
-                $window.Height = 0
-                $window.ResizeMode = 'NoResize'
-                $window.ShowInTaskbar = $false
-                [void]$data.Add($window)
-                $data[0].Set()
-                $window.ShowDialog()");
-            _powerShell.AddParameter("data", data);
+                param($result, $event)
+                [WpfWindowCmdlets.Util]::OpenWindow($result, $event)");
+            _powerShell.AddParameter("result", result);
+            _powerShell.AddParameter("event", e);
+
             _powerShell.BeginInvoke();
 
             e.WaitOne();
-            _rootWindow = (Window)data[1];
+
+            _rootWindow = result[0];
         }
 
         protected override void EndProcessing()
