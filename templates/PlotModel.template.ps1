@@ -5,7 +5,6 @@ function New-OxyPlotModel {
   param(
     [Parameter(ValueFromPipeline=$true, Mandatory=$false)]
     [OxyPlot.Series.Series]$InputObject,
-    [OxyPlot.Series.Series[]]$Series,
     [OxyPlot.Axes.Axis[]]$Axis,
     [OxyPlot.Annotations.Annotation]$Annotation,
     [string]$StyleName,
