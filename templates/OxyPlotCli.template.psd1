@@ -74,7 +74,7 @@ NestedModules = @(
 FunctionsToExport = @(
 
   # OxyPlotCliHelpers
-  "Add-OxyCoupledAxes"
+  "Add-OxyAxisShare"
 
   # Misc.ps1
   "New-OxySequence"
