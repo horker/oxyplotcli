@@ -7,8 +7,8 @@
     <ProjectGuid>{684D12FB-47D1-47AF-B191-A5C61CA926D5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>wpfWindowCmdlets</RootNamespace>
-    <AssemblyName>wpfWindowCmdlets</AssemblyName>
+    <RootNamespace>WpfWindowCmdlets</RootNamespace>
+    <AssemblyName>WpfWindowCmdlets</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

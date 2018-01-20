@@ -16,7 +16,7 @@ using System.Runtime.InteropServices;
 
 namespace WpfWindowCmdlets
 {
-    // Win32 API functions and constants To make a window invisible in the task switcher
+    // Win32 API functions and constants to make a window invisible in the task switcher
     // ref.
     // https://social.msdn.microsoft.com/Forums/en-US/9c4ada92-5065-4abb-a295-d62e5ddaf2b1/wpf-window-is-showen-in-alttab-list-though-windowstylenone-showintaskbarfalse?forum=wpf
 
