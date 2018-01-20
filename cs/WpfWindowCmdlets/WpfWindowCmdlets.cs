@@ -56,9 +56,12 @@ namespace WpfWindowCmdlets
             _powerShell.AddScript(@"
                 param($data)
                 $window = New-Object Windows.Window
-                $window.Visibility = 'Collapsed'
-                $window.WindowState = 'Minimized'
-                $window.ShowActivated = $false
+                $window.AllowTransparency = $true
+                $window.Background = 'Transparent'
+                $window.WindowStyle = 'None'
+                $window.Width = 0
+                $window.Height = 0
+                $window.ResizeMode = 'NoResize'
                 $window.ShowInTaskbar = $false
                 [void]$data.Add($window)
                 $data[0].Set()
