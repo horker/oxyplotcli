@@ -6,4 +6,5 @@ source/
 .vs/
 bin/
 obj/
+packages/
 *.user

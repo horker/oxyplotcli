@@ -1,6 +1,7 @@
 Set-StrictMode -version 3
 
-Import-Module -Force $PSScriptRoot\WpfWindowCmdlets.dll
+Import-Module $PSScriptRoot\WpfWindowCmdlets.dll
+Import-Module $PSScriptRoot\OxyPlotCliHelpers.dll
 
 Get-ChildItem $PSScriptRoot\*.ps1 | foreach { . $_.FullName }
 

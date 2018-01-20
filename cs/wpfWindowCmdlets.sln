@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfWindowCmdlets", "wpfWindowCmdlets\WpfWindowCmdlets.csproj", "{684D12FB-47D1-47AF-B191-A5C61CA926D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OxyPlotCliHelpers", "OxyPlotCliHelpers\OxyPlotCliHelpers.csproj", "{07D7C723-5D13-45F4-AC40-9D52EE6C67A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{684D12FB-47D1-47AF-B191-A5C61CA926D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{684D12FB-47D1-47AF-B191-A5C61CA926D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{684D12FB-47D1-47AF-B191-A5C61CA926D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07D7C723-5D13-45F4-AC40-9D52EE6C67A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07D7C723-5D13-45F4-AC40-9D52EE6C67A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07D7C723-5D13-45F4-AC40-9D52EE6C67A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07D7C723-5D13-45F4-AC40-9D52EE6C67A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

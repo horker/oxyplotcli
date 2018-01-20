@@ -7,13 +7,14 @@ task SetupOxyPlot {
 
   $null = mkdir "$PSScriptRoot\OxyPlotCli\lib" -force
 
-  (Get-Item "$PSScriptRoot\lib\OxyPlot.Core.*\lib\net40\OxyPlot.dll").CopyTo("$PSScriptRoot\OxyPlotCli\lib\OxyPlot.dll")
-  (Get-Item "$PSScriptRoot\lib\OxyPlot.Wpf.*\lib\net40\OxyPlot.Wpf.dll").CopyTo("$PSScriptRoot\OxyPlotCli\lib\OxyPlot.Wpf.dll")
+  (Get-Item "$PSScriptRoot\lib\OxyPlot.Core.*\lib\net45\OxyPlot.dll").CopyTo("$PSScriptRoot\OxyPlotCli\lib\OxyPlot.dll")
+  (Get-Item "$PSScriptRoot\lib\OxyPlot.Wpf.*\lib\net45\OxyPlot.Wpf.dll").CopyTo("$PSScriptRoot\OxyPlotCli\lib\OxyPlot.Wpf.dll")
 }
 
 task Build {
-  Copy-Item -Recurse -Force "$PSScriptRoot\scripts\*" "$PSScriptRoot\OxyPlotCli"
-  Copy-Item -Force "$PSScriptRoot\cs\WpfWindowCmdlets\bin\Release\WpfWindowCmdlets.dll" "$PSScriptRoot\OxyPlotCli"
+  Copy-Item -Recurse "$PSScriptRoot\scripts\*" "$PSScriptRoot\OxyPlotCli"
+  Copy-Item "$PSScriptRoot\cs\WpfWindowCmdlets\bin\Release\WpfWindowCmdlets.dll" "$PSScriptRoot\OxyPlotCli"
+  Copy-Item "$PSScriptRoot\cs\OxyPlotCliHelpers\bin\Release\OxyPlotCliHelpers.dll" "$PSScriptRoot\OxyPlotCli"
 
   Import-Module HorkerTemplateEngine
   Invoke-Build -File "$PSScriptRoot\templates\template.build.ps1"
