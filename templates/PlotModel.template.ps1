@@ -6,7 +6,7 @@ function New-OxyPlotModel {
     [Parameter(ValueFromPipeline=$true, Mandatory=$false)]
     [OxyPlot.Series.Series]$InputObject,
     [OxyPlot.Axes.Axis[]]$Axis,
-    [OxyPlot.Annotations.Annotation]$Annotation,
+    [OxyPlot.Annotations.Annotation[]]$Annotation,
     [string]$StyleName,
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.PlotModel" -Indent 4 -%>
     [hashtable]$Option = @{}
