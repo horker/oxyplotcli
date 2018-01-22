@@ -2,62 +2,65 @@ Set-StrictMode -Version 3
 
 function Get-AxisObject {
   param(
-    [string]$AxisType,
     [Reflection.TypeInfo]$DataType
   )
 
-  if ($AxisType -eq "none") {
-    return $null
+  if ($DataType -eq [DateTime]) {
+    $type = "OxyPlot.Axes.DateTimeAxis"
+  }
+  elseif ($DataType -is [TimeSpan]) {
+    $type = "OxyPlot.Axes.TimeSpanAxis"
+  }
+  else {
+    $type = "OxyPlot.Axes.LinearAxis"
   }
 
-  if ($AxisType -eq "linear") {
-    if ($DataType -eq [DateTime]) { $AxisType = "OxyPlot.Axes.DateTimeAxis" }
-    elseif ($DataType -is [TimeSpan]) { $AxisType = "OxyPlot.Axes.TimeSpanAxis" }
-    else { $AxisType = "OxyPlot.Axes.LinearAxis" }
-  }
-
-  New-Object $AxisType
+  New-Object $type
 }
 
-function New-DefaultAxes {
+############################################################
+
+$script:ResultsOfAreAxesRequired = @{}
+
+[OxyPlot.Series.Series].Assembly.GetTypes() |
+  where { $_.Name -Match "Series$" -And !$_.IsAbstract } |
+  foreach {
+    $m = [OxyPlot.Series.Series].GetMethod(
+      "AreAxesRequired",
+      [Reflection.BindingFlags]::InvokeMethod -bor [Reflection.BindingFlags]::Instance -bor [Reflection.BindingFlags]::NonPublic)
+  },
+  {
+    $name = $_.FullName
+    $ResultsOfAreAxesRequired[$name] = $m.Invoke((new-Object $name), $null)
+  }
+
+function Test-AxesRequired {
   param(
-    [OxyPlot.Series.Series]$Series
+    [OxyPlot.Series.Series]$series
   )
 
-  if ($Series.PSObject.Properties -Contains "_Info") {
-    return @()
-  }
+  $ResultsOfAreAxesRequired[$series.GetType().FullName]
+}
 
-  $result = @()
+############################################################
 
-  # bottom axis
-  $axis = Get-AxisObject $Series._Info.BottomAxisType $Series._Info.XDataType
-  if ($axis) {
-    $axis.Position = "Bottom"
-    if ($Series._Info.XAxisTitle) {
-      $axis.Title = $Series._Info.XAxisTitle
+$script:AxisTypes = [OxyPlot.Axes.Axis].Assembly.GetTypes() |
+  where { $_.Name -Match "Axis$" -And !$_.IsAbstract } |
+  foreach { $_.FullName } |
+  Sort
+
+function Get-AxisByPartialTypeName {
+  param(
+    [string]$PartialName
+  )
+
+  foreach ($t in $AxisTypes) {
+    if ($t -Match [regex]::Escape($PartialName)) {
+      return New-Object $t
     }
-    $result = @($axis)
   }
 
-  # left axis
-  $axis = Get-AxisObject $Series._Info.LeftAxisType $Series._Info.YDataType
-  if ($axis) {
-    $axis.Position = "Left"
-    if ($Series._Info.YAxisTitle) {
-      $axis.Title = $Series._Info.YAxisTitle
-    }
-    $result = $result + $axis
-  }
-
-  # right axis
-  $axis = Get-AxisObject $Series._Info.RightAxisType ([double])
-  if ($axis) {
-    $axis.Position = "Right"
-    $result = $result + $axis
-  }
-
-  $result
+  $null
 }
 
 ############################################################
@@ -75,12 +78,10 @@ function Show-OxyPlot {
 
     [string]$AxType,
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.Axes.Axis" -Indent 4 -Prefix "Ax" -%>
-
     [hashtable]$AxOptions = @{},
 
     [string]$AyType,
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.Axes.Axis" -Indent 4 -Prefix "Ay" -%>
-
     [hashtable]$AyOptions = @{}
   )
 
@@ -103,39 +104,104 @@ process {
 }
 
 end {
-  foreach ($a in $Axes) {
-    $model.Axes.Add($a)
-  }
+  $ax = $null
+  $ay = $null
 
   if ($PSBoundParameters.ContainsKey("AxType")) {
-    $ax = Get-Axis $AxType
+    $ax = Get-AxisByPartialTypeName $AxType
+    $ax.Position = "Bottom"
+    if (!$ax) {
+      Write-Error "No Axis type matches with '$AxType'"
+      return
+    }
+
     $model.Axes.Add($ax)
   }
 
   if ($PSBoundParameters.ContainsKey("AyType")) {
-    $ax = Get-Axis $AyType
+    $ay = Get-AxisByPartialTypeName $AyType
+    $ay.Position = "Left"
+    if (!$ay) {
+      Write-Error "No Axis type matches with '$AyType'"
+      return
+    }
+
     $model.Axes.Add($ay)
   }
 
-  if ($model.Axes.Count -eq 0) {
-    $s = $model.Series[0]
-    $Axes = New-DefaultAxes $s
-    foreach ($a in $Axes) {
-      $model.Axes.Add($a)
+  foreach ($a in $Axes) {
+    $model.Axes.Add($a)
+    if ($ax -eq $null -and $a.IsHorizontal()) {
+      $ax = $a
+    }
+    if ($ay -eq $null -and $a.IsVertical()) {
+      $ay = $a
     }
   }
 
-  if ($model.Axes.Count -ge 1) {
-    $axis = $model.Axes[0]
-
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.Axes.Axis" -Indent 4 -VariableName axis -OptionHashName AxOptions -Prefix Ax -%>
+  if ($ax -eq $null) {
+    foreach ($s in $Series) {
+      if ($s.IsVisible -and (Test-AxesRequired $s)) {
+        if ($s -is [OxyPlot.Series.ColumnSeries]) {
+          $ax = New-Object OxyPlot.Axes.CategoryAxis
+        }
+        else {
+          if ($s.PSObject.Properties.Name -Contains "_Info") {
+            $ax = Get-AxisObject $s._Info.XDataType
+          }
+          else {
+            $ax = New-Object OxyPlot.Axes.LinearAxes
+          }
+        }
+        $ax.Position = "Bottom"
+        $model.Axes.Add($ax)
+        break
+      }
+    }
   }
 
-  if ($model.Axes.Count -ge 2) {
-    $axis = $model.Axes[1]
-
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.Axes.Axis" -Indent 4 -VariableName axis -OptionHashName AxOptions -Prefix Ay -%>
+  if ($ay -eq $null) {
+    foreach ($s in $Series) {
+      if ($s.IsVisible -and (Test-AxesRequired $s)) {
+        if ($s -is [OxyPlot.Series.BarSeries]) {
+          $ay = New-Object OxyPlot.Axes.CategoryAxis
+        }
+        else {
+          if ($s.PSObject.Properties.Name -Contains "_Info") {
+            $ay = Get-AxisObject $s._Info.YDataType
+          }
+          else {
+            $ay = New-Object OxyPlot.Axes.LinearAxes
+          }
+        }
+        $ay.Position = "Left"
+        $model.Axes.Add($ay)
+        break
+      }
+    }
   }
+
+  if ($ax -eq $null) {
+    foreach ($a in $model.Axes) {
+      if ($a.IsHorizontal()) {
+        $ax = $a
+        break
+      }
+    }
+  }
+
+  if ($ay -eq $null) {
+    foreach ($a in $model.Axes) {
+      if ($a.IsVertical()) {
+        $ay = $a
+        break
+      }
+    }
+  }
+
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.Axes.Axis" -Indent 2 -VariableName ax -OptionHashName AxOptions -Prefix Ax -%>
+
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.Axes.Axis" -Indent 2 -VariableName ay -OptionHashName AxOptions -Prefix Ay -%>
 
   if ($Reuse) {
     $w = Get-OxyWindow
