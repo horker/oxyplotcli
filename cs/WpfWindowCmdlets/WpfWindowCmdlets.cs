@@ -89,10 +89,11 @@ namespace WpfWindowCmdlets
 
     public class Util
     {
+        static private PropertyInfo IsDisposedMethod = typeof(Window).GetProperty("IsDisposed", BindingFlags.NonPublic | BindingFlags.Instance);
+
         static public bool IsWindowClosed(Window w)
         {
-            var prop = w.GetType().GetProperty("IsDisposed", BindingFlags.NonPublic | BindingFlags.Instance);
-            return (bool)prop.GetValue(w);
+            return (bool)IsDisposedMethod.GetValue(w);
         }
 
         static public void OpenWindow(List<Window> result, AutoResetEvent e)
