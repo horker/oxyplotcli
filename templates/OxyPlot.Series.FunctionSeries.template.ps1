@@ -4,36 +4,26 @@ Set-StrictMode -Version 3
 function New-OxyFunctionSeries {
   [cmdletbinding()]
   param(
-    [Parameter(ParameterSetName="Explicit-n")]
-    [Parameter(ParameterSetName="Explicit-dx")]
+    [Parameter(ParameterSetName="Explicit", Position=0)]
     [scriptblock]$F,
-    [Parameter(ParameterSetName="Explicit-n")]
-    [Parameter(ParameterSetName="Explicit-dx")]
+    [Parameter(ParameterSetName="Explicit", Position=1)]
     [double]$X0,
-    [Parameter(ParameterSetName="Explicit-n")]
-    [Parameter(ParameterSetName="Explicit-dx")]
+    [Parameter(ParameterSetName="Explicit", Position=2)]
     [double]$X1,
 
-    [Parameter(ParameterSetName="Implicit-n")]
-    [Parameter(ParameterSetName="Implicit-dx")]
+    [Parameter(ParameterSetName="Implicit", Position=0)]
     [scriptblock]$Fx,
-    [Parameter(ParameterSetName="Implicit-n")]
-    [Parameter(ParameterSetName="Implicit-dx")]
+    [Parameter(ParameterSetName="Implicit", Position=1)]
     [scriptblock]$Fy,
-    [Parameter(ParameterSetName="Implicit-n")]
-    [Parameter(ParameterSetName="Implicit-dx")]
+    [Parameter(ParameterSetName="Implicit", Position=2)]
     [double]$T0,
-    [Parameter(ParameterSetName="Implicit-n")]
-    [Parameter(ParameterSetName="Implicit-dx")]
+    [Parameter(ParameterSetName="Implicit", Position=3)]
     [double]$T1,
 
-    [Parameter(ParameterSetName="Explicit-n")]
-    [Parameter(ParameterSetName="Implicit-n")]
-    [double]$N,
-    [Parameter(ParameterSetName="Explicit-dx")]
-    [Parameter(ParameterSetName="Implicit-dx")]
+    [double]$N = 100,
+
     [Alias("Dt")]
-    [double]$Dx,
+    [double]$Dx = [double]::NaN,
 
     [string]$StyleName,
 
@@ -44,18 +34,17 @@ function New-OxyFunctionSeries {
 
   $series = New-Object OxyPlot.Series.FunctionSeries
 
-  switch ($PSCmdlet.ParameterSetName) {
-    "Explicit-n" {
+  if ([double]::IsNaN($Dx)) {
+    if ($PSCmdlet.ParameterSetName -eq "Explicit") {
       $Dx = ($X1 - $X0) / ($N - 1)
     }
-    "Implicit-n" {
+    else {
       $Dx = ($T1 - $T0) / ($N - 1)
     }
   }
 
   $va = New-Object Collections.Generic.List[Management.Automation.PSVariable]
-  if ($PSCmdlet.ParameterSetName -eq "Explicit-n" -or
-      $PSCmdlet.ParameterSetName -eq "Explicit-dx") {
+  if ($PSCmdlet.ParameterSetName -eq "Explicit") {
     $va.Add((New-Object Management.Automation.PSVariable "x"))
     for ($i = $X0; $i -le $X1 + $Dx * 0.5; $i += $Dx) {
       $va[0].Value = $i
