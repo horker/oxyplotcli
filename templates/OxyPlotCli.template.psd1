@@ -147,6 +147,23 @@ VariablesToExport = '*'
 AliasesToExport = @(
   <% ($seriesAliases -replace "(.+)", '"$1"') -join "`r`n  " %>
   "oxyfunction"
+
+  # Additional aliases
+  "oxybox"
+  "oxycandle"
+  "oxycandlev"
+  "oxycol"
+  "oxyecol"
+  "oxyfunc"
+  "oxyibar"
+  "oxylbar"
+  "oxyrbar"
+  "oxyscat"
+  "oxyscate"
+  "oxystair"
+  "oxy3line"
+  "oxy2area"
+  "oxy2line"
 )
 
 # DSC resources to export from this module
