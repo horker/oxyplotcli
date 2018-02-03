@@ -11,13 +11,17 @@ function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
 <% $SeriesElement.Element | foreach { -%>
     [string]$<% $_.Name %>Name,
 <% } -%>
+
     [Parameter(ValueFromPipeline=$true)]
     [object]$InputObject,
+
     [string]$StyleName,
 
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName $ClassName -Indent 4 -%>
 
-    [hashtable]$Options = @{}
+    [hashtable]$Options = @{},
+
+    [switch]$Show
   )
 
 begin {
@@ -91,6 +95,13 @@ end {
 
 #  Apply-Style "<% $ClassName %>" $l $MyInvocation $StyleName
 
-  $series | Add-Member -PassThru NoteProperty _Info $info
+  $series = $series | Add-Member -PassThru NoteProperty _Info $info
+
+  if ($Show) {
+    $series | Show-OxyPlot -WTitle $MyInvocation.Line
+  }
+  else {
+    $series
+  }
 }
 }

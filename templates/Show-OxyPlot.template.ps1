@@ -94,6 +94,11 @@ function Save-OxyPlot {
 
     [OxyPlot.Axes.Axis[]]$Axes,
 
+<% if ($output -match "Show-OxyPlot") { -%>
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "System.Windows.Window" -Indent 2 -VariableName w -OptionHashName WOptions -Prefix W -%>
+    [hashtable]$WOptions = @{},
+<% } -%>
+
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.PlotModel" -Indent 4 -Prefix "M" -%>
     [hashtable]$MOptions = @{},
 
@@ -235,6 +240,9 @@ end {
   }
 
   Invoke-WpfWindowAction $w {
+
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "System.Windows.Window" -Indent 4 -VariableName w -OptionHashName WOptions -Prefix W -%>
+
     $w.Activate()
 
     $view = New-Object OxyPlot.Wpf.PlotView
