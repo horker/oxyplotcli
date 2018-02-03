@@ -7,7 +7,6 @@ $TEMPLATES = @(
   "PlotModel.template.ps1"
   "OxyWindow.template.ps1"
   "OxyPlot.Series.FunctionSeries.template.ps1"
-  "Show-OxyPlot.template.ps1"
 )
 
 ############################################################

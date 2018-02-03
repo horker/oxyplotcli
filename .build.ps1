@@ -17,6 +17,7 @@ task Build {
   Import-Module HorkerTemplateEngine
   Invoke-Build -File "$PSScriptRoot\templates\template.build.ps1"
   Invoke-Build -File "$PSScriptRoot\templates\Axis.build.ps1"
+  Invoke-Build -File "$PSScriptRoot\templates\Show-OxyPlot.build.ps1"
 
   try {
     Copy-Item "$PSScriptRoot\cs\WpfWindowCmdlets\bin\Release\WpfWindowCmdlets.dll" "$PSScriptRoot\OxyPlotCli"

@@ -130,8 +130,11 @@ FunctionsToExport = @(
   <% ($seriesCmdlets -replace "(.+)", '"$1"') -join "`r`n  " %>
   "New-OxyFunctionSeries"
 
-  # ShowOxyPlot.ps1
+  # Show-OxyPlot.ps1
   "Show-OxyPlot"
+
+  # Save-OxyPlot.ps1
+  "Save-OxyPlot"
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

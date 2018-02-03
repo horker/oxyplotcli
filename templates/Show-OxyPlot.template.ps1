@@ -65,7 +65,11 @@ function Get-AxisByPartialTypeName {
 
 ############################################################
 
+<% if ($output -match "Show-OxyPlot") { -%>
 function Show-OxyPlot {
+<% } else { -%>
+function Save-OxyPlot {
+<% } -%>
   [cmdletbinding()]
   param(
     [Parameter(ParameterSetName="PlotModel", ValueFromPipeline=$true)]
@@ -73,6 +77,18 @@ function Show-OxyPlot {
 
     [Parameter(ParameterSetName="Series", ValueFromPipeline=$true)]
     [OxyPlot.Series.Series]$Series,
+
+<% if ($output -match "Show-OxyPlot") { -%>
+    [switch]$Reuse,
+<% } else { -%>
+    [Parameter(Position=0, Mandatory=$true)]
+    [string]$OutFile,
+
+    [double]$Width = 800,
+    [double]$Height = 600,
+    [string]$Background = "white",
+    [bool]$IsDocument = $false,
+<% } -%>
 
     [string]$StyleName,
 
@@ -84,28 +100,7 @@ function Show-OxyPlot {
 
     [string]$AyType,
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.Axes.Axis" -Indent 4 -Prefix "Ay" -%>
-    [hashtable]$AyOptions = @{},
-
-    [string]$OutFile,
-
-    # Wpf paramters
-    [switch]$Reuse,
-
-    # Svg paramters
-    [double]$SvgWidth = 800,
-    [double]$SvgHeight = 600,
-    [string]$SvgIsDocument = "white",
-
-    # Pdf paramters
-    [double]$PdfWidth,
-    [double]$PdfHeight,
-    [string]$PdfBackground = "white",
-
-    # Png paramters
-    [int]$PngWidth = 800,
-    [int]$PngHeight = 600,
-    [int]$PngResolution = 96,
-    [string]$PngBackground = "white"
+    [hashtable]$AyOptions = @{}
   )
 
 begin {
@@ -114,7 +109,7 @@ begin {
 
 process {
   if ($model -eq $null) {
-    if ($PSCmdlet.ParameterSetName -eq "Series") {
+    if ($PSCmdlet.ParameterSetName -match "^Series") {
       $model = New-Object OxyPlot.PlotModel
     }
     else {
@@ -226,64 +221,64 @@ end {
 
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.Axes.Axis" -Indent 2 -VariableName ay -OptionHashName AxOptions -Prefix Ay -%>
 
-  if ($OutFile.Length -gt 0) {
-    $OutFile = try { Resolve-Path $OutFile -EA Stop } catch { $_.TargetObject }
-    switch -regex ($OutFile) {
-      "\.svg$" {
-        $ex = New-Object OxyPlot.SvgExporter
-        $ex.Width = $SvgWidth
-        $ex.Height = $SvgHeight
-        $ex.IsDocument = $SvgIsDocument
-        $ex.ExportToString($model) | Set-Content $OutFile
-      }
-      "\.pdf$" {
-        $ex = New-Object OxyPlot.PdfExporter
-        $ex.Width = $PdfWidth
-        $ex.Height = $PdfHeight
-        $ex.Background = New-OxyColor $PdfBackground
-
-        $stream = [IO.File]::Create($OutFile)
-        try {
-          $ex.Export($model, $stream)
-        }
-        finally {
-          $stream.Close()
-        }
-      }
-      default { # Png
-        $ex = New-Object OxyPlot.Wpf.PngExporter
-        $ex.Width = $PngWidth
-        $ex.Height = $PngHeight
-        $ex.Background = New-OxyColor $PngBackground
-
-        $stream = [IO.File]::Create($OutFile)
-        try {
-          $ex.Export($model, $stream)
-        }
-        finally {
-          $stream.Close()
-        }
-      }
-    }
+<% if ($output -match "Show-OxyPlot") { -%>
+  if ($Reuse) {
+    $w = Get-OxyWindow
   }
   else {
-    if ($Reuse) {
-      $w = Get-OxyWindow
+    $w = New-OxyWindow -Title $MyInvocation.Line
+  }
+
+  Invoke-WpfWindowAction $w {
+    $w.Activate()
+
+    $view = New-Object OxyPlot.Wpf.PlotView
+    $view.Model = $model
+
+    $g = New-Object Windows.Controls.Grid
+    $g.Children.Add($view)
+    $w.Content = $g
+  }
+<% } else { -%>
+  $OutFile = try { Resolve-Path $OutFile -EA Stop } catch { $_.TargetObject }
+
+  switch -regex ($OutFile) {
+    "\.svg$" {
+      $ex = New-Object OxyPlot.SvgExporter
+      $ex.Width = $Width
+      $ex.Height = $Height
+      $ex.IsDocument = $IsDocument
+      $ex.ExportToString($model) | Set-Content $OutFile
     }
-    else {
-      $w = New-OxyWindow -Title $MyInvocation.Line
+    "\.pdf$" {
+      $ex = New-Object OxyPlot.PdfExporter
+      $ex.Width = $Width
+      $ex.Height = $Height
+      $ex.Background = New-OxyColor $Background
+
+      $stream = [IO.File]::Create($OutFile)
+      try {
+        $ex.Export($model, $stream)
+      }
+      finally {
+        $stream.Close()
+      }
     }
+    default { # Png
+      $ex = New-Object OxyPlot.Wpf.PngExporter
+      $ex.Width = $Width
+      $ex.Height = $Height
+      $ex.Background = New-OxyColor $Background
 
-    Invoke-WpfWindowAction $w {
-      $w.Activate()
-
-      $view = New-Object OxyPlot.Wpf.PlotView
-      $view.Model = $model
-
-      $g = New-Object Windows.Controls.Grid
-      $g.Children.Add($view)
-      $w.Content = $g
+      $stream = [IO.File]::Create($OutFile)
+      try {
+        $ex.Export($model, $stream)
+      }
+      finally {
+        $stream.Close()
+      }
     }
   }
+<% } -%>
 }
 }
