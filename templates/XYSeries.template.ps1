@@ -12,7 +12,7 @@ function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
     [string]$<% $_.Name %>Name,
 <% } -%>
     [Parameter(ValueFromPipeline=$true)]
-    [object[]]$InputObject,
+    [object]$InputObject,
     [string]$StyleName,
 
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName $ClassName -Indent 4 -%>

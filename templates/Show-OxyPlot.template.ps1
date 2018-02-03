@@ -94,6 +94,9 @@ function Save-OxyPlot {
 
     [OxyPlot.Axes.Axis[]]$Axes,
 
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.PlotModel" -Indent 4 -Prefix "M" -%>
+    [hashtable]$MOptions = @{},
+
     [string]$AxType,
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.Axes.Axis" -Indent 4 -Prefix "Ax" -%>
     [hashtable]$AxOptions = @{},
@@ -216,6 +219,8 @@ end {
       }
     }
   }
+
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.PlotModel" -Indent 2 -VariableName model -OptionHashName MOptions -Prefix M -%>
 
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.Axes.Axis" -Indent 2 -VariableName ax -OptionHashName AxOptions -Prefix Ax -%>
 
