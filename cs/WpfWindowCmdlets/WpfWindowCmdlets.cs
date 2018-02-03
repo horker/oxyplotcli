@@ -201,7 +201,9 @@ namespace WpfWindowCmdlets
 
         protected override void EndProcessing()
         {
-            Window.Dispatcher.InvokeShutdown();
+            Window.Dispatcher.Invoke(() => {
+                Window.Close();
+            });
         }
     }
 

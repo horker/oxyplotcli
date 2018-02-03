@@ -17,11 +17,19 @@ function New-OxyWindow {
 function Close-OxyWindow {
   [cmdletbinding()]
   param(
-    [int]$Index = -1
+    [int]$Index = -1,
+    [switch]$All
   )
 
-  $w = Get-OxyWindow $Index
-  Close-WpfWindow $w
+  if ($All) {
+    foreach ($w in (Get-OxyWindowList)) {
+      Close-WpfWindow $w
+    }
+  }
+  else {
+    $w = Get-OxyWindow $Index
+    Close-WpfWindow $w
+  }
 }
 
 function Get-OxyWindow {
