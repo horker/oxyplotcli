@@ -4,12 +4,14 @@ Set-StrictMode -Version 3
 function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
   [cmdletbinding()]
   param(
+<% if ($SeriesElement -ne $null) { -%>
 <% $SeriesElement.Element | foreach { -%>
     [<% $_.Class %>[]]$<% $_.Name %> = @(),
 <% } -%>
 
 <% $SeriesElement.Element | foreach { -%>
     [string]$<% $_.Name %>Name,
+<% } -%>
 <% } -%>
 
     [Parameter(ValueFromPipeline=$true)]
@@ -54,13 +56,16 @@ begin {
 
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName $ClassName -Indent 2 -VariableName series -OptionHashName Options -%>
 
+<% if ($SeriesElement -ne $null) { -%>
 <% foreach ($e in $SeriesElement.Element) { -%>
   $<% $e.Name %>Data = New-Object Collections.Generic.List[<% $e.Class %>]
 <% } -%>
 
   Set-StrictMode -Off
+<% } -%>
 }
 
+<% if ($SeriesElement -ne $null) { -%>
 process {
   if ($InputObject -ne $null) {
 <% foreach ($e in $SeriesElement.Element) { -%>
@@ -68,8 +73,10 @@ process {
 <% } -%>
   }
 }
+<% } -%>
 
 end {
+<% if ($SeriesElement -ne $null) { -%>
 <% foreach ($e in $SeriesElement.Element) { -%>
   if ($<% $e.Name %>Data.Count -gt 0 -and $<% $e.Name %>.Count -gt 0) { Write-Error "Data set of '<% $e.Name %>' is given in two ways"; return }
 <% } -%>
@@ -85,6 +92,7 @@ end {
 <% } -%>
     <% $SeriesElement.Cmdlet %> $series<% $SeriesElement.Element | foreach { %> $<% $_.Name %>Element<% } %>
   }
+<% } # if ($SeriesElement -ne $null) -%>
 
 <% if ($XAxisElement -ne $null) { -%>
   if ($<% $XAxisElement.Name %>Data.Count -gt 0) { $info.XDataType = $<% $XAxisElement.Name %>Data[0].GetType() }

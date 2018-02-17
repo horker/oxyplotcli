@@ -41,12 +41,18 @@ foreach ($p in $props) {
         "^OxyPlot\.OxyColor$" {
           $results.Add("$indent$colorValidateAttribute[string]`$$Prefix$name,")
         }
+        "^OxyPlot\.OxyPalette$" {
+          $results.Add("$indent[object[]]`$$Prefix$name,")
+        }
         "^OxyPlot\.OxyThickness$" {
           $results.Add("$indent[double[]]`$$Prefix$name,")
         }
         "^OxyPlot\.ElementCollection\[" {
           $m = ([regex]"^OxyPlot\.ElementCollection\[(.+)\]$").Match($class)
           $results.Add("$indent[$($m.Groups[1].Value)[]]`$$Prefix$name,")
+        }
+        "^double\[,\]$" {
+          $results.Add("$indent[object]`$$Prefix$name,")
         }
         default {
           $results.Add("$indent[$class]`$$Prefix$name,")
@@ -58,12 +64,18 @@ foreach ($p in $props) {
         "^OxyPlot\.OxyColor$" {
           $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = New-OxyColor `$$Prefix$name }")
         }
+        "^OxyPlot\.OxyPalette$" {
+          $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { if (`$$Prefix$name.Length -eq 1) { `$$VariableName.$name = New-OxyPalette `$$Prefix$name[0] } else { `$$VariableName.$name = New-OxyPalette `$$Prefix$name[0] `$$Prefix$name[1] } }")
+        }
         "^OxyPlot\.OxyThickness$" {
           $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = New-OxyThickness `$$Prefix$name }")
         }
         "^OxyPlot\.ElementCollection\[" {
           $m = ([regex]"^OxyPlot\.ElementCollection\[.+\.(.+)\]$").Match($class)
-          $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { Add-ToCollection `$$VariableName.$($m.Groups[1].Value) `$$Prefix$name }")
+          $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { Add-ToCollection `$$VariableName.$name `$$Prefix$name }")
+        }
+        "^double\[,\]$" {
+          $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = New-OxyTwoDimensionArray `$$Prefix$name }")
         }
         default{
           $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = `$$Prefix$name }")

@@ -206,7 +206,10 @@ $SERIES_TEMPLATES = @(
     BottomAxisType = "OxyPlot.Axes.CategoryAxis"
   },
 
-  # HeatMapSeries
+  @{
+    ClassName = "OxyPlot.Series.HeatMapSeries"
+    SeriesElement = $null
+  },
 
   @{
     ClassName = "OxyPlot.Series.HighLowSeries"
@@ -326,8 +329,14 @@ foreach ($t in $SERIES_TEMPLATES) {
     -Jobs {
       $ClassName = $Task.Data.ClassName
       $SeriesElement = $Task.Data.SeriesElement
-      $XAxisElement = $SeriesElement.Element | where { $_.PSObject.Properties.Name -Contains "Axis" -and $_.Axis -eq "X" }
-      $YAxisElement = $SeriesElement.Element | where { $_.PSObject.Properties.Name -Contains "Axis" -and $_.Axis -eq "Y" }
+
+      # XAxisElement/YAxisElement
+      $XAxisElement = $null
+      $YAxisElement = $null
+      if ($SeriesElement -ne $null) {
+        $XAxisElement = $SeriesElement.Element | where { $_.PSObject.Properties.Name -Contains "Axis" -and $_.Axis -eq "X" }
+        $YAxisElement = $SeriesElement.Element | where { $_.PSObject.Properties.Name -Contains "Axis" -and $_.Axis -eq "Y" }
+      }
 
       # AxisType
       $BottomAxisType = "linear"

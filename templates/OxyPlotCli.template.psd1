@@ -80,6 +80,7 @@ FunctionsToExport = @(
   "New-OxySequence"
   "Get-OxyColorList"
   "New-OxyColor"
+  "New-OxyPalette"
 
   # WpfWindow.ps1
   "New-WpfWindow"

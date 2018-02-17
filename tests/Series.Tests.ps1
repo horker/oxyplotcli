@@ -13,7 +13,7 @@ $dataB = -3, -2, -1.5
 $dataSize = 10, 20, 30
 $dataLabel = "foo", "bar", "baz"
 
-Describe "New-OxyLineSeries" {
+Describe "New-OxyLineSeries and data points" {
 
   BeforeEach {
     $s = $data | New-OxyLineSeries -XName A -YName B
@@ -52,6 +52,35 @@ Describe "New-OxyLineSeries" {
   }
 }
 
+Describe "New-OxyHeapMapSeries" {
+
+  It "can create a HeatMapSeries object" {
+    $s = New-OxyHeatMapSeries -X0 1.0 -X1 2.0 -Y0 3.0 -Y1 4.0
+    $s | Should -BeOfType [OxyPlot.Series.HeatMapSeries]
+    $s.X0 | Should -Be 1.0
+    $s.Y1 | Should -Be 4.0
+  }
+
+  It "can accept a two-dimension array as data points" {
+    $data = New-Object "double[,]" 1, 2
+    $data[0, 0] = 0.0
+    $data[0, 1] = 0.1
+    $s = New-OxyHeatMapSeries -Data $data
+    $s.Data | Should -Be $data
+  }
+
+  It "can accept a jagged array as data points" {
+    $data = @(1, 2), @(3, 4), @(5, 6)
+    $s = New-OxyHeatMapSeries -Data $data
+    $s.Data.Rank | Should -Be 2
+    $s.Data.GetLength(0) | Should -Be 2
+    $s.Data.GetLength(1) | Should -Be 3
+    $s.Data[0,0] | Should -Be 1
+    $s.Data[1,1] | Should -Be 4
+    $s.Data[1,2] | Should -Be 6
+  }
+}
+
 Describe "OxyColor parameter" {
 
   It "accepts a color name" {
@@ -75,6 +104,21 @@ Describe "OxyColor parameter" {
 
   It "raises an error for invalid parameter" {
     { $s = New-OxyLineSeries -X $dataA -Y $dataB -Color xxxx } | Should -Throw "Cannot validate"
+  }
+}
+
+Describe "OxyPalette parameter" {
+
+  It "accepts a type" {
+    $a = New-OxyLinearColorAxis -Palette hue
+    $a.Palette | Should -BeOfType [OxyPlot.OxyPalette]
+    $a.Palette.Colors.Count | Should -Be 100
+  }
+
+  It "accepts a type and the number of colors" {
+    $a = New-OxyLinearColorAxis -Palette "hot", 500
+    $a.Palette | Should -BeOfType [OxyPlot.OxyPalette]
+    $a.Palette.Colors.Count | Should -Be 500
   }
 }
 

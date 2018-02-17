@@ -24,15 +24,16 @@ $AXIS_CLASSES = @(
 )
 
 $TEMPLATE = "$PSScriptRoot\Axis.template.ps1"
+$TOOL = "$PSScriptRoot\..\tools\Insert-PropertyList.ps1"
 
 foreach ($c in $AXIS_CLASSES) {
   task "build_$c" `
-    -Inputs $TEMPLATE `
+    -Inputs $TEMPLATE, $TOOL `
     -Outputs ($c -replace "(.+)", "$PSScriptRoot\..\OxyPlotCli\`$1.ps1") `
     -Data $c `
     -Jobs {
       $ClassName = $Task.Data
-      Get-Content $Inputs | Invoke-TemplateEngine | Set-Content $Outputs
+      Get-Content $TEMPLATE | Invoke-TemplateEngine | Set-Content $Outputs
     }
 }
 
