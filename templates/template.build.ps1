@@ -198,7 +198,10 @@ $SERIES_TEMPLATES = @(
     BottomAxisType = "OxyPlot.Axes.CategoryAxis"
   },
 
-  # ContourSeries
+  @{
+    ClassName = "OxyPlot.Series.ContourSeries"
+    SeriesElement = $null
+  },
 
   @{
     ClassName = "OxyPlot.Series.ErrorColumnSeries"

@@ -220,6 +220,13 @@ Describe "series creation cmdlets" {
     $s.Items[1].CategoryIndex | Should -Be 4
   }
 
+  It "can create a ContourSeries object" {
+    $s = New-OxyContourSeries -ColumnCoordinates 1,2,3
+    $s | Should -BeOfType [OxyPlot.Series.ContourSeries]
+    $s.ColumnCoordinates[0] | Should -Be 1
+    $s.ColumnCoordinates[2] | Should -Be 3
+  }
+
   It "can create an ErrorColumnSeries object" {
     $s = New-OxyErrorColumnSeries -Value 1,2,3 -Error 4,5,6 -CategoryIndex 7,8,9
     $s.Items[0].Value | Should -Be 1
