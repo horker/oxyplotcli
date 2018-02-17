@@ -240,8 +240,6 @@ $SERIES_TEMPLATES = @(
     LeftAxisType = "none"
   }
 
-  # PolarHeapMapSeries
-
   @{
     ClassName = "OxyPlot.Series.RectangleBarSeries"
     SeriesElement = $DATAPOINTS.RectangleBar
