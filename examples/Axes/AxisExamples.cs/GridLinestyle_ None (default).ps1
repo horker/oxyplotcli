@@ -1,4 +1,4 @@
 New-OxyPlotModel `
   -Title "No gridlines" `
-  -Axis (New-OxyLinearAxis -Position Left),
+  -Axes (New-OxyLinearAxis -Position Left),
         (New-OxyLinearAxis -Position Bottom)

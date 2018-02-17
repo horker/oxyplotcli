@@ -29,11 +29,3 @@ end {
 }
 }
 
-function Update-OxyPlotModel {
-  [cmdletbinding()]
-  param(
-    [OxyPlot.PlotModel]$Model,
-    [bool]$UpdateData = $true
-  )
-  $Model.InvalidatePlot($UpdateData)
-}
