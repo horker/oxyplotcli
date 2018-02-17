@@ -12,11 +12,11 @@ function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
 <% $SeriesElement.Element | foreach { -%>
     [string]$<% $_.Name %>Name,
 <% } -%>
-<% } -%>
 
     [Parameter(ValueFromPipeline=$true)]
     [object]$InputObject,
 
+<% } -%>
     [string]$StyleName,
 
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName $ClassName -Indent 4 -%>
@@ -42,6 +42,9 @@ begin {
 <% } -%>
     XDataType = $null
     YDataType = $null
+<% if ($SeriesElement -ne $null -and $SeriesElement.Element.Name -Contains "Category") { -%>
+    CategoryNames = @()
+<% } -%>
     BottomAxisType = "<% $BottomAxisType %>"
     LeftAxisType = "<% $LeftAxisType %>"
     RightAxisType = "<% $RightAxisType %>"
@@ -90,7 +93,7 @@ end {
 <% foreach ($e in $SeriesElement.Element) { -%>
     if ($i -lt $<% $e.Name %>Data.Count) { $<% $e.Name %>Element = $<% $e.Name %>Data[$i] } else { $<% $e.Name %>Element = $null }
 <% } -%>
-    <% $SeriesElement.Cmdlet %> $series<% $SeriesElement.Element | foreach { %> $<% $_.Name %>Element<% } %>
+    <% $SeriesElement.Cmdlet %> $series<% $SeriesElement.Element | where { $_.Name -ne "Category" } | foreach { %> $<% $_.Name %>Element<% } %>
   }
 <% } # if ($SeriesElement -ne $null) -%>
 
@@ -99,6 +102,9 @@ end {
 <% } -%>
 <% if ($YAxisElement -ne $null) { -%>
   if ($<% $YAxisElement.Name %>Data.Count -gt 0) { $info.YDataType = $<% $YAxisElement.Name %>Data[0].GetType() }
+<% } -%>
+<% if ($SeriesElement -ne $null -and $SeriesElement.Element.Name -Contains "Category") { -%>
+  $info.CategoryNames = $CategoryData
 <% } -%>
 
 #  Apply-Style "<% $ClassName %>" $l $MyInvocation $StyleName

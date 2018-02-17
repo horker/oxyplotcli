@@ -79,7 +79,8 @@ $DATAPOINTS.Bar = @{
   Cmdlet = "Add-OxyBarSeriesPoint"
   Element = @(
     @{ Name = "Value"; Class = "object"; Axis = "Y" },
-    @{ Name = "CategoryIndex"; Class = "int"; Axis = "X" }
+    @{ Name = "CategoryIndex"; Class = "int"; Axis = "X" },
+    @{ Name = "Category"; Class = "string" }
   )
 }
 
@@ -105,7 +106,8 @@ $DATAPOINTS.IntervalBar = @{
   Element = @(
     @{ Name = "Start"; Class = "object" },
     @{ Name = "End"; Class = "object" },
-    @{ Name = "BarTitle"; Class = "string" } # renamed from Title to avoid conflict against the Series.InternalBarSeries property
+    @{ Name = "BarTitle"; Class = "string" }, # renamed from Title to avoid conflict against the Series.InternalBarSeries property
+    @{ Name = "Category"; Class = "string" }
   )
 }
 
@@ -115,7 +117,8 @@ $DATAPOINTS.RectangleBar = @{
     @{ Name = "X0"; Class = "object"; Axis = "X" },
     @{ Name = "Y0"; Class = "object"; Axis = "Y" },
     @{ Name = "X1"; Class = "object" },
-    @{ Name = "Y1"; Class = "object" }
+    @{ Name = "Y1"; Class = "object" },
+    @{ Name = "Category"; Class = "string" }
   )
 }
 
@@ -126,7 +129,8 @@ $DATAPOINTS.TornadoBar = @{
     @{ Name = "Maximum"; Class = "object" },
     @{ Name = "BarBaseValue"; Class = "object" }, # renamed from BaseValue to avoid conflict against the Series.TornadoBarSeries property
     @{ Name = "MinimumColor"; Class = "string" },
-    @{ Name = "MaximumColor"; Class = "string" }
+    @{ Name = "MaximumColor"; Class = "string" },
+    @{ Name = "Category"; Class = "string" }
   )
 }
 
@@ -352,6 +356,7 @@ foreach ($t in $SERIES_TEMPLATES) {
       if ($Task.Data.PSObject.Properties.Name -Contains "RightAxisType") {
         $RightAxisType = $Task.Data.RightAxisType
       }
+
       Get-Content $Inputs[0] | Invoke-TemplateEngine | Set-Content $Outputs
     }
 }

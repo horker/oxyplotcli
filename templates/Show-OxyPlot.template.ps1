@@ -168,8 +168,14 @@ end {
   if ($ax -eq $null) {
     foreach ($s in $Series) {
       if ($s.IsVisible -and (Test-AxesRequired $s)) {
-        if ($s -is [OxyPlot.Series.ColumnSeries]) {
+        if ($s -is [OxyPlot.Series.ColumnSeries] -or
+            $s -is [OxyPlot.Series.ErrorColumnSeries]) {
           $ax = New-Object OxyPlot.Axes.CategoryAxis
+          if ($s.PSObject.Properties.Name -Contains "_Info") {
+            foreach ($n in $s._Info.CategoryNames) {
+              $ax.Labels.Add($n)
+            }
+          }
         }
         else {
           if ($s.PSObject.Properties.Name -Contains "_Info") {
@@ -190,8 +196,16 @@ end {
     foreach ($s in $Series) {
       if ($s.IsVisible -and (Test-AxesRequired $s)) {
         if ($s -is [OxyPlot.Series.BarSeries] -or
+            $s -is [OxyPlot.Series.IntervalBarSeries] -or
+            $s -is [OxyPlot.Series.LinearBarSeries] -or
+            $s -is [OxyPlot.Series.RectangleBarSeries] -or
             $s -is [OxyPlot.Series.TornadoBarSeries]) {
           $ay = New-Object OxyPlot.Axes.CategoryAxis
+          if ($s.PSObject.Properties.Name -Contains "_Info") {
+            foreach ($n in $s._Info.CategoryNames) {
+              $ay.Labels.Add($n)
+            }
+          }
         }
         else {
           if ($s.PSObject.Properties.Name -Contains "_Info") {
