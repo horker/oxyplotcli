@@ -11,6 +11,7 @@ function Convert-PlotValue {
   elseif ($value -is [TimeSpan]) {
     $value = [OxyPlot.Axes.TimeSpanAxis]::ToDouble($value)
   }
+
   [double]$value
 }
 
@@ -256,9 +257,11 @@ function Add-OxyTornadoBarSeriesPoint {
   )
 
   $p = New-Object OxyPlot.Series.TornadoBarItem
-  $p.Minimum = (Convert-PlotValue $Minimum)
-  $p.Maximum = (Convert-PlotValue $Maximum)
-  $p.BaseValue = (Convert-PlotValue $BaseValue)
+  $p.Minimum = Convert-PlotValue $Minimum
+  $p.Maximum = Convert-PlotValue $Maximum
+  if ($BaseValue -ne $null) {
+    $p.BaseValue = Convert-PlotValue $BaseValue
+  }
   $p.MinimumColor = New-OxyColor $MinimumColor
   $p.MaximumColor = New-OxyColor $MaximumColor
   $series.Items.Add($p)
@@ -302,4 +305,3 @@ function Add-OxyBoxPlotSeriesPoint {
   $p = New-Object OxyPlot.Series.BoxPlotItem (Convert-PlotValue $X), $LowerWhisker, $BoxBottom, $Median, $BoxTop, $UpperWhistker
   $series.Items.Add($p)
 }
-

@@ -163,6 +163,7 @@ AliasesToExport = @(
   "oxyscate"
   "oxystair"
   "oxy3line"
+  "oxytornado"
   "oxy2area"
   "oxy2line"
 )

@@ -47,7 +47,10 @@ function New-OxyColor {
     [double]$Alpha = -1
   )
 
-  if ($ColorName -match "^(\w+)-(\d+)$") {
+  if ($ColorName -eq "") {
+    $ColorName = "Automatic"
+  }
+  elseif ($ColorName -match "^(\w+)-(\d+)$") {
     $ColorName = $matches[1]
     $Alpha = $matches[2] / 100.0
   }

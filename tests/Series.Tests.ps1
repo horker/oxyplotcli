@@ -336,6 +336,13 @@ Describe "series creation cmdlets" {
     $s.Points[1].Y | Should -Be 4
   }
 
+  It "can create a TornadoBarSeries object" {
+    $s = New-OxyTornadoBarSeries -Minimum -5,-4,-3 -Maximum 10,20,30
+    $s | Should -BeOfType [OxyPlot.Series.TornadoBarSeries]
+    $s.Items[0].Minimum | Should -Be -5
+    $s.Items[2].Maximum | Should -Be 30
+  }
+
   It "can create a TwoColorAreaSeries object" {
     $s = New-OxyTwoColorAreaSeries -X 1,2 -Y 3,4
     $s | Should -BeOfType [OxyPlot.Series.TwoColorAreaSeries]
@@ -343,7 +350,7 @@ Describe "series creation cmdlets" {
     $s.Points[1].Y | Should -Be 4
   }
 
-  It "can create a TowColorLineSeries object" {
+  It "can create a TwoColorLineSeries object" {
     $s = New-OxyTwoColorLineSeries -X 1,2 -Y 3,4
     $s | Should -BeOfType [OxyPlot.Series.TwoColorLineSeries]
     $s.Points[0].X | Should -Be 1

@@ -29,5 +29,6 @@ Set-Alias oxyscat New-OxyScatterSeries
 Set-Alias oxyscate New-OxyScatterErrorSeries
 Set-Alias oxystair New-OxyStairStepSeries
 Set-Alias oxy3cline New-OxyThreeColorLineSeries
+Set-Alias oxytornado New-OxyTornadoBarSeries
 Set-Alias oxy2carea New-OxyTwoColorAreaSeries
 Set-Alias oxy2cline New-OxyTwoColorLineSeries

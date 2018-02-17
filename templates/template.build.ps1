@@ -119,16 +119,16 @@ $DATAPOINTS.RectangleBar = @{
   )
 }
 
-#$DATAPOINTS.TornadoBar = @{
-#  Cmdlet = "Add-OxyTornadoBarSeriesPoint"
-#  Element = @(
-#    @{ Name = "Minimum"; Class = "object" },
-#    @{ Name = "Maximum"; Class = "object" },
-#    @{ Name = "BaseValue"; Class = "object" },
-#    @{ Name = "MinimumColor"; Class = "string" },
-#    @{ Name = "MinimumColor"; Class = "string" }
-#  )
-#}
+$DATAPOINTS.TornadoBar = @{
+  Cmdlet = "Add-OxyTornadoBarSeriesPoint"
+  Element = @(
+    @{ Name = "Minimum"; Class = "object"; Axis = "X" },
+    @{ Name = "Maximum"; Class = "object" },
+    @{ Name = "BarBaseValue"; Class = "object" }, # renamed from BaseValue to avoid conflict against the Series.TornadoBarSeries property
+    @{ Name = "MinimumColor"; Class = "string" },
+    @{ Name = "MaximumColor"; Class = "string" }
+  )
+}
 
 $DATAPOINTS.CandleStickAndVolume = @{
   Cmdlet = "Add-OxyCandleStickAndVolumeSeriesPoint"
@@ -275,6 +275,11 @@ $SERIES_TEMPLATES = @(
   },
 
   @{
+    ClassName = "OxyPlot.Series.TornadoBarSeries"
+    SeriesElement = $DATAPOINTS.TornadoBar
+  }
+
+  @{
     ClassName = "OxyPlot.Series.TwoColorAreaSeries"
     SeriesElement = $DATAPOINTS.Area
   },
@@ -283,11 +288,6 @@ $SERIES_TEMPLATES = @(
     ClassName = "OxyPlot.Series.TwoColorLineSeries"
     SeriesElement = $DATAPOINTS.Line
   }
-
-#  @{
-#    ClassName = "OxyPlot.Series.TornadoBarSeries"
-#    SeriesElement = $DATAPOINTS.TornadoBar
-#  }
 
   @{
     ClassName = "OxyPlot.Series.VolumeSeries"

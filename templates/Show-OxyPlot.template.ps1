@@ -189,7 +189,8 @@ end {
   if ($ay -eq $null) {
     foreach ($s in $Series) {
       if ($s.IsVisible -and (Test-AxesRequired $s)) {
-        if ($s -is [OxyPlot.Series.BarSeries]) {
+        if ($s -is [OxyPlot.Series.BarSeries] -or
+            $s -is [OxyPlot.Series.TornadoBarSeries]) {
           $ay = New-Object OxyPlot.Axes.CategoryAxis
         }
         else {
