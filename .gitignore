@@ -2,6 +2,7 @@ old/
 OxyPlotCli/
 lib/
 source/
+private/
 
 .vs/
 bin/
