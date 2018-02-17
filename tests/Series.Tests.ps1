@@ -319,3 +319,15 @@ Describe "series creation cmdlets" {
   }
 
 }
+
+Describe "New-OxyPlotModel" {
+
+  It "can accept an array of Series objects" {
+    $s1 = New-OxyLineSeries -X 1,2,3 -Y 4,5,6
+    $s2 = New-OxyLineSeries -X 1,2,3 -Y 4,5,6
+    $m = New-OxyPlotModel -Series $s1, $s2
+    $m.Series.Count | Should -Be 2
+    $m.Series[0] | Should -Be $s1
+  }
+
+}

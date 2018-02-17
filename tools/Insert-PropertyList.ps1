@@ -37,25 +37,37 @@ foreach ($p in $props) {
 
   switch ($OutputType) {
     "param" {
-      if ($class -eq "OxyPlot.OxyColor") {
-        $results.Add("$indent$colorValidateAttribute[string]`$$Prefix$name,")
-      }
-      elseif ($class -eq "OxyPlot.OxyThickness") {
-        $results.Add("$indent[double[]]`$$Prefix$name,")
-      }
-      else {
-        $results.Add("$indent[$class]`$$Prefix$name,")
+      switch -regex ($class) {
+        "^OxyPlot\.OxyColor$" {
+          $results.Add("$indent$colorValidateAttribute[string]`$$Prefix$name,")
+        }
+        "^OxyPlot\.OxyThickness$" {
+          $results.Add("$indent[double[]]`$$Prefix$name,")
+        }
+        "^OxyPlot\.ElementCollection\[" {
+          $m = ([regex]"^OxyPlot\.ElementCollection\[(.+)\]$").Match($class)
+          $results.Add("$indent[$($m.Groups[1].Value)[]]`$$Prefix$name,")
+        }
+        default {
+          $results.Add("$indent[$class]`$$Prefix$name,")
+        }
       }
     }
     "assign" {
-      if ($class -eq "OxyPlot.OxyColor") {
-        $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = New-OxyColor `$$Prefix$name }")
-      }
-      elseif ($class -eq "OxyPlot.OxyThickness") {
-        $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = New-OxyThickness `$$Prefix$name }")
-      }
-      else {
-        $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = `$$Prefix$name }")
+      switch -regex ($class) {
+        "^OxyPlot\.OxyColor$" {
+          $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = New-OxyColor `$$Prefix$name }")
+        }
+        "^OxyPlot\.OxyThickness$" {
+          $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = New-OxyThickness `$$Prefix$name }")
+        }
+        "^OxyPlot\.ElementCollection\[" {
+          $m = ([regex]"^OxyPlot\.ElementCollection\[.+\.(.+)\]$").Match($class)
+          $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { Add-ToCollection `$$VariableName.$($m.Groups[1].Value) `$$Prefix$name }")
+        }
+        default{
+          $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = `$$Prefix$name }")
+        }
       }
     }
   }

@@ -94,3 +94,17 @@ function New-OxyThickness {
     }
   }
 }
+
+############################################################
+# Adding elements to a collection
+
+function Add-ToCollection {
+  param(
+    [object]$Collection,
+    [object[]]$Elements
+  )
+
+  foreach ($e in $Elements) {
+    $Collection.Add($e)
+  }
+}
