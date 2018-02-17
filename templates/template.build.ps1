@@ -177,7 +177,6 @@ $SERIES_TEMPLATES = @(
   @{
     ClassName = "OxyPlot.Series.BarSeries"
     SeriesElement = $DATAPOINTS.Bar
-    LeftAxisType = "OxyPlot.Axes.CategoryAxis"
   },
 
   @{
@@ -188,7 +187,6 @@ $SERIES_TEMPLATES = @(
   @{
     ClassName = "OxyPlot.Series.CandleStickAndVolumeSeries"
     SeriesElement = $DATAPOINTS.CandleStickAndVolume
-    RightAxisType = "OxyPlot.Axes.LinearAxis"
   },
 
   @{
@@ -199,7 +197,6 @@ $SERIES_TEMPLATES = @(
   @{
     ClassName = "OxyPlot.Series.ColumnSeries"
     SeriesElement = $DATAPOINTS.Column
-    BottomAxisType = "OxyPlot.Axes.CategoryAxis"
   },
 
   @{
@@ -210,7 +207,6 @@ $SERIES_TEMPLATES = @(
   @{
     ClassName = "OxyPlot.Series.ErrorColumnSeries"
     SeriesElement = $DATAPOINTS.ErrorColumn
-    BottomAxisType = "OxyPlot.Axes.CategoryAxis"
   },
 
   @{
@@ -226,13 +222,11 @@ $SERIES_TEMPLATES = @(
   @{
     ClassName = "OxyPlot.Series.IntervalBarSeries"
     SeriesElement = $DATAPOINTS.IntervalBar
-    LeftAxisType = "OxyPlot.Axes.CategoryAxis"
   },
 
   @{
     ClassName = "OxyPlot.Series.LinearBarSeries"
     SeriesElement = $DATAPOINTS.Line
-    LeftAxisType = "OxyPlot.Axes.CategoryAxis"
   },
 
   @{
@@ -243,14 +237,11 @@ $SERIES_TEMPLATES = @(
   @{
     ClassName = "OxyPlot.Series.PieSeries"
     SeriesElement = $DATAPOINTS.Pie
-    BottomAxisType = "none"
-    LeftAxisType = "none"
   }
 
   @{
     ClassName = "OxyPlot.Series.RectangleBarSeries"
     SeriesElement = $DATAPOINTS.RectangleBar
-    LeftAxisType = "OxyPlot.Axes.CategoryAxis"
   },
 
   @{
@@ -341,20 +332,6 @@ foreach ($t in $SERIES_TEMPLATES) {
       if ($SeriesElement -ne $null) {
         $XAxisElement = $SeriesElement.Element | where { $_.PSObject.Properties.Name -Contains "Axis" -and $_.Axis -eq "X" }
         $YAxisElement = $SeriesElement.Element | where { $_.PSObject.Properties.Name -Contains "Axis" -and $_.Axis -eq "Y" }
-      }
-
-      # AxisType
-      $BottomAxisType = "linear"
-      $LeftAxisType = "linear"
-      $RightAxisType = "none"
-      if ($Task.Data.PSObject.Properties.Name -Contains "BottomAxisType") {
-        $BottomAxisType = $Task.Data.BottomAxisType
-      }
-      if ($Task.Data.PSObject.Properties.Name -Contains "LeftAxisType") {
-        $LeftAxisType = $Task.Data.LeftAxisType
-      }
-      if ($Task.Data.PSObject.Properties.Name -Contains "RightAxisType") {
-        $RightAxisType = $Task.Data.RightAxisType
       }
 
       Get-Content $Inputs[0] | Invoke-TemplateEngine | Set-Content $Outputs

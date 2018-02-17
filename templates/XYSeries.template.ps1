@@ -45,9 +45,6 @@ begin {
 <% if ($SeriesElement -ne $null -and $SeriesElement.Element.Name -Contains "Category") { -%>
     CategoryNames = @()
 <% } -%>
-    BottomAxisType = "<% $BottomAxisType %>"
-    LeftAxisType = "<% $LeftAxisType %>"
-    RightAxisType = "<% $RightAxisType %>"
   }
 
 <% if ($XAxisElement -ne $null) { -%>
