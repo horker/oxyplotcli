@@ -1,43 +1,38 @@
 <% Set-StrictMode -Version 3 -%>
 Set-StrictMode -Version 3
 
-<% if ($output -match "Show-OxyPlot") { -%>
-function Show-OxyPlot {
-<% } else { -%>
-function Save-OxyPlot {
-<% } -%>
-  [cmdletbinding()]
+function <% $output %> {
+  [cmdletbinding(DefaultParameterSetName="PlotModel")]
   param(
     [Parameter(ParameterSetName="PlotModel", ValueFromPipeline=$true)]
     [OxyPlot.PlotModel]$PlotModel,
 
     [Parameter(ParameterSetName="Series", ValueFromPipeline=$true)]
-    [OxyPlot.Series.Series]$Series,
+    [OxyPlot.Series.Series]$InputObject,
 
 <% if ($output -match "Show-OxyPlot") { -%>
     [switch]$Reuse,
-<% } else { -%>
+
+<% } elseif ($output -match "Save-OxyPlot") { -%>
     [Parameter(Position=0, Mandatory=$true)]
     [string]$OutFile,
 
-    [double]$Width = 800,
-    [double]$Height = 600,
-    [string]$Background = "white",
+    [double]$ImageWidth = 800,
+    [double]$ImageHeight = 600,
+    [string]$ImageBackground = "white",
     [bool]$IsDocument = $false,
-<% } -%>
 
+<% } -%>
     [string]$StyleName,
 
-    [OxyPlot.Axes.Axis[]]$Axes,
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.PlotModel" -Indent 4 -%>
+    [hashtable]$Options = @{},
 
 <% if ($output -match "Show-OxyPlot") { -%>
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "System.Windows.Window" -Indent 2 -VariableName w -OptionHashName WOptions -Prefix W -%>
     [hashtable]$WOptions = @{},
+
 <% } -%>
-
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.PlotModel" -Indent 4 -Prefix "M" -%>
-    [hashtable]$MOptions = @{},
-
     [string]$AxType,
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.Axes.Axis" -Indent 4 -Prefix "Ax" -%>
     [hashtable]$AxOptions = @{},
@@ -48,24 +43,20 @@ function Save-OxyPlot {
   )
 
 begin {
-  $model = $null
+  if ($PlotModel -eq $null) {
+    $PlotModel = New-Object OxyPlot.PlotModel
+  }
 }
 
 process {
-  if ($model -eq $null) {
-    if ($PSCmdlet.ParameterSetName -match "^Series") {
-      $model = New-Object OxyPlot.PlotModel
-    }
-    else {
-      $model = $PlotModel
-    }
-  }
-  if ($Series -ne $null) {
-    $model.Series.Add($Series)
+  if ($InputObject -ne $null) {
+    $PlotModel.Series.Add($InputObject)
   }
 }
 
 end {
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.PlotModel" -Indent 2 -VariableName PlotModel -OptionHashName Options -%>
+
   $ax = $null
   $ay = $null
 
@@ -77,7 +68,7 @@ end {
       return
     }
 
-    $model.Axes.Add($ax)
+    $PlotModel.Axes.Add($ax)
   }
 
   if ($PSBoundParameters.ContainsKey("AyType")) {
@@ -88,11 +79,10 @@ end {
       return
     }
 
-    $model.Axes.Add($ay)
+    $PlotModel.Axes.Add($ay)
   }
 
-  foreach ($a in $Axes) {
-    $model.Axes.Add($a)
+  foreach ($a in $PlotModel.Axes) {
     if ($ax -eq $null -and $a.IsHorizontal()) {
       $ax = $a
     }
@@ -102,7 +92,7 @@ end {
   }
 
   if ($ax -eq $null) {
-    foreach ($s in $Series) {
+    foreach ($s in $PlotModel.Series) {
       if ($s.IsVisible -and (Test-AxesRequired $s)) {
         if ($s -is [OxyPlot.Series.ColumnSeries] -or
             $s -is [OxyPlot.Series.ErrorColumnSeries]) {
@@ -122,14 +112,14 @@ end {
           }
         }
         $ax.Position = "Bottom"
-        $model.Axes.Add($ax)
+        $PlotModel.Axes.Add($ax)
         break
       }
     }
   }
 
   if ($ay -eq $null) {
-    foreach ($s in $Series) {
+    foreach ($s in $PlotModel.Series) {
       if ($s.IsVisible -and (Test-AxesRequired $s)) {
         if ($s -is [OxyPlot.Series.BarSeries] -or
             $s -is [OxyPlot.Series.IntervalBarSeries] -or
@@ -152,37 +142,19 @@ end {
           }
         }
         $ay.Position = "Left"
-        $model.Axes.Add($ay)
+        $PlotModel.Axes.Add($ay)
         break
       }
     }
   }
-
-  if ($ax -eq $null) {
-    foreach ($a in $model.Axes) {
-      if ($a.IsHorizontal()) {
-        $ax = $a
-        break
-      }
-    }
-  }
-
-  if ($ay -eq $null) {
-    foreach ($a in $model.Axes) {
-      if ($a.IsVertical()) {
-        $ay = $a
-        break
-      }
-    }
-  }
-
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.PlotModel" -Indent 2 -VariableName model -OptionHashName MOptions -Prefix M -%>
 
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.Axes.Axis" -Indent 2 -VariableName ax -OptionHashName AxOptions -Prefix Ax -%>
 
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.Axes.Axis" -Indent 2 -VariableName ay -OptionHashName AyOptions -Prefix Ay -%>
 
-<% if ($output -match "Show-OxyPlot") { -%>
+<% if ($output -match "New-OxyPlotModel") { -%>
+  $PlotModel
+<% } elseif ($output -match "Show-OxyPlot") { -%>
   if ($Reuse) {
     $w = Get-OxyWindow
   }
@@ -197,7 +169,7 @@ end {
     $w.Activate()
 
     $view = New-Object OxyPlot.Wpf.PlotView
-    $view.Model = $model
+    $view.Model = $PlotModel
 
     $g = New-Object Windows.Controls.Grid
     $g.Children.Add($view)
@@ -209,20 +181,20 @@ end {
   switch -regex ($OutFile) {
     "\.svg$" {
       $ex = New-Object OxyPlot.SvgExporter
-      $ex.Width = $Width
-      $ex.Height = $Height
+      $ex.Width = $ImageWidth
+      $ex.Height = $ImageHeight
       $ex.IsDocument = $IsDocument
-      $ex.ExportToString($model) | Set-Content $OutFile
+      $ex.ExportToString($PlotModel) | Set-Content $OutFile
     }
     "\.pdf$" {
       $ex = New-Object OxyPlot.PdfExporter
-      $ex.Width = $Width
-      $ex.Height = $Height
-      $ex.Background = New-OxyColor $Background
+      $ex.Width = $ImageWidth
+      $ex.Height = $ImageHeight
+      $ex.Background = New-OxyColor $ImageBackground
 
       $stream = [IO.File]::Create($OutFile)
       try {
-        $ex.Export($model, $stream)
+        $ex.Export($PlotModel, $stream)
       }
       finally {
         $stream.Close()
@@ -230,13 +202,13 @@ end {
     }
     default { # Png
       $ex = New-Object OxyPlot.Wpf.PngExporter
-      $ex.Width = $Width
-      $ex.Height = $Height
-      $ex.Background = New-OxyColor $Background
+      $ex.Width = $ImageWidth
+      $ex.Height = $ImageHeight
+      $ex.Background = New-OxyColor $ImageBackground
 
       $stream = [IO.File]::Create($OutFile)
       try {
-        $ex.Export($model, $stream)
+        $ex.Export($PlotModel, $stream)
       }
       finally {
         $stream.Close()

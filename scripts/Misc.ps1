@@ -1,6 +1,18 @@
 Set-StrictMode -Version 3
 
 ############################################################
+# Update-OxyPlotModel
+
+function Update-OxyPlotModel {
+  [cmdletbinding()]
+  param(
+    [OxyPlot.PlotModel]$Model,
+    [switch]$UpdateData = $false
+  )
+  $Model.InvalidatePlot($UpdateData)
+}
+
+############################################################
 # Show-OxyPlot helpers
 
 function Get-AxisObject {

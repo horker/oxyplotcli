@@ -4,7 +4,6 @@ Set-StrictMode -Version 3
 # Template files
 
 $TEMPLATES = @(
-  "PlotModel.template.ps1"
   "OxyWindow.template.ps1"
   "OxyPlot.Series.FunctionSeries.template.ps1"
 )
