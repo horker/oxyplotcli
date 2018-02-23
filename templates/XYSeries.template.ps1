@@ -88,7 +88,11 @@ end {
   $dataCount = $<% $SeriesElement.Element[0].Name %>Data.Count
   for ($i = 0; $i -lt $dataCount; ++$i) {
 <% foreach ($e in $SeriesElement.Element) { -%>
+<%   if ($e.Name -ne "CategoryIndex") { -%>
     if ($i -lt $<% $e.Name %>Data.Count) { $<% $e.Name %>Element = $<% $e.Name %>Data[$i] } else { $<% $e.Name %>Element = $null }
+<%   } else { -%>
+    if ($i -lt $CategoryIndexData.Count) { $CategoryIndexElement = $CategoryIndexData[$i] } else { $CategoryIndexElement = $i }
+<%   } -%>
 <% } -%>
     <% $SeriesElement.Cmdlet %> $series<% $SeriesElement.Element | where { $_.Name -ne "Category" } | foreach { %> $<% $_.Name %>Element<% } %>
   }
