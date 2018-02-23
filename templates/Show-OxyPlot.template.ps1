@@ -155,16 +155,25 @@ end {
 <% if ($output -match "New-OxyPlotModel") { -%>
   $PlotModel
 <% } elseif ($output -match "Show-OxyPlot") { -%>
+  $windowOptions = @{
+    Title = $MyInvocation.Line
+  }
+
+  <% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "System.Windows.Window" -Indent 4 -VariableName windowOptions -OptionHashName WOptions -Prefix W -%>
+
   if ($Reuse) {
     $w = Get-OxyWindow
   }
   else {
-    $w = New-OxyWindow -Title $MyInvocation.Line
+    $w = New-WpfWindow -Options $windowOptions
   }
 
   Invoke-WpfWindowAction $w {
-
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "System.Windows.Window" -Indent 4 -VariableName w -OptionHashName WOptions -Prefix W -%>
+    if ($Reuse) {
+      foreach ($key in $windowOptions.Keys) {
+        $w.$key = $windowOptions[$key]
+      }
+    }
 
     $w.Activate()
 
