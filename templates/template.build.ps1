@@ -88,6 +88,7 @@ $DATAPOINTS.Column = @{
   Element = @(
     @{ Name = "Value"; Class = "object"; Axis = "X" },
     @{ Name = "CategoryIndex"; Class = "int"; Axis = "Y" }
+    @{ Name = "Category"; Class = "string" }
   )
 }
 
@@ -97,6 +98,7 @@ $DATAPOINTS.ErrorColumn = @{
     @{ Name = "Value"; Class = "object"; Axis = "X" },
     @{ Name = "Error"; Class = "object" },
     @{ Name = "CategoryIndex"; Class = "int"; Axis = "Y" }
+    @{ Name = "Category"; Class = "string" }
   )
 }
 
