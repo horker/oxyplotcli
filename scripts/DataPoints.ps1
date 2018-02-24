@@ -73,7 +73,7 @@ function Add-OxyScatterSeriesPoint {
   )
 
   if ($Size -eq 0) {
-    $Size = 5
+    $Size = [double]::NaN
   }
   $p = New-Object OxyPlot.Series.ScatterPoint (Convert-PlotValue $X), (Convert-PlotValue $Y), $Size, $Value, $Tag
   $series.Points.Add($p)
