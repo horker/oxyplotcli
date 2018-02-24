@@ -29,7 +29,7 @@ function New-OxyFunctionSeries {
 
     [hashtable]$Options = @{},
 
-    [string]$Style,
+    [string]$Style = "default",
     [switch]$Show
   )
 
