@@ -5,6 +5,10 @@ Import-Module $PSScriptRoot\OxyPlotCliHelpers.dll
 
 Get-ChildItem $PSScriptRoot\*.ps1 | foreach { . $_.FullName }
 
+Get-ChildItem $PSScriptRoot\styles\*.ps1 | foreach { . $_.FullName }
+
+# Define aliases
+
 Get-Item function:\New-Oxy*Series  | where { $_ -match "^New-Oxy(\w+)Series(\w*)$" } | foreach {
   $fullName = $matches[0]
   $series = $matches[1]

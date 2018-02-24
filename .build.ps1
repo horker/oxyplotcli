@@ -14,6 +14,9 @@ task SetupOxyPlot {
 task Build {
   Copy-Item -Recurse "$PSScriptRoot\scripts\*" "$PSScriptRoot\OxyPlotCli"
 
+  $null = mkdir "$PSScriptRoot\OxyPlotCli\styles" -force
+  Copy-Item -Recurse "$PSScriptRoot\styles\*" "$PSScriptRoot\OxyPlotCli\styles"
+
   Import-Module HorkerTemplateEngine
   Invoke-Build -File "$PSScriptRoot\templates\template.build.ps1"
   Invoke-Build -File "$PSScriptRoot\templates\Axis.build.ps1"

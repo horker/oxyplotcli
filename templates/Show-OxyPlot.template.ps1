@@ -23,8 +23,6 @@ function <% $output %> {
     [bool]$IsDocument = $false,
 
 <% } -%>
-    [string]$StyleName,
-
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.PlotModel" -Indent 4 -%>
     [hashtable]$Options = @{},
 
@@ -39,10 +37,17 @@ function <% $output %> {
 
     [string]$AyType,
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.Axes.Axis" -Indent 4 -Prefix "Ay" -%>
-    [hashtable]$AyOptions = @{}
+    [hashtable]$AyOptions = @{},
+
+    [string]$Style = "default"
   )
 
 begin {
+  if (!(Test-OxyStyleName $Style)) {
+    Write-Error "Unknown style: '$Style'"
+    return
+  }
+
   if ($PlotModel -eq $null) {
     $PlotModel = New-Object OxyPlot.PlotModel
   }
@@ -55,6 +60,8 @@ process {
 }
 
 end {
+  Apply-OxyStyle $PlotModel $Style $MyInvocation
+
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.PlotModel" -Indent 2 -VariableName PlotModel -OptionHashName Options -%>
 
   $ax = $null
@@ -62,22 +69,24 @@ end {
 
   if ($PSBoundParameters.ContainsKey("AxType")) {
     $ax = Get-AxisByPartialTypeName $AxType
-    $ax.Position = "Bottom"
     if (!$ax) {
       Write-Error "No Axis type matches with '$AxType'"
       return
     }
+    $ax.Position = "Bottom"
+    Apply-OxyStyle $ax $Style $MyInvocation
 
     $PlotModel.Axes.Add($ax)
   }
 
   if ($PSBoundParameters.ContainsKey("AyType")) {
     $ay = Get-AxisByPartialTypeName $AyType
-    $ay.Position = "Left"
     if (!$ay) {
       Write-Error "No Axis type matches with '$AyType'"
       return
     }
+    $ay.Position = "Left"
+    Apply-OxyStyle $ay $Style $MyInvocation
 
     $PlotModel.Axes.Add($ay)
   }

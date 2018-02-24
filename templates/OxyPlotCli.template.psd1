@@ -82,6 +82,11 @@ FunctionsToExport = @(
   "New-OxyColor"
   "New-OxyPalette"
 
+  # Style.ps1
+  "Add-OxyStyle"
+  "Get-OxyStyle"
+  "Set-OxyDefaultStyle"
+
   # WpfWindow.ps1
   "New-WpfWindow"
   "Invoke-WpfWindowAction"

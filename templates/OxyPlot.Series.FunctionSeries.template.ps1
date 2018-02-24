@@ -25,12 +25,18 @@ function New-OxyFunctionSeries {
     [Alias("Dt")]
     [double]$Dx = [double]::NaN,
 
-    [string]$StyleName,
-
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName OxyPlot.Series.FunctionSeries -Indent 4 -%>
 
-    [hashtable]$Options = @{}
+    [hashtable]$Options = @{},
+
+    [string]$Style,
+    [switch]$Show
   )
+
+  if (!(Test-OxyStyleName $Style)) {
+    Write-Error "Unknown style: '$Style'"
+    return
+  }
 
   $series = New-Object OxyPlot.Series.FunctionSeries
 
@@ -74,5 +80,14 @@ function New-OxyFunctionSeries {
     RightAxisType = "none"
   }
 
-  $series | Add-Member -PassThru NoteProperty _Info $info
+  $series = $series | Add-Member -PassThru NoteProperty _Info $info
+
+  Apply-OxyStyle $series $Style $MyInvocation
+
+  if ($Show) {
+    $series | Show-OxyPlot -WTitle $MyInvocation.Line
+  }
+  else {
+    $series
+  }
 }

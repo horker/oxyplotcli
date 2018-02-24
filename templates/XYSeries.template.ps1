@@ -17,16 +17,21 @@ function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
     [object]$InputObject,
 
 <% } -%>
-    [string]$StyleName,
-
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName $ClassName -Indent 4 -%>
 
     [hashtable]$Options = @{},
 
+    [string]$Style = "default",
     [switch]$Show
   )
 
 begin {
+
+  if (!(Test-OxyStyleName $Style)) {
+    Write-Error "Unknown style: '$Style'"
+    return
+  }
+
   $series = New-Object <% $ClassName %>
 
   $info = [PSCustomObject]@{
@@ -108,12 +113,12 @@ end {
   $info.CategoryNames = $CategoryData
 <% } -%>
 
-#  Apply-Style "<% $ClassName %>" $l $MyInvocation $StyleName
-
   $series = $series | Add-Member -PassThru NoteProperty _Info $info
 
+  Apply-OxyStyle $series $Style $MyInvocation
+
   if ($Show) {
-    $series | Show-OxyPlot -WTitle $MyInvocation.Line
+    $series | Show-OxyPlot -WTitle $MyInvocation.Line -Style $Style
   }
   else {
     $series
