@@ -11,7 +11,7 @@ $config = @{
   "unit" = "pt"
 
   "PlotModel.DefaultFontSize" = $baseSize
-#  "PlotModel.DefaultColors" = 'E24A33', '348ABD', '988ED5', '777777', 'FBC15E', '8EBA42', 'FFB5B8'
+  "PlotModel.DefaultColors" = 'E24A33', '348ABD', '988ED5', '777777', 'FBC15E', '8EBA42', 'FFB5B8'
   "PlotModel.PlotAreaBackground" = "#E5E5E5"
   "PlotModel.TitleFontSize" = $baseSize * 1.2
   "PlotModel.SubtitleFontSize" = $baseSize * 0.9
