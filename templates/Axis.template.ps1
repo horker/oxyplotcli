@@ -6,12 +6,25 @@ function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
   param(
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName $ClassName -Indent 4 -%>
 
-    [hashtable]$Options = @{}
+    [hashtable]$Options = @{},
+
+    [string]$Style = "default",
+    [OxyPlot.PlotModel]$AddTo
   )
 
-  $axis = New-Object <% $ClassName %>
+  $a = New-Object <% $ClassName %>
 
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName $ClassName -Indent 2 -VariableName axis -OptionHashName Options -%>
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName $ClassName -Indent 2 -VariableName a -OptionHashName Options -%>
 
-  $axis
+  if ($AddTo -ne $null) {
+<% if ($ClassName -match "Axis$") { -%>
+    $AddTo.Axes.Add($a)
+<% } else { -%>
+    $AddTo.Annotations.Add($a)
+<% } -%>
+    $AddTo.InvalidatePlot($false)
+  }
+  else {
+    $a
+  }
 }
