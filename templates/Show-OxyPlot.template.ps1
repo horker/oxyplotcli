@@ -10,10 +10,7 @@ function <% $output %> {
     [Parameter(ParameterSetName="Series", ValueFromPipeline=$true)]
     [OxyPlot.Series.Series]$InputObject,
 
-<% if ($output -match "Show-OxyPlot") { -%>
-    [switch]$Reuse,
-
-<% } elseif ($output -match "Save-OxyPlot") { -%>
+<% if ($output -match "Save-OxyPlot") { -%>
     [Parameter(Position=0, Mandatory=$true)]
     [string]$OutFile,
 
@@ -22,11 +19,18 @@ function <% $output %> {
     [string]$ImageBackground = "white",
     [bool]$IsDocument = $false,
 
+<% } elseif ($output -match "New-OxyPlotModel") { -%>
+    [switch]$Show,
+    [switch]$Reuse,
+
+<% } else { -%>
+    [switch]$Reuse,
+
 <% } -%>
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.PlotModel" -Indent 4 -%>
     [hashtable]$Options = @{},
 
-<% if ($output -match "Show-OxyPlot") { -%>
+<% if ($output -match "Show-OxyPlot|New-OxyPlotModel") { -%>
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "System.Windows.Window" -Indent 2 -VariableName w -OptionHashName WOptions -Prefix W -%>
     [hashtable]$WOptions = @{},
 
@@ -180,8 +184,12 @@ end {
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.Axes.Axis" -Indent 2 -VariableName ay -OptionHashName AyOptions -Prefix Ay -%>
 
 <% if ($output -match "New-OxyPlotModel") { -%>
-  $PlotModel
-<% } elseif ($output -match "Show-OxyPlot") { -%>
+  if (!$Show) {
+    return $PlotModel
+  }
+
+<% } -%>
+<% if ($output -match "Show-OxyPlot|New-OxyPlotModel") { -%>
   $windowOptions = @{
     Title = $MyInvocation.Line
   }
@@ -211,6 +219,10 @@ end {
     $g.Children.Add($view)
     $w.Content = $g
   }
+<%   if ($output -match "New-OxyPlotModel") { -%>
+
+  $PlotModel
+<%   } -%>
 <% } else { -%>
   $OutFile = try { Resolve-Path $OutFile -EA Stop } catch { $_.TargetObject }
 
