@@ -73,9 +73,9 @@ end {
       Write-Error "No Axis type matches with '$AxType'"
       return
     }
+
     $ax.Position = "Bottom"
     Apply-OxyStyle $ax $Style $MyInvocation
-
     $PlotModel.Axes.Add($ax)
   }
 
@@ -85,9 +85,9 @@ end {
       Write-Error "No Axis type matches with '$AyType'"
       return
     }
+
     $ay.Position = "Left"
     Apply-OxyStyle $ay $Style $MyInvocation
-
     $PlotModel.Axes.Add($ay)
   }
 
@@ -120,8 +120,11 @@ end {
             $ax = New-Object OxyPlot.Axes.LinearAxes
           }
         }
+
         $ax.Position = "Bottom"
+        Apply-OxyStyle $ax $Style $MyInvocation
         $PlotModel.Axes.Add($ax)
+
         break
       }
     }
@@ -150,8 +153,11 @@ end {
             $ay = New-Object OxyPlot.Axes.LinearAxes
           }
         }
+
         $ay.Position = "Left"
+        Apply-OxyStyle $ay $Style $MyInvocation
         $PlotModel.Axes.Add($ay)
+
         break
       }
     }
