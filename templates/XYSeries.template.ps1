@@ -118,8 +118,7 @@ end {
   Apply-OxyStyle $series $Style $MyInvocation
 
   if ($AddTo -ne $null) {
-    $AddTo.Series.Add($series)
-    $AddTo.InvalidatePlot($true)
+    Add-OxyObjectToPlotModel $series $AddTo
   }
   else {
     $series
