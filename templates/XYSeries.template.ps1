@@ -22,7 +22,7 @@ function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
     [hashtable]$Options = @{},
 
     [string]$Style = "default",
-    [switch]$Show
+    [OxyPlot.PlotModel]$AddTo
   )
 
 begin {
@@ -117,8 +117,9 @@ end {
 
   Apply-OxyStyle $series $Style $MyInvocation
 
-  if ($Show) {
-    $series | Show-OxyPlot -WTitle $MyInvocation.Line -Style $Style
+  if ($AddTo -ne $null) {
+    $AddTo.Series.Add($series)
+    $AddTo.InvalidatePlot($true)
   }
   else {
     $series

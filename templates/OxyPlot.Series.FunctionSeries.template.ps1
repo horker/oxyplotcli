@@ -30,7 +30,7 @@ function New-OxyFunctionSeries {
     [hashtable]$Options = @{},
 
     [string]$Style = "default",
-    [switch]$Show
+    [OxyPlot.PlotModel]$AddTo
   )
 
   if (!(Test-OxyStyleName $Style)) {
@@ -75,17 +75,15 @@ function New-OxyFunctionSeries {
     YAxisTitle = "y"
     XDataType = [double]
     YDataType = [double]
-    BottomAxisType = "linear"
-    LeftAxisType = "linear"
-    RightAxisType = "none"
   }
 
   $series = $series | Add-Member -PassThru NoteProperty _Info $info
 
   Apply-OxyStyle $series $Style $MyInvocation
 
-  if ($Show) {
-    $series | Show-OxyPlot -WTitle $MyInvocation.Line
+  if ($AddTo -ne $null) {
+    $AddTo.Series.Add($series)
+    $AddTo.InvalidatePlot($true)
   }
   else {
     $series
