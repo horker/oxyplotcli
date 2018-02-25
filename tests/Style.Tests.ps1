@@ -1,7 +1,5 @@
 Set-StrictMode -Version 3
 
-Import-Module ./OxyPlotCli -Force
-
 Describe "Add-OxyStyle" {
 
   It "can add a style" {

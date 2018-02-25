@@ -1,7 +1,5 @@
 Set-StrictMode -Version 3
 
-Import-Module $PSScriptRoot\..\OxyPlotCli -Force
-
 Describe "New-OxyPlotModel" {
 
   It "can accept an array of Series objects" {

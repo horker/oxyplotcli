@@ -1,7 +1,5 @@
 Set-StrictMode -Version 3
 
-Import-Module $PSScriptRoot\..\OxyPlotCli -Force
-
 $data = (
   [pscustomobject]@{ A = 1.5; B = -3 },
   [pscustomobject]@{ A = 2;   B = -2 },

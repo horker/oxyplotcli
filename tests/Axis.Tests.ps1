@@ -1,7 +1,5 @@
 Set-StrictMode -Version 3
 
-Import-Module $PSScriptRoot\..\OxyPlotCli -Force
-
 Describe "axis creation cmdlets" {
 
   It "can create an AngleAxis object" {
