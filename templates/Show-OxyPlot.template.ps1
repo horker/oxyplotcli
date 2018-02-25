@@ -66,6 +66,8 @@ end {
 
   $ax = $null
   $ay = $null
+  $axCreated = $false
+  $ayCreated = $false
 
   if ($PSBoundParameters.ContainsKey("AxType")) {
     $ax = Get-AxisByPartialTypeName $AxType
@@ -73,10 +75,7 @@ end {
       Write-Error "No Axis type matches with '$AxType'"
       return
     }
-
-    $ax.Position = "Bottom"
-    Apply-OxyStyle $ax $Style $MyInvocation
-    $PlotModel.Axes.Add($ax)
+    $axCreated = $true
   }
 
   if ($PSBoundParameters.ContainsKey("AyType")) {
@@ -85,10 +84,7 @@ end {
       Write-Error "No Axis type matches with '$AyType'"
       return
     }
-
-    $ay.Position = "Left"
-    Apply-OxyStyle $ay $Style $MyInvocation
-    $PlotModel.Axes.Add($ay)
+    $ayCreated = $true
   }
 
   foreach ($a in $PlotModel.Axes) {
@@ -120,11 +116,7 @@ end {
             $ax = New-Object OxyPlot.Axes.LinearAxes
           }
         }
-
-        $ax.Position = "Bottom"
-        Apply-OxyStyle $ax $Style $MyInvocation
-        $PlotModel.Axes.Add($ax)
-
+        $axCreated = $true
         break
       }
     }
@@ -153,14 +145,34 @@ end {
             $ay = New-Object OxyPlot.Axes.LinearAxes
           }
         }
-
-        $ay.Position = "Left"
-        Apply-OxyStyle $ay $Style $MyInvocation
-        $PlotModel.Axes.Add($ay)
-
+        $ayCreated = $true
         break
       }
     }
+  }
+
+  foreach ($s in $PlotModel.Series) {
+    if ($s.IsVisible -and $s.PSObject.Properties.Name -Contains "_Info") {
+      if ($axCreated) {
+        $ax.Title = $s._Info.XAxisTitle
+      }
+      if ($ayCreated) {
+        $ay.Title = $s._Info.YAxisTitle
+      }
+      break
+    }
+  }
+
+  if ($axCreated) {
+    $ax.Position = "Bottom"
+    Apply-OxyStyle $ax $Style $MyInvocation
+    $PlotModel.Axes.Add($ax)
+  }
+
+  if ($ayCreated) {
+    $ay.Position = "Left"
+    Apply-OxyStyle $ay $Style $MyInvocation
+    $PlotModel.Axes.Add($ay)
   }
 
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.Axes.Axis" -Indent 2 -VariableName ax -OptionHashName AxOptions -Prefix Ax -%>
