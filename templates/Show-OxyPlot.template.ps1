@@ -132,7 +132,6 @@ end {
         if ($s -is [OxyPlot.Series.BarSeries] -or
             $s -is [OxyPlot.Series.IntervalBarSeries] -or
             $s -is [OxyPlot.Series.LinearBarSeries] -or
-            $s -is [OxyPlot.Series.RectangleBarSeries] -or
             $s -is [OxyPlot.Series.TornadoBarSeries]) {
           $ay = New-Object OxyPlot.Axes.CategoryAxis
           if ($s.PSObject.Properties.Name -Contains "_Info") {
