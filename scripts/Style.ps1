@@ -104,8 +104,12 @@ function Add-OxyStyle {
         "^System\.Collections\.Generic\.IList``1\[\[OxyPlot\.OxyColor" {
           $value = New-Object Collections.Generic.List[OxyPlot.OxyColor]
           foreach ($v in $originalValue) {
-            $v = New-OxyColor $v
-            $value.Add($v)
+            if ($v -is [OxyPlot.OxyColor]) {
+              $value.Add($v)
+            }
+            else {
+              $v = New-OxyColor $v
+            }
           }
         }
         default {

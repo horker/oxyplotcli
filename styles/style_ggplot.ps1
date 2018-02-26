@@ -14,7 +14,7 @@ $config = @{
 
   # Default
   "PlotModel.DefaultFontSize" = $baseSize
-  "PlotModel.DefaultColors" = 'E24A33', '348ABD', '988ED5', '777777', 'FBC15E', '8EBA42', 'FFB5B8'
+  "PlotModel.DefaultColors" = (New-OxyPalette Hue 4).Colors
 
   # PlotArea
   "PlotModel.PlotAreaBackground" = "#E5E5E5"
