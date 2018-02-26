@@ -217,7 +217,7 @@ function New-OxyPalette {
   [cmdletbinding(DefaultParameterSetName="Predefined")]
   param(
     [Parameter(Position=0, Mandatory=$true, ParameterSetName="Predefined")]
-    [ValidateSet("BlackWhiteRed", "BlueWhiteRed", "Cool", "Gray", "Hot", "Hue", "HueDistinct", "Jet", "Raindow")]
+    [ValidateSet("BlackWhiteRed", "BlueWhiteRed", "Cool", "Gray", "Hot", "Hue", "HueDistinct", "Jet", "Rainbow")]
     [string]$Type,
 
     [Parameter(Position=1, Mandatory=$false, ParameterSetName="Predefined")]
