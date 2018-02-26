@@ -218,9 +218,15 @@ namespace WpfWindowCmdlets
 
         protected override void EndProcessing()
         {
+            System.Collections.ObjectModel.Collection<PSObject> results = null;
             Window.Dispatcher.Invoke(() => {
-                InvokeCommand.InvokeScript(false, Action, null);
+                results = InvokeCommand.InvokeScript(false, Action, null);
             });
+
+            foreach (var r in results) {
+                WriteObject(r);
+            }
+
         }
     }
 

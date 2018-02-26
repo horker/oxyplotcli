@@ -81,6 +81,7 @@ FunctionsToExport = @(
   "Get-OxyColorList"
   "New-OxyColor"
   "New-OxyPalette"
+  "Update-OxyPlotModel"
 
   # Style.ps1
   "Add-OxyStyle"
@@ -104,10 +105,6 @@ FunctionsToExport = @(
 
   # DataPoint.ps1
   "New-OxyDataPoint"
-
-  # PlotModel.ps1
-  "New-OxyPlotModel"
-  "Update-OxyPlotModel"
 
   # Axis classes
   "New-OxyAngleAxis"
@@ -137,10 +134,11 @@ FunctionsToExport = @(
   "New-OxyFunctionSeries"
 
   # Show-OxyPlot.ps1
+  "New-OxyPlotModel"
   "Show-OxyPlot"
-
-  # Save-OxyPlot.ps1
   "Save-OxyPlot"
+  "Get-OxyPlotModel"
+  "Update-OxyPlotModel"
 
   # Add-OxyObjectToPlotModel.ps1
   "Add-OxyObjectToPlotModel"

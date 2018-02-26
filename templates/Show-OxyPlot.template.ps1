@@ -209,13 +209,13 @@ end {
       }
     }
 
-    $w.Activate()
+    [void]$w.Activate()
 
     $view = New-Object OxyPlot.Wpf.PlotView
     $view.Model = $PlotModel
 
     $g = New-Object Windows.Controls.Grid
-    $g.Children.Add($view)
+    [void]$g.Children.Add($view)
     $w.Content = $g
   }
 <%   if ($output -match "New-OxyPlotModel") { -%>
@@ -264,4 +264,35 @@ end {
   }
 <% } -%>
 }
+}
+
+function Get-OxyPlotModel {
+  [cmdletbinding(DefaultParameterSetName="Index")]
+  param(
+    [Parameter(ParameterSetName="Index")]
+    [int]$Index = -1,
+    [Parameter(ParameterSetName="Window")]
+    [Windows.Window]$Window
+  )
+
+  if ($PSCmdlet.ParameterSetName -eq "Index") {
+    $Window = Get-OxyWindow $Index
+  }
+
+  Invoke-WpfWindowAction $Window {
+    foreach ($view in $Window.Content.Children) {
+      if ($view -is [OxyPlot.Wpf.PlotView]) {
+        $view.Model
+      }
+    }
+  }
+}
+
+function Update-OxyPlotModel {
+  [cmdletbinding()]
+  param(
+    [OxyPlot.PlotModel]$PlotModel,
+    [switch]$UpdateData = $false
+  )
+  $PlotModel.InvalidatePlot($UpdateData)
 }
