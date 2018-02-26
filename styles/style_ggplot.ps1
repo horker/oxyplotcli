@@ -29,9 +29,9 @@ $config = @{
   "PlotModel.LegendBorder" = "gray"
   "PlotModel.LegendBorderThickness" = "1px"
 
-  "PlotModel.LegendTitleFontSize" = $baseSize * 0.9
+  "PlotModel.LegendTitleFontSize" = $baseSize
   "PlotModel.LegendTitleFontWeight" = "800px"
-  "PlotModel.LegendFontSize" = $baseSize * 0.9
+  "PlotModel.LegendFontSize" = $baseSize
   "PlotModel.LegendLineSpacing" = $baseLineSize
 
   # Axis: Tick
