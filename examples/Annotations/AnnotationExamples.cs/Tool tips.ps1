@@ -1,5 +1,5 @@
 $model = New-OxyPlotModel -Title "Tool tips" `
-  -Axis (New-OxyLinearAxis -Position Bottom),
+  -Axes (New-OxyLinearAxis -Position Bottom),
         (New-OxyLinearAxis -Position Left)
 
 $anno1 = New-OxyLineAnnotation -Slope 0.1 -Intercept 1 -Text "LineAnnotation" -ToolTip "This is a tool tip for the LineAnnotation"

@@ -1,7 +1,7 @@
 $model = New-OxyPlotModel `
   -Title "Test #2" `
   -RenderingDecorator { param($rc) New-Object OxyPlot.XkcdRenderingDecorator($rc) } `
-  -Axis (New-OxyLinearAxis -Position Left -Minimum 0 -Maximum 8 -Title "INTENSITY"),
+  -Axes (New-OxyLinearAxis -Position Left -Minimum 0 -Maximum 8 -Title "INTENSITY"),
         (New-OxyLinearAxis -Position Bottom -Title "TIME")
 
 $s1 = New-OxyLineSeries -Color Cyan -StrokeThickness 4

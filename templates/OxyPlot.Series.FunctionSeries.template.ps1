@@ -75,6 +75,7 @@ function New-OxyFunctionSeries {
     YAxisTitle = "y"
     XDataType = [double]
     YDataType = [double]
+    GroupName = $null
   }
 
   $series = $series | Add-Member -PassThru NoteProperty _Info $info

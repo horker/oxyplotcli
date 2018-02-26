@@ -1,8 +1,5 @@
-old/
 OxyPlotCli/
 lib/
-source/
-private/
 
 .vs/
 bin/
@@ -10,4 +7,8 @@ obj/
 packages/
 *.user
 
+old/
+source/
+private/
+temp/
 temp.*
