@@ -1,6 +1,8 @@
 # ggplot2 default gray style
 # https://github.com/tidyverse/ggplot2/blob/master/R/theme-defaults.r
 
+Set-StrictMode -Version 3
+
 $baseSize = 11.0
 $baseLineSize = $baseSize / 22
 $baseRectSize = $baseSize / 22
@@ -37,14 +39,18 @@ $config = @{
   "*Axis.MinorGridlineThickness" = "1px"
 
   # Axis: Title
-  "*Axis.TitleFontSize" = $baseSize
+  "*Axis.TitleFontSize" = $baseSize * 1.2
   "*Axis.TitleColor" = "#4D4D4D"
+  "*Axis.AxisTitleDistance" = $baseSize * 2
 
-  # Series
+  # *Series
   "*Series.StrokeThickness" = "1px"
-  "*Series.Color" = "#348ABD"
-  "*Series.MarkerType" = "Diamond"
-  "*Series.MarkerSize" = "3px"
+  "*Series.StrokeColor" = "Automatic"
+  "*Series.FillColor" = "Automatic"
+
+  # Scatter*Series
+  "Scatter*Series.MarkerType" = "Diamond"
+  "Scatter*Series.MarkerSize" = "3px"
 
 }
 
