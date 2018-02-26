@@ -26,18 +26,23 @@ function Add-OxyObjectToPlotModel {
   param(
     [object]$Object,
     [OxyPlot.PlotModel]$PlotModel,
-    [string]$Style = "default"
+    [string]$Style = "default",
+    [switch]$NoRefresh
   )
 
   if ($Object -is [OxyPlot.Axes.Axis]) {
     $PlotModel.Axes.Add($Object)
-    $PlotModel.InvalidatePlot($false)
+    if (!$NoRefresh) {
+      $PlotModel.InvalidatePlot($false)
+    }
     return
   }
 
   if ($Object -is [OxyPlot.Annotations.Annotation]) {
     $PlotModel.Annotations.Add($Object)
-    $PlotModel.InvalidatePlot($false)
+    if (!$NoRefresh) {
+      $PlotModel.InvalidatePlot($false)
+    }
     return
   }
 
@@ -150,5 +155,8 @@ function Add-OxyObjectToPlotModel {
   }
 
   $PlotModel.Series.Add($Object)
-  $PlotModel.InvalidatePlot($true)
+
+  if (!$NoRefresh) {
+    $PlotModel.InvalidatePlot($true)
+  }
 }

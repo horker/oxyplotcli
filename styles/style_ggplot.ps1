@@ -12,12 +12,27 @@ $config = @{
 
   "unit" = "pt"
 
+  # Default
   "PlotModel.DefaultFontSize" = $baseSize
   "PlotModel.DefaultColors" = 'E24A33', '348ABD', '988ED5', '777777', 'FBC15E', '8EBA42', 'FFB5B8'
+
+  # PlotArea
   "PlotModel.PlotAreaBackground" = "#E5E5E5"
+  "PlotModel.PlotAreaBorderThickness" = 0
   "PlotModel.TitleFontSize" = $baseSize * 1.2
   "PlotModel.SubtitleFontSize" = $baseSize * 0.9
-  "PlotModel.PlotAreaBorderThickness" = 0
+
+  # Legend
+  "PlotModel.LegendPosition" = "RightMiddle"
+  "PlotModel.LegendPlacement" = "Outside"
+
+  "PlotModel.LegendBorder" = "gray"
+  "PlotModel.LegendBorderThickness" = "1px"
+
+  "PlotModel.LegendTitleFontSize" = $baseSize * 0.9
+  "PlotModel.LegendTitleFontWeight" = "800px"
+  "PlotModel.LegendFontSize" = $baseSize * 0.9
+  "PlotModel.LegendLineSpacing" = $baseLineSize
 
   # Axis: Tick
   "*Axis.TickStyle" = "Outside"

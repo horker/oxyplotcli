@@ -64,6 +64,13 @@ process {
 }
 
 end {
+  foreach ($s in $PlotModel.Series) {
+    if ($s.IsVisible -and $s.PSObject.Properties.Name -Contains "_Info") {
+      $PlotModel.LegendTitle = $s._Info.GroupName
+      break
+    }
+  }
+
   Apply-OxyStyle $PlotModel $Style $MyInvocation
 
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.PlotModel" -Indent 2 -VariableName PlotModel -OptionHashName Options -%>
