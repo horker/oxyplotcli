@@ -52,9 +52,10 @@ begin {
     return
   }
 
+  $modelCreated = $false
   if ($PlotModel -eq $null) {
     $PlotModel = New-Object OxyPlot.PlotModel
-    Apply-OxyStyle $PlotModel $Style $MyInvocation
+    $modelCreated = $true
   }
 }
 
@@ -70,6 +71,10 @@ end {
       $PlotModel.LegendTitle = $s._Info.GroupName
       break
     }
+  }
+
+  if ($modelCreated) {
+    Apply-OxyStyle $PlotModel $Style $MyInvocation
   }
 
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.PlotModel" -Indent 2 -VariableName PlotModel -OptionHashName Options -%>
