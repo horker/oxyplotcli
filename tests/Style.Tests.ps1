@@ -39,7 +39,7 @@ Describe "Add-OxyStyle" {
 
   It "can specify default units" {
     Add-OxyStyle TestStyle @{
-      "unit" = "pt"
+      "[Unit]" = "pt"
       "ColumnSeries.FontSize" = 10
     }
 

@@ -199,6 +199,8 @@ end {
   }
 
 <% } -%>
+  Apply-OxyStyleEvent $PlotModel $Style "BeforeRendering" $MyInvocation
+
 <% if ($output -match "Show-OxyPlot|New-OxyPlotModel") { -%>
   $windowOptions = @{
     Title = $MyInvocation.Line

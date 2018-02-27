@@ -156,6 +156,8 @@ function Add-OxyObjectToPlotModel {
 
   $PlotModel.Series.Add($Object)
 
+  Apply-OxyStyleEvent $PlotModel $Style "BeforeRendering" $MyInvocation
+
   if (!$NoRefresh) {
     $PlotModel.InvalidatePlot($true)
   }

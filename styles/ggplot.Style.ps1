@@ -10,16 +10,12 @@ $halfLine = $baseSize / 2
 
 $config = @{
 
-  "unit" = "pt"
+  "[Unit]" = "pt"
 
   # Default
   "PlotModel.DefaultFontSize" = $baseSize
 
-  "PlotModel.*" = {
-    param($m)
-    $n = [Math]::Max(3, $m.Series.Count)
-    $m.DefaultColors = Get-OxyHuePalette -N $n
-  }
+  "PlotModel.DefaultColors" = @()
 
   # PlotArea
   "PlotModel.PlotAreaBackground" = "#E5E5E5"
@@ -71,6 +67,18 @@ $config = @{
   # Scatter*Series
   "Scatter*Series.MarkerType" = "Diamond"
   "Scatter*Series.MarkerSize" = "3px"
+
+  # Event hook
+  "[BeforeRendering]" = {
+    param($m)
+    $n = $m.Series.Count
+    if ($n -le 1) {
+      $m.DefaultColors = [OxyPlot.OxyColor[]]@(New-OxyColor black)
+    }
+    else {
+      $m.DefaultColors = Get-OxyHuePalette -N $n
+    }
+  }
 
 }
 

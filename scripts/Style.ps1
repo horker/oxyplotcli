@@ -53,8 +53,9 @@ function Add-OxyStyle {
 
   $result = @{}
 
-  if ($Config.Contains("unit")) {
-    $unit = $Config["unit"]
+  # Must read first
+  if ($Config.Contains("[Unit]")) {
+    $unit = $Config["[Unit]"]
     if ($unit -notmatch "^(px|in|cm|pt)$") {
       Write-Error "Unknown unit: '$unit'"
       return
@@ -63,7 +64,8 @@ function Add-OxyStyle {
 
   foreach ($filter in $Config.Keys) {
 
-    if ($filter -eq "unit") {
+    if ($filter -match "^\[") {
+      $result[$filter] = $Config[$filter]
       continue
     }
 
@@ -179,12 +181,35 @@ function Apply-OxyStyle {
 
   foreach ($p in $config.Keys) {
     if ($p -eq "*") {
-      $config["*"].Invoke($Object, $InvocationInfo)
+      [void]$config["*"].Invoke($Object, $InvocationInfo)
     }
     else {
       $Object.$p = $config[$p]
     }
   }
+}
+
+function Apply-OxyStyleEvent {
+  param(
+    [OxyPlot.PlotModel]$PlotModel,
+    [string]$StyleName,
+    [string]$EventName,
+    [Management.Automation.InvocationInfo]$InvocationInfo
+  )
+
+  $style = $Styles[$StyleName]
+  if ($style -eq $null) {
+    Write-Error "Unknown style: $StyleName"
+    return
+  }
+
+  [scriptblock]$script = $style["[$EventName]"]
+  if ($script -eq $null) {
+    Write-Error "Unknown event: $EventName"
+    return
+  }
+
+  [void]$script.Invoke($PlotModel, $InvocationInfo)
 }
 
 function Set-OxyDefaultStyle {
