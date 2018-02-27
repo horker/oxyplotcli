@@ -54,6 +54,7 @@ begin {
 
   if ($PlotModel -eq $null) {
     $PlotModel = New-Object OxyPlot.PlotModel
+    Apply-OxyStyle $PlotModel $Style $MyInvocation
   }
 }
 
@@ -70,8 +71,6 @@ end {
       break
     }
   }
-
-  Apply-OxyStyle $PlotModel $Style $MyInvocation
 
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.PlotModel" -Indent 2 -VariableName PlotModel -OptionHashName Options -%>
 
