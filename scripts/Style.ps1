@@ -152,6 +152,11 @@ function Get-OxyStyle {
     [string]$StyleName
   )
 
+  if (!(Test-OxyStyleName $StyleName)) {
+    Write-Error "Unknown style: $StyleName"
+    return
+  }
+
   $Styles[$StyleName]
 }
 
@@ -175,17 +180,20 @@ function Apply-OxyStyle {
   }
 
   $config = $style[$Object.GetType().FullName]
-  if ($null -eq $config) {
-    return
+
+  if ($null -ne $config) {
+    foreach ($p in $config.Keys) {
+      if ($p -eq "*") {
+        [void]$config["*"].Invoke($Object, $InvocationInfo)
+      }
+      else {
+        $Object.$p = $config[$p]
+      }
+    }
   }
 
-  foreach ($p in $config.Keys) {
-    if ($p -eq "*") {
-      [void]$config["*"].Invoke($Object, $InvocationInfo)
-    }
-    else {
-      $Object.$p = $config[$p]
-    }
+  if ($StyleName -ne "local" -and $Styles.ContainsKey("local")) {
+    Apply-OxyStyle $Object "local" $InvocationInfo
   }
 }
 

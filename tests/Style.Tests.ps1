@@ -50,7 +50,7 @@ Describe "Add-OxyStyle" {
 
 }
 
-Describe "Add-OxyStyle" {
+Describe "Apply-OxyStyle" {
 
   It "can apply a style to an object" {
     Add-OxyStyle TestStyle @{
@@ -65,6 +65,20 @@ Describe "Add-OxyStyle" {
 
     $s3 = New-OxyBarSeries -Style TestStyle
     $s3.FontSize | Should -Not -Be 100.0
+  }
+
+}
+
+Describe "Local style" {
+
+  It "can be applied every time" {
+    Add-OxyStyle local @{
+      "PlotModel.DefaultFont" = "Times New Roman"
+    }
+
+    $m = New-OxyPlotModel -Style empty
+
+    $m.DefaultFont | Should -Be "Times New Roman"
   }
 
 }
