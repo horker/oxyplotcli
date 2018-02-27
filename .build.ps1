@@ -34,6 +34,9 @@ task Build {
 
 task LocalImport {
   Import-Module .\OxyPlotCli -Force
+
+  # for testing purpose
+  Set-OxyDefaultStyle ggplot
 }
 
 task Install {

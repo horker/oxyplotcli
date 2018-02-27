@@ -21,11 +21,17 @@ function Get-OxyHuePalette {
     $HTo -= 360.0 / $N
   }
 
+  # To be able to assign directly to PlotModel.DefaultColors,
+  # return as List[OxyPlot.OxyColor]
+  $result = New-Object Collections.Generic.List[OxyPlot.OxyColor]
+
   for ($i = 0; $i -lt $N; ++$i) {
     $h0 = $HFrom + ($HTo - $HFrom) / ($N-1) * $i * $Direction
     $h = ($h0 + $HStart) % 360
     $rgb = [OxyPlotCliHelpers.ColorConverter]::ConvertHclToRgb($h, $C, $L)
     $rgb.Fixup()
-    $rgb.ToString()
+    $result.Add($rgb.ToString())
   }
+
+  , $result
 }

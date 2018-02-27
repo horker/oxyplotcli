@@ -86,32 +86,42 @@ function Add-OxyStyle {
 
     foreach ($t in $filteredTypes) {
 
-      $prop = $t.GetProperties() | where { $_.Name -eq $filterProp }
-      if ($null -eq $prop -or !$prop.CanWrite) {
-        continue
+      if ($filterProp -eq "*") {
+        if ($originalValue -isnot [scriptblock]) {
+          Write-Error "Filter $filter's property is wildcard, but no scriptblock is specified"
+          return
+        }
+        $value = $originalValue
+        ++$matchCount
       }
-
-      Write-Verbose "$filter=$originalValue (class: $($t.FullName))"
-      ++$matchCount
-
-      switch -regex ($prop.PropertyType.FullName) {
-        "^System\.Double$" {
-          $value = Get-LogicalPoint $originalValue $unit
+      else {
+        $prop = $t.GetProperties() | where { $_.Name -eq $filterProp }
+        if ($null -eq $prop -or !$prop.CanWrite) {
+          continue
         }
-        "^OxyPlot\.OxyColor$" {
-          $value = New-OxyColor $originalValue
-        }
-        "^System\.Collections\.Generic\.IList``1\[\[OxyPlot\.OxyColor" {
-          $value = New-Object Collections.Generic.List[OxyPlot.OxyColor]
-          foreach ($v in $originalValue) {
-            if ($v -isnot [OxyPlot.OxyColor]) {
-              $v = New-OxyColor $v
-            }
-            $value.Add($v)
+
+        Write-Verbose "$filter=$originalValue (class: $($t.FullName))"
+        ++$matchCount
+
+        switch -regex ($prop.PropertyType.FullName) {
+          "^System\.Double$" {
+            $value = Get-LogicalPoint $originalValue $unit
           }
-        }
-        default {
-          $value = $originalValue
+          "^OxyPlot\.OxyColor$" {
+            $value = New-OxyColor $originalValue
+          }
+          "^System\.Collections\.Generic\.IList``1\[\[OxyPlot\.OxyColor" {
+            $value = New-Object Collections.Generic.List[OxyPlot.OxyColor]
+            foreach ($v in $originalValue) {
+              if ($v -isnot [OxyPlot.OxyColor]) {
+                $v = New-OxyColor $v
+              }
+              $value.Add($v)
+            }
+          }
+          default {
+            $value = $originalValue
+          }
         }
       }
 
@@ -154,7 +164,7 @@ function Apply-OxyStyle {
   param(
     [object]$Object,
     [string]$StyleName,
-    [Management.Automation.InvocationInfo]$InvocationInfo # for future use
+    [Management.Automation.InvocationInfo]$InvocationInfo
   )
 
   $style = $Styles[$StyleName]
@@ -168,7 +178,12 @@ function Apply-OxyStyle {
   }
 
   foreach ($p in $config.Keys) {
-    $Object.$p = $config[$p]
+    if ($p -eq "*") {
+      $config["*"].Invoke($Object, $InvocationInfo)
+    }
+    else {
+      $Object.$p = $config[$p]
+    }
   }
 }
 
