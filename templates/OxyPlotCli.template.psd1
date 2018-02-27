@@ -83,6 +83,9 @@ FunctionsToExport = @(
   "New-OxyPalette"
   "Update-OxyPlotModel"
 
+  # Color.ps1
+  "Get-OxyHuePalette"
+
   # Style.ps1
   "Add-OxyStyle"
   "Get-OxyStyle"
