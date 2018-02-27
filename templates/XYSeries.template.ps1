@@ -14,6 +14,7 @@ function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
     [string]$<% $_.Name %>Name,
 <% } -%>
     [string]$GroupName,
+    [string[]]$GroupKeys = @(),
 
     [Parameter(ValueFromPipeline=$true)]
     [object]$InputObject,
@@ -102,16 +103,18 @@ end {
     foreach ($e in $GroupData) {
       $groups[$e] = 1
     }
-    $groups = $groups.Keys | Sort
+    if ($GroupKeys.Count -eq 0) {
+      $groupKeys = $groups.Keys | Sort
+    }
     $grouping = $true
   }
   else {
-    $groups = "dummy"
+    $groupKeys = @("dummy")
     $grouping = $false
   }
 
   $dataCount = $<% $SeriesElement.Element[0].Name %>Data.Count
-  foreach ($group in $groups) {
+  foreach ($group in $groupKeys) {
 
 <% } # if ($SeriesElement -ne $null) -%>
     $series = New-Object <% $ClassName %>
