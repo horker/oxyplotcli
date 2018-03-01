@@ -311,16 +311,20 @@ foreach ($t in $TEMPLATES) {
 ############################################################
 
 $thisFile = "$PSScriptRoot\..\templates\template.build.ps1"
-$helperFile = "$PSScriptRoot\..\tools\Insert-PropertyList.ps1"
+$helperFile1 = "$PSScriptRoot\..\tools\Insert-PropertyList.ps1"
+$helperFile2 = "$PSScriptRoot\..\tools\Insert-Help.ps1"
 $defaultTemplate = "XYSeries.template.ps1"
+
+$Document = [xml](Get-Content -Encoding utf8 $PSScriptRoot\..\lib\OxyPlot.Core.1.0.0\lib\net40\OxyPlot.XML)
 
 foreach ($t in $SERIES_TEMPLATES) {
   $template = $defaultTemplate
   if ($t.PSObject.Properties.Name -Contains "Template") {
     $template = $t.Template
   }
+
   task "build_$($t.ClassName)" `
-    -Inputs ($template -replace "^", "$PSScriptRoot\..\templates\"), $thisFile, $helperFile `
+    -Inputs ($template -replace "^", "$PSScriptRoot\..\templates\"), $thisFile, $helperFile1, $helperFile2 `
     -Outputs ($t.ClassName -replace "(.+)", "$PSScriptRoot\..\OxyPlotCli\`$1.ps1") `
     -Data $t `
     -Jobs {

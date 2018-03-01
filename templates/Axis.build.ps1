@@ -24,11 +24,14 @@ $AXIS_CLASSES = @(
 )
 
 $TEMPLATE = "$PSScriptRoot\Axis.template.ps1"
-$TOOL = "$PSScriptRoot\..\tools\Insert-PropertyList.ps1"
+$TOOL1 = "$PSScriptRoot\..\tools\Insert-PropertyList.ps1"
+$TOOL2 = "$PSScriptRoot\..\tools\Insert-Help.ps1"
+
+$Document = [xml](Get-Content -Encoding utf8 $PSScriptRoot\..\lib\OxyPlot.Core.1.0.0\lib\net40\OxyPlot.XML)
 
 foreach ($c in $AXIS_CLASSES) {
   task "build_$c" `
-    -Inputs $TEMPLATE, $TOOL `
+    -Inputs $TEMPLATE, $TOOL1, $TOOL2 `
     -Outputs ($c -replace "(.+)", "$PSScriptRoot\..\OxyPlotCli\`$1.ps1") `
     -Data $c `
     -Jobs {
