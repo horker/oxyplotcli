@@ -3,11 +3,54 @@ Set-StrictMode -Version 3
 
 <#
 <% ../tools/Insert-Help.ps1 $Document $ClassName %>
+
+<% if ($SeriesElement -ne $null) { -%>
+<% $SeriesElement.Element | foreach { -%>
+.PARAMETER InputObject
+Sets the data set of the object.
+
+.PARAMETER <% $_.Name %>
+Sets the column <% $_.Name %> of the data set.
+
+<% } -%>
+.PARAMETER Group
+Specifies groups to which each element of the data set belongs.
+
+If this parameter is set, the data set are grouped by these values, and multiple series are produced for each group.
+
+<% $SeriesElement.Element | foreach { -%>
+.PARAMETER <% $_.Name %>Name
+Specifies a property name of the input objects to be assigned to the column <% $_.Name %> of the data set.
+
+<% } -%>
+.PARAMETER GroupName
+Specifies a property name of the input objects to be treated as groups.
+
+If this parameter is set, the data set are grouped by the values of this property, and multiple series are produced for each group.
+
+.PARAMETER GroupingKeys
+Specifies effective groups and these order.
+
+This option is useful when you will select groups, or specify the order of the groups shown in the legend.
+
+<% } -%>
+.PARAMETER Options
+Sets properties of the object.
+
+.PARAMETER Style
+Sets a style of the object.
+
+.INPUTS
+You can send any object to the cmdlet as data set.
+
 #>
 function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
   [cmdletbinding()]
   [OutputType([<% $ClassName %>[]])]
   param(
+    [Parameter(ValueFromPipeline=$true)]
+    [object]$InputObject,
+
 <% if ($SeriesElement -ne $null) { -%>
 <% $SeriesElement.Element | foreach { -%>
     [<% $_.Class %>[]]$<% $_.Name %> = @(),
@@ -18,10 +61,7 @@ function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
     [string]$<% $_.Name %>Name,
 <% } -%>
     [string]$GroupName,
-    [string[]]$GroupKeys = @(),
-
-    [Parameter(ValueFromPipeline=$true)]
-    [object]$InputObject,
+    [string[]]$GroupingKeys = @(),
 
 <% } -%>
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName $ClassName -Indent 4 -%>
