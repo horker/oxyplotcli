@@ -7,7 +7,7 @@ Set-StrictMode -Version 3
 <% if ($SeriesElement -ne $null) { -%>
 <% $SeriesElement.Element | foreach { -%>
 .PARAMETER InputObject
-Sets the data set of the object.
+Sets the source of the data set.
 
 .PARAMETER <% $_.Name %>
 Sets the column <% $_.Name %> of the data set.
@@ -16,7 +16,7 @@ Sets the column <% $_.Name %> of the data set.
 .PARAMETER Group
 Specifies groups to which each element of the data set belongs.
 
-If this parameter is set, the data set are grouped by these values, and multiple series are produced for each group.
+If this parameter is set, the data set will be grouped by these values, and multiple series will be produced for each group.
 
 <% $SeriesElement.Element | foreach { -%>
 .PARAMETER <% $_.Name %>Name
@@ -26,7 +26,7 @@ Specifies a property name of the input objects to be assigned to the column <% $
 .PARAMETER GroupName
 Specifies a property name of the input objects to be treated as groups.
 
-If this parameter is set, the data set are grouped by the values of this property, and multiple series are produced for each group.
+If this parameter is set, the data set will be grouped by the values of this property, and multiple series will be produced for each group.
 
 .PARAMETER GroupingKeys
 Specifies effective groups and these order.
@@ -40,13 +40,19 @@ Sets properties of the object.
 .PARAMETER Style
 Sets a style of the object.
 
-.INPUTS
-You can send any object to the cmdlet as data set.
+.PARAMETER AddTo
+Specifies a plot model to which the object will be added.
 
+.INPUTS
+<% if ($SeriesElement -ne $null) { -%>
+You can send any object to the cmdlet as the source of the data set.
+<% } else { -%>
+You cannot pipe input to the cmdlet.
+<% } -%>
 #>
 function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
   [cmdletbinding()]
-  [OutputType([<% $ClassName %>[]])]
+  [OutputType([<% $ClassName %>[]], [void])]
   param(
 <% if ($SeriesElement -ne $null) { -%>
     [Parameter(ValueFromPipeline=$true)]
