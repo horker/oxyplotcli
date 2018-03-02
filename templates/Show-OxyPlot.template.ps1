@@ -36,11 +36,11 @@ function <% $output %> {
 
 <% } -%>
     [string]$AxType,
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.Axes.Axis" -Indent 4 -Prefix "Ax" -%>
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -Properties $AxesProperties -Indent 4 -Prefix "Ax" -%>
     [hashtable]$AxOptions = @{},
 
     [string]$AyType,
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "OxyPlot.Axes.Axis" -Indent 4 -Prefix "Ay" -%>
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -Properties $AxesProperties -Indent 4 -Prefix "Ay" -%>
     [hashtable]$AyOptions = @{},
 
     [string]$Style = "default"
@@ -189,9 +189,9 @@ end {
     $PlotModel.Axes.Add($ay)
   }
 
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.Axes.Axis" -Indent 2 -VariableName ax -OptionHashName AxOptions -Prefix Ax -%>
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -Properties $AxesProperties -Indent 2 -VariableName ax -OptionHashName AxOptions -Prefix Ax -%>
 
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.Axes.Axis" -Indent 2 -VariableName ay -OptionHashName AyOptions -Prefix Ay -%>
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -Properties $AxesProperties -Indent 2 -VariableName ay -OptionHashName AyOptions -Prefix Ay -%>
 
 <% if ($output -match "New-OxyPlotModel") { -%>
   if (!$Show) {

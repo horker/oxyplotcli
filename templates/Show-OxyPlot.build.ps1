@@ -9,6 +9,13 @@ $OUTPUTS = @(
   "New-OxyPlotModel"
 )
 
+$AxesProperties =
+  [OxyPlot.Axes.Axis].Assembly.DefinedTypes |
+  where { $_.Name -match "Axis$" -and !$_.IsAbstract } |
+  foreach { $_.GetProperties() } |
+  where { $_.CanWrite } |
+  Sort Name -Unique
+
 foreach ($output in $OUTPUTS) {
   task "build_$output" `
     -Inputs $TEMPLATE, $TOOL `

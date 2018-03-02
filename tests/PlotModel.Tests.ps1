@@ -17,6 +17,20 @@ Describe "New-OxyPlotModel" {
     $m.Axes[0].Minimum | Should -Be -10
   }
 
+  It "can accept the properties of all types axis classes" {
+    $m = New-OxyPlotModel -AxType LinearColor -AxKey key -AxFractionUnit 3.0 -AxHighColor red
+
+    $m.Axes[0] | Should -BeOfType [OxyPlot.Axes.LinearColorAxis]
+
+    # Defined in OxyPlot.Axes.Axis
+    $m.Axes[0].Key | Should -Be "key"
+
+    # Defined in OxyPlot.Axes.LinearAxis
+    $m.Axes[0].FractionUnit | Should -Be 3.0
+
+    # Defined in OxyPlot.Axes.LinearColorAxis
+    $m.Axes[0].HighColor | Should -Be (New-OxyColor red)
+  }
 }
 
 Describe "Add-OxyObjectToPlotModel" {

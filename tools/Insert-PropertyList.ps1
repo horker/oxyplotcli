@@ -2,6 +2,7 @@
 param(
   [string]$OutputType,
   [string]$ClassName,
+  [Reflection.PropertyInfo[]]$Properties,
   [string]$VariableName,
   [string]$OptionHashName,
   [int]$IndentWidth,
@@ -29,9 +30,11 @@ if ($OutputType -eq "assign") {
 
 ############################################################
 
-$props = (Invoke-Expression "[$ClassName]").Assembly.GetType($ClassName).GetProperties() | where { $_.CanWrite }
+if ($ClassName -ne "") {
+  $Properties = (Invoke-Expression "[$ClassName]").Assembly.GetType($ClassName).GetProperties() | where { $_.CanWrite }
+}
 
-foreach ($p in $props) {
+foreach ($p in $Properties) {
   $name = $p.Name
   $class = [string]$p.PropertyType
 
