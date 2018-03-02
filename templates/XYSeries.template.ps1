@@ -48,10 +48,10 @@ function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
   [cmdletbinding()]
   [OutputType([<% $ClassName %>[]])]
   param(
+<% if ($SeriesElement -ne $null) { -%>
     [Parameter(ValueFromPipeline=$true)]
     [object]$InputObject,
 
-<% if ($SeriesElement -ne $null) { -%>
 <% $SeriesElement.Element | foreach { -%>
     [<% $_.Class %>[]]$<% $_.Name %> = @(),
 <% } -%>
