@@ -6,6 +6,7 @@ Set-StrictMode -Version 3
 #>
 function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
   [cmdletbinding()]
+  [OutputType([<% $ClassName %>[]])]
   param(
 <% if ($SeriesElement -ne $null) { -%>
 <% $SeriesElement.Element | foreach { -%>

@@ -3,6 +3,11 @@ Set-StrictMode -Version 3
 
 function <% $output %> {
   [cmdletbinding(DefaultParameterSetName="PlotModel")]
+<% if ($output -match "New-OxyPlotModel") { -%>
+  [OutputType([OxyPlot.PlotModel], [void])]
+<% } else { -%>
+  [OutputType([void])]
+<% } -%>
   param(
     [Parameter(ParameterSetName="PlotModel", ValueFromPipeline=$true)]
     [OxyPlot.PlotModel]$PlotModel,

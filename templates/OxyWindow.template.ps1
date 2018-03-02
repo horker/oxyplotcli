@@ -2,6 +2,7 @@ Set-StrictMode -Version 3
 
 function New-OxyWindow {
   [cmdletbinding()]
+  [OutputType([Windows.Window])]
   param(
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "System.Windows.Window" -%>
     [Hashtable]$Options = @{}
@@ -16,6 +17,7 @@ function New-OxyWindow {
 
 function Close-OxyWindow {
   [cmdletbinding()]
+  [OutputType([void])]
   param(
     [int]$Index = -1,
     [switch]$All
@@ -34,6 +36,7 @@ function Close-OxyWindow {
 
 function Get-OxyWindow {
   [cmdletbinding()]
+  [OutputType([Windows.Window])]
   param(
     [int]$Index = -1
   )
@@ -59,6 +62,7 @@ function Get-OxyWindow {
 
 function Get-OxyWindowList {
   [cmdletbinding()]
+  [OutputType([Windows.Window[]])]
   param()
 
   Get-WpfWindowList
@@ -68,6 +72,7 @@ function Get-OxyWindowList {
 
 function Add-OxyPlotViewInGrid {
   [cmdletbinding(DefaultParameterSetName="ByDefinition")]
+  [OutputType([OxyPlot.Wpf.PlotView[]])]
   param(
     [Parameter(Position=0)]
     [Windows.Window]$Window,
@@ -141,13 +146,14 @@ function Add-OxyPlotViewInGrid {
 
 function Add-OxyPlotModelToPlotView {
   [cmdletbinding()]
+  [OutputType([void])]
   param(
     [Windows.Window]$Window,
     [OxyPlot.Wpf.PlotView]$PlotView,
     [OxyPlot.PlotModel]$PlotModel
   )
 
-  Invoke-WpfWindowAction $Window {
+  $null = Invoke-WpfWindowAction $Window {
     $PlotView.Model = $PlotModel
   }
 }

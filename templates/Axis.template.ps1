@@ -7,6 +7,7 @@ Set-StrictMode -Version 3
 #>
 function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
  [cmdletbinding()]
+ [OutputType([<% $ClassName %>])]
   param(
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName $ClassName -Indent 4 -%>
 

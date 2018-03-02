@@ -6,6 +6,7 @@ Set-StrictMode -Version 3
 #>
 function New-OxyFunctionSeries {
   [cmdletbinding()]
+  [OutputType([OxyPlot.Series.FunctionSeries])]
   param(
     [Parameter(ParameterSetName="Explicit", Position=0)]
     [scriptblock]$F,
