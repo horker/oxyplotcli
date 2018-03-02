@@ -51,7 +51,6 @@ while ($c) {
 $member = $doc | where { $_.name -eq "T:$ClassName" }
 
 (. {
-  "<#"
   ".SYNOPSIS"
   Get-PlainText $member.summary
   Get-PlainText $member.remarks
@@ -65,6 +64,4 @@ $member = $doc | where { $_.name -eq "T:$ClassName" }
     Get-PlainText $p.remarks
     ""
   }
-
-  "#>"
 }) -join "`r`n"

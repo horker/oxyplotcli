@@ -1,7 +1,10 @@
 <% Set-StrictMode -Version 3 -%>
 Set-StrictMode -Version 3
 
+<#
 <% ../tools/Insert-Help.ps1 $Document $ClassName %>
+.INPUTS
+#>
 function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
  [cmdletbinding()]
   param(
