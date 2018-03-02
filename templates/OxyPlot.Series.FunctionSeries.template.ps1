@@ -1,6 +1,7 @@
 <% Set-StrictMode -Version 3 -%>
 Set-StrictMode -Version 3
 
+<% ../tools/Insert-Help.ps1 $Document OxyPlot.Series.FunctionSeries %>
 function New-OxyFunctionSeries {
   [cmdletbinding()]
   param(
