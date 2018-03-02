@@ -40,6 +40,14 @@ function Get-PlainText {
 
 $doc = $HelpDocument.doc.members.member
 
+$classes = New-Object Collections.Generic.List[string]
+
+$c = Invoke-Expression "[$ClassName]"
+while ($c) {
+  $classes.Add($c.FullName)
+  $c = $c.BaseType
+}
+
 $member = $doc | where { $_.name -eq "T:$ClassName" }
 
 (. {
@@ -49,11 +57,11 @@ $member = $doc | where { $_.name -eq "T:$ClassName" }
   Get-PlainText $member.remarks
   ""
 
-  $props = $doc | where { $_.name -like "P:$ClassName*" }
+  $props = $doc | where { $classes.Contains(($_.name -replace "^.:", "" -replace "\.([^.]+)$")) }
 
   foreach ($p in $props) {
     ".PARAMETER $($p.name -replace "^.+\.", '')"
-    Get-PlainText $p.summary
+    (Get-PlainText $p.summary) -replace "Gets or sets", "Sets"
     Get-PlainText $p.remarks
     ""
   }
