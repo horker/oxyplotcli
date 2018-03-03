@@ -213,7 +213,6 @@ function Apply-OxyStyleEvent {
 
   [scriptblock]$script = $style["[$EventName]"]
   if ($script -eq $null) {
-    Write-Error "Unknown event: $EventName"
     return
   }
 
