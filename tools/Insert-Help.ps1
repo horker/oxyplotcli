@@ -4,41 +4,56 @@ param(
   [string]$ClassName
 )
 
-Set-StrictMode -Off
+Set-StrictMode -Version 3
+
+$links = New-Object Collections.Generic.List[string]
 
 function Get-PlainText {
   param(
-    [object]$MemberElement
+    [xml.XmlElement]$Xml
   )
 
-  if ($null -eq $MemberElement) {
+  if ($null -eq $Xml) {
     return
-  }
-
-  if ($MemberElement -is [string]) {
-    return $MemberElement
   }
 
   $out = New-Object Text.StringBuilder
 
-  foreach ($node in $MemberElement.ChildNodes) {
+  foreach ($node in $Xml.ChildNodes) {
     switch ($node.Name) {
       "#text" {
-        [void]$out.Append($node.InnerText)
+        # Modify descriptions for properties to those for cmdlet parameters
+        $s = $node.InnerText -replace "^\s*Gets or sets ", "Sets "
+
+        # .NET XML component returns multiple lines that end with LF only.
+        $s = $s -replace "`n", "`r`n"
+
+        [void]$out.Append($s)
       }
       "see" {
         [void]$out.Append(($node.cref -replace "^.:", ""))
       }
+      "a" {
+        [void]$out.Append((Get-PlainText $node))
+        [void]$out.Append(" ($($node.href))")
+        $links.Add($node.href)
+      }
       default {
-        [void]$out.Append($node.InnerText)
+        [void]$out.Append((Get-PlainText $node))
       }
     }
+  }
+
+  if ($Xml.Name -eq "summary" -or $Xml.Name -eq "remarks") {
+    [void]$out.Append("`r`n")
   }
 
   $out.ToString()
 }
 
-$doc = $HelpDocument.doc.members.member
+$members = $HelpDocument.doc.members.member
+
+$classDescription = $members | where { $_.name -eq "T:$ClassName" }
 
 $classes = New-Object Collections.Generic.List[string]
 
@@ -48,20 +63,24 @@ while ($c) {
   $c = $c.BaseType
 }
 
-$member = $doc | where { $_.name -eq "T:$ClassName" }
+$props = $members |
+  where { $_.name -match "^P:" -and $_.name -notmatch "#ctor$" } |
+  where { $classes.Contains(($_.name -replace "^.:", "" -replace "\.([^.]+)$")) }
 
 (. {
   ".SYNOPSIS"
-  Get-PlainText $member.summary
-  Get-PlainText $member.remarks
+  Get-PlainText $classDescription
   ""
-
-  $props = $doc | where { $classes.Contains(($_.name -replace "^.:", "" -replace "\.([^.]+)$")) }
 
   foreach ($p in $props) {
     ".PARAMETER $($p.name -replace "^.+\.", '')"
-    (Get-PlainText $p.summary) -replace "Gets or sets", "Sets"
-    Get-PlainText $p.remarks
+    (Get-PlainText $p)
     ""
   }
-}) -join "`r`n"
+
+  foreach ($l in $links) {
+    ".LINK"
+    $l
+    ""
+  }
+}) -join "`r`n" -replace "([ `t]*`r?`n[ `t]*){2,}", "`r`n`r`n" -replace "`n[ `t]+", "`n"
