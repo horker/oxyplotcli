@@ -1,6 +1,60 @@
 <% Set-StrictMode -Version 3 -%>
 Set-StrictMode -Version 3
 
+<#
+<% if ($output -match "New-OxyPlotModel") { -%>
+<% ..\tools\Insert-Help.ps1 $Document OxyPlot.PlotModel -%>
+<% } elseif ($output -match "Show-OxyPlot") { -%>
+.SYNOPSIS
+Shows an OxyPlot chart.
+<% ..\tools\Insert-Help.ps1 $Document OxyPlot.PlotModel -OnlyParameters -%>
+<% } else { -%>
+.SYNOPSIS
+Saves an OxyPlot chart to an image file.
+<% ..\tools\Insert-Help.ps1 $Document OxyPlot.PlotModel -OnlyParameters -%>
+<% } -%>
+
+.PARAMETER PlotModel
+Represents a plot model.
+
+.PARAMETER InputObject
+Represents a set of series objects.
+
+<% if ($output -match "Save-OxyPlot") { -%>
+.PARAMETER OutFile
+Represents a image file to save a chart.
+
+An image type is determined by file extension.
+The file extension can be one of ".svg", ".pdf" or ".png".
+
+.PARAMETER ImageWidth
+Represents an image width.
+
+.PARAMETER ImageHeight
+Represents an image height.
+
+.PARAMETER ImageBackground
+Represents an image backround color.
+
+.PARAMETER IsDocument
+Indicates whether the output document should contain <html> and </html> tags.
+Effective only for SVG files.
+
+<% } elseif ($output -match "New-OxyPlotModel") { -%>
+.PARAMETER Show
+Shows a chart instead of returning a PlotModel object.
+
+.PARAMETER Reuse
+Indicates to reuse the current chart window instead of opening a new one.
+
+<% } else { -%>
+.PARAMETER Reuse
+Indicates to reuse the current chart window instead of opening a new one.
+
+<% } -%>
+<% ..\tools\Insert-Help.ps1 $Document $AxesClassNames -Prefix Ax -OnlyParameters -%>
+<% ..\tools\Insert-Help.ps1 $Document $AxesClassNames -Prefix Ay -OnlyParameters -%>
+#>
 function <% $output %> {
   [cmdletbinding(DefaultParameterSetName="PlotModel")]
 <% if ($output -match "New-OxyPlotModel") { -%>

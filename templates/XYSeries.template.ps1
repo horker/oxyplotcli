@@ -2,8 +2,7 @@
 Set-StrictMode -Version 3
 
 <#
-<% ../tools/Insert-Help.ps1 $Document $ClassName %>
-
+<% ../tools/Insert-Help.ps1 $Document $ClassName -%>
 <% if ($SeriesElement -ne $null) { -%>
 <% $SeriesElement.Element | foreach { -%>
 .PARAMETER InputObject

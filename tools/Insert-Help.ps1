@@ -1,7 +1,9 @@
 [cmdletbinding()]
 param(
   [xml]$HelpDocument,
-  [string]$ClassName
+  [string[]]$ClassName,
+  [string]$Prefix,
+  [switch]$OnlyParameters
 )
 
 Set-StrictMode -Version 3
@@ -38,6 +40,9 @@ function Get-PlainText {
         [void]$out.Append(" ($($node.href))")
         $links.Add($node.href)
       }
+      "value" {
+        # Skip the <value> element because it contains a little valuable information
+      }
       default {
         [void]$out.Append((Get-PlainText $node))
       }
@@ -53,34 +58,45 @@ function Get-PlainText {
 
 $members = $HelpDocument.doc.members.member
 
-$classDescription = $members | where { $_.name -eq "T:$ClassName" }
-
-$classes = New-Object Collections.Generic.List[string]
-
-$c = Invoke-Expression "[$ClassName]"
-while ($c) {
-  $classes.Add($c.FullName)
-  $c = $c.BaseType
+if (!$OnlyParameters) {
+  $classDescription = $members |
+    where { $_.name -match "^T:" -and $ClassName -Contains ($_.name -replace "^.:") }
 }
+
+$h = @{}
+foreach ($cn in $ClassName) {
+  $c = Invoke-Expression "[$cn]"
+  while ($c) {
+    $h[$c.FullName] = 1
+    $c = $c.BaseType
+  }
+}
+$classes = $h.Keys
 
 $props = $members |
   where { $_.name -match "^P:" -and $_.name -notmatch "#ctor$" } |
-  where { $classes.Contains(($_.name -replace "^.:", "" -replace "\.([^.]+)$")) }
+  where { $classes -Contains ($_.name -replace "^.:", "" -replace "\.([^.]+)$") }
 
 (. {
-  ".SYNOPSIS"
-  Get-PlainText $classDescription
-  ""
+  if (!$OnlyParameters) {
+    ".SYNOPSIS"
+    Get-PlainText $classDescription
+    ""
+  }
 
   foreach ($p in $props) {
-    ".PARAMETER $($p.name -replace "^.+\.", '')"
+    ".PARAMETER $Prefix$($p.name -replace "^.+\.", '')"
     (Get-PlainText $p)
     ""
   }
 
-  foreach ($l in $links) {
-    ".LINK"
-    $l
-    ""
+  if (!$OnlyParameters) {
+    foreach ($l in $links) {
+      ".LINK"
+      $l
+      ""
+    }
   }
+
+  ""
 }) -join "`r`n" -replace "([ `t]*`r?`n[ `t]*){2,}", "`r`n`r`n" -replace "`n[ `t]+", "`n"
