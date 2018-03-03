@@ -2,7 +2,44 @@
 Set-StrictMode -Version 3
 
 <#
-<% ../tools/Insert-Help.ps1 $Document OxyPlot.Series.FunctionSeries %>
+<% ../tools/Insert-Help.ps1 $Document OxyPlot.Series.FunctionSeries -%>
+
+<% # copied from the OxyPlot/Series/FunctionSeries.cs -%>
+.PARAMETER F
+The function f(x).
+
+.PARAMETER X0
+The start x value.
+
+.PARAMETER X1
+The end x value.
+
+.PARAMETER  Fx
+The function x(t).
+
+.PARAMETER Fy
+The function y(t).
+
+.PARAMETER T0
+The start t parameter.
+
+.PARAMETER T1
+The end t parameter.
+
+.PARAMETER N
+The number of points.
+
+.PARAMETER Dx
+The increment in x or t.
+
+.PARAMETER Options
+Sets properties of the object.
+
+.PARAMETER Style
+Sets a style of the object.
+
+.PARAMETER AddTo
+Specifies a plot model to which the object will be added.
 #>
 function New-OxyFunctionSeries {
   [cmdletbinding()]
