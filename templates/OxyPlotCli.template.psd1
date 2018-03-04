@@ -15,7 +15,7 @@ RootModule = 'OxyPlotCli.psm1'
 ModuleVersion = '1.0.0'
 
 # Supported PSEditions
-CompatiblePSEditions = @('desktop')
+# CompatiblePSEditions = ''
 
 # ID used to uniquely identify this module
 GUID = '10a77f13-43c9-4a13-b9ba-5215623f5941'
@@ -158,7 +158,7 @@ CmdletsToExport = @(
 )
 
 # Variables to export from this module
-VariablesToExport = '*'
+VariablesToExport = @()
 
 # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
 AliasesToExport = @(

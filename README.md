@@ -4,7 +4,7 @@ OxyPlot CLI is a PowerShell module for using the [OxyPlot](http://www.oxyplot.or
 
 OxyPlot CLI is designed for both interactive usage and complex, sophisticated visualization scripting. It supports all series, axes and annotations of OxyPlot.
 
-OxyPlot CLI offers a concept of 'style'. A style can apply a set of visual properties to the chart at once. Currently, one style named 'ggplot' is provided. You can define your own style.
+OxyPlot CLI provides the 'style' feature. A style can apply a set of visual properties to the chart at once. Currently, one style named 'ggplot' is provided. You can define your own style.
 
 ## Installation
 
