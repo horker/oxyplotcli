@@ -237,6 +237,10 @@ $data | oxyscat -XName Sepal.Width -YName Sepal.Length -GroupName Species | Show
 
 (TBD)
 
+### Direct object manipulation and `Update-OxyPlotModel'
+
+(TBD)
+
 ### Window manipulation
 
 (TBD)
