@@ -73,7 +73,7 @@ OxyPlot CLI provides cmdlets corresponding to series, axis and annotation classe
   - New-OxyRectangleAnnotation (class: OxyPlot.Annotations.RectangleAnnotation)
   - New-OxyTextAnnotation (class: OxyPlot.Annotations.TextAnnotation)
 
-#### Object properties
+#### Object properties to parameters
 
 These cmdlets provide the parameters corresponding to the properties of the corresponding classes. With these parameters, you can set any writable property values of an object instance.
 
