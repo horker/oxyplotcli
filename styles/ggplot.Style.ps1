@@ -10,18 +10,15 @@ $halfLine = $baseSize / 2
 
 $config = @{
 
-  "[Unit]" = "pt"
-
   # Default
-  "PlotModel.DefaultFontSize" = $baseSize
-
+  "PlotModel.DefaultFontSize" = $baseSize, "pt"
   "PlotModel.DefaultColors" = @()
 
   # PlotArea
   "PlotModel.PlotAreaBackground" = "#E5E5E5"
   "PlotModel.PlotAreaBorderThickness" = 0
-  "PlotModel.TitleFontSize" = $baseSize * 1.2
-  "PlotModel.SubtitleFontSize" = $baseSize * 0.9
+  "PlotModel.TitleFontSize" = ($baseSize * 1.2), "pt"
+  "PlotModel.SubtitleFontSize" = ($baseSize * 0.9), "pt"
 
   # Legend
   "PlotModel.LegendPosition" = "RightMiddle"
@@ -30,16 +27,16 @@ $config = @{
   "PlotModel.LegendBorder" = "gray"
   "PlotModel.LegendBorderThickness" = "1px"
 
-  "PlotModel.LegendTitleFontSize" = $baseSize
-  "PlotModel.LegendTitleFontWeight" = "800px"
-  "PlotModel.LegendFontSize" = $baseSize
-  "PlotModel.LegendLineSpacing" = $baseLineSize
+  "PlotModel.LegendTitleFontSize" = $baseSize, "pt"
+  "PlotModel.LegendTitleFontWeight" = 800
+  "PlotModel.LegendFontSize" = $baseSize, "pt"
+  "PlotModel.LegendLineSpacing" = $baseLineSize, "pt"
 
   # Axis: Tick
   "*Axis.TickStyle" = "Outside"
   "*Axis.TicklineColor" = "#4D4D4D"
   "*Axis.TextColor" = "#4D4D4D"
-  "*Axis.FontSize" = $baseSize * 0.8
+  "*Axis.FontSize" = ($baseSize * 0.8), "pt"
 
   # Axis: MinorTick
   "*Axis.MinorTickSize" = 0
@@ -55,18 +52,25 @@ $config = @{
   "*Axis.MinorGridlineThickness" = "1px"
 
   # Axis: Title
-  "*Axis.TitleFontSize" = $baseSize * 1.2
+  "*Axis.TitleFontSize" = ($baseSize * 1.2), "pt"
   "*Axis.TitleColor" = "#4D4D4D"
-  "*Axis.AxisTitleDistance" = $baseSize * 2
+  "*Axis.AxisTitleDistance" = ($baseSize * 2), "pt"
 
   # *Series
   "*Series.StrokeThickness" = "1px"
   "*Series.StrokeColor" = "Automatic"
   "*Series.FillColor" = "Automatic"
+  "*Series.FontSize" = $baseSize, "pt"
 
   # Scatter*Series
   "Scatter*Series.MarkerType" = "Diamond"
   "Scatter*Series.MarkerSize" = "3px"
+
+  # PieSeries
+  "PieSeries.StartAngle" = -90
+  "PieSeries.Diameter" = 0.9
+  "PieSeries.InnerDiameter" = 0.4
+  "PieSeries.AreInsideLabelsAngled" = $true
 
   # Event hook
   "[BeforeRendering]" = {

@@ -17,7 +17,7 @@ function Get-LogicalPoint {
     [string]$Unit
   )
 
-  if ($Value -match "^\s*([\d.]+)\s*([^\d.]+)\s*$") {
+  if ($Value -match "^\s*-?([\d.]+)\s*([^\d.]+)\s*$") {
     $Value = $matches[1]
     $Unit = $matches[2]
   }
@@ -84,6 +84,13 @@ function Add-OxyStyle {
     }
 
     $originalValue = $Config[$filter]
+    if ($originalValue -is [Array] -and
+        $originalValue.Count -eq 2 -and
+        $originalValue[1] -is [string] -and
+        $originalValue[1] -match "^(pt|in|cm|pt)$") {
+      $originalValue = $originalValue[0].ToString() + $originalValue[1].ToString()
+    }
+
     $matchCount = 0
 
     foreach ($t in $filteredTypes) {
