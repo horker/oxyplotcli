@@ -9,13 +9,13 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-# RootModule = 'OxyPlotCli'
+RootModule = 'OxyPlotCli.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.0'
+ModuleVersion = '1.0.0'
 
 # Supported PSEditions
-# CompatiblePSEditions = @()
+CompatiblePSEditions = @('desktop')
 
 # ID used to uniquely identify this module
 GUID = '10a77f13-43c9-4a13-b9ba-5215623f5941'
@@ -27,10 +27,14 @@ Author = 'horker'
 CompanyName = ''
 
 # Copyright statement for this module
-Copyright = '(c) 2017 horker. All rights reserved.'
+Copyright = '(c) 2018 horker. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'A module to use OxyPlot on command line'
+Description = "OxyPlot CLI is a PowerShell module for using the OxyPlot library on commnad line.
+
+OxyPlot CLI is designed for both interactive usage and complex, sophisticated visualization scripting. It supports all series, axes and annotations of OxyPlot.
+
+For more details, see https://github.com/horkerps/oxyplotcli"
 
 # Minimum version of the Windows PowerShell engine required by this module
 # PowerShellVersion = ''
@@ -66,9 +70,7 @@ DotNetFrameworkVersion = '4.0'
 # FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-NestedModules = @(
-  "OxyPlotCli.psm1"
-)
+# NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
@@ -92,13 +94,6 @@ FunctionsToExport = @(
   "Get-OxyStyle"
   "Test-OxyStyleName"
   "Set-OxyDefaultStyle"
-
-  # WpfWindow.ps1
-  "New-WpfWindow"
-  "Invoke-WpfWindowAction"
-  "Test-WpfWindowClosed"
-  "Close-WpfWindow"
-  "Get-WpfWindowList"
 
   # OxyWindow.ps1
   "New-OxyWindow"
@@ -150,7 +145,17 @@ FunctionsToExport = @(
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-CmdletsToExport = '*'
+CmdletsToExport = @(
+  # WpfWindowCmdlets.dll
+  "New-WpfWindow"
+  "Invoke-WpfWindowAction"
+  "Test-WpfWindowClosed"
+  "Close-WpfWindow"
+  "Get-WpfWindowList"
+
+  # OxyPlotCliHelpers.dll
+  "Add-OxyAxisShare"
+)
 
 # Variables to export from this module
 VariablesToExport = '*'
@@ -196,19 +201,27 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        # Tags = @()
+        Tags = @(
+          'OxyPlot', 'cli', 'powershell', 'commnadline', 'command', 'line',
+          'chart', 'plot', 'graphic',
+          'visualization', 'interactive', 'data', 'analysis',
+          'wpf', 'window'
+        )
 
         # A URL to the license for this module.
-        # LicenseUri = ''
+        LicenseUri = 'https://opensource.org/licenses/MIT'
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+        ProjectUri = 'https://github.com/horkerps/oxyplotcli'
 
         # A URL to an icon representing this module.
         # IconUri = ''
 
         # ReleaseNotes of this module
-        # ReleaseNotes = ''
+        ReleaseNotes = @"
+v1.0.0
+First release
+"@
 
     } # End of PSData hashtable
 
