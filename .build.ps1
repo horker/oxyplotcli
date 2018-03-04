@@ -14,6 +14,9 @@ task SetupOxyPlot {
 task Build {
   Copy-Item -Recurse "$PSScriptRoot\scripts\*" "$PSScriptRoot\OxyPlotCli"
 
+  $null = mkdir "$PSScriptRoot\OxyPlotCli\datasets" -force
+  Copy-Item -Recurse "$PSScriptRoot\datasets\*" "$PSScriptRoot\OxyPlotCli\datasets"
+
   $null = mkdir "$PSScriptRoot\OxyPlotCli\styles" -force
   Copy-Item -Recurse "$PSScriptRoot\styles\*" "$PSScriptRoot\OxyPlotCli\styles"
 
