@@ -102,9 +102,8 @@ begin {
 <% } else { -%>
     GroupName = $null
 <% } -%>
-<% if ($SeriesElement -ne $null -and $SeriesElement.Element.Name -Contains "Category") { -%>
     CategoryNames = @()
-<% } -%>
+    CategoryTitle = $null
   }
 
 <% if ($XAxisElement -ne $null) { -%>
@@ -113,6 +112,9 @@ begin {
 <% if ($YAxisElement -ne $null) { -%>
   if ($PSBoundParameters.ContainsKey("<% $YAxisElement.Name %>Name")) { $info.YAxisTitle = $<% $YAxisElement.Name %>Name }
 <% } -%>
+<% if ($SeriesElement -ne $null -and $SeriesElement.Element.Name -Contains "Category") { -%>
+  if ($PSBoundParameters.ContainsKey("CategoryName")) { $info.CategoryTitle = $CategoryName }
+<% } %>
 
 <% if ($SeriesElement -ne $null) { -%>
 <% foreach ($e in $SeriesElement.Element) { -%>

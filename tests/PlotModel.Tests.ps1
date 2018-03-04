@@ -31,6 +31,36 @@ Describe "New-OxyPlotModel" {
     # Defined in OxyPlot.Axes.LinearColorAxis
     $m.Axes[0].HighColor | Should -Be (New-OxyColor red)
   }
+
+  It "can select a category axis for relevant series (X-axis)" {
+    $m = New-OxyErrorColumnSeries | New-OxyPlotModel
+    $m.Axes.Count | Should -Be 2
+    $m.Axes[0] | Should -BeOfType [OxyPlot.Axes.CategoryAxis]
+    $m.Axes[0].Position | Should -Be "Bottom"
+    $m.Axes[1] | Should -BeOfType [OxyPlot.Axes.LinearAxis]
+    $m.Axes[1].Position | Should -Be "Left"
+  }
+
+  It "can select a category axis for relevant series (Y-axis)" {
+    $m = New-OxyBarSeries | New-OxyPlotModel
+    $m.Axes.Count | Should -Be 2
+    $m.Axes[0] | Should -BeOfType [OxyPlot.Axes.LinearAxis]
+    $m.Axes[0].Position | Should -Be "Bottom"
+    $m.Axes[1] | Should -BeOfType [OxyPlot.Axes.CategoryAxis]
+    $m.Axes[1].Position | Should -Be "Left"
+  }
+
+  It "can set the title of the category axis to the column name of the input data (X-axis)" {
+    $data = [PSCustomObject]@{ A = "A"; B = 20 }
+    $m = $data | New-OxyColumnSeries -CategoryName A -ValueName B | New-OxyPlotModel
+    $m.Axes[0].Title | Should -Be "A"
+  }
+
+  It "can set the title of the category axis to the column name of the input data (Y-axis)" {
+    $data = [PSCustomObject]@{ A = "A"; B = 20 }
+    $m = $data | New-OxyTornadoBarSeries -CategoryName A | New-OxyPlotModel
+    $m.Axes[1].Title | Should -Be "A"
+  }
 }
 
 Describe "Add-OxyObjectToPlotModel" {

@@ -173,8 +173,7 @@ end {
   if ($ax -eq $null) {
     foreach ($s in $PlotModel.Series) {
       if ($s.IsVisible -and (Test-AxesRequired $s)) {
-        if ($s -is [OxyPlot.Series.ColumnSeries] -or
-            $s -is [OxyPlot.Series.ErrorColumnSeries]) {
+        if ((Get-RequiredCategoryAxis $s) -eq "x") {
           $ax = New-Object OxyPlot.Axes.CategoryAxis
           if ($s.PSObject.Properties.Name -Contains "_Info") {
             foreach ($n in $s._Info.CategoryNames) {
@@ -199,10 +198,7 @@ end {
   if ($ay -eq $null) {
     foreach ($s in $PlotModel.Series) {
       if ($s.IsVisible -and (Test-AxesRequired $s)) {
-        if ($s -is [OxyPlot.Series.BarSeries] -or
-            $s -is [OxyPlot.Series.IntervalBarSeries] -or
-            $s -is [OxyPlot.Series.LinearBarSeries] -or
-            $s -is [OxyPlot.Series.TornadoBarSeries]) {
+        if ((Get-RequiredCategoryAxis $s) -eq "y") {
           $ay = New-Object OxyPlot.Axes.CategoryAxis
           if ($s.PSObject.Properties.Name -Contains "_Info") {
             foreach ($n in $s._Info.CategoryNames) {
@@ -224,15 +220,29 @@ end {
     }
   }
 
-  foreach ($s in $PlotModel.Series) {
-    if ($s.IsVisible -and $s.PSObject.Properties.Name -Contains "_Info") {
-      if ($axCreated) {
-        $ax.Title = $s._Info.XAxisTitle
+  if ($axCreated -or $ayCreated) {
+    foreach ($s in $PlotModel.Series) {
+      if ($s.IsVisible -and $s.PSObject.Properties.Name -Contains "_Info") {
+        if ($axCreated) {
+          if ((Get-RequiredCategoryAxis $s) -eq "x" -and
+              $null -ne $s._Info.CategoryTitle) {
+            $ax.Title = $s._Info.CategoryTitle
+          }
+          else {
+            $ax.Title = $s._Info.XAxisTitle
+          }
+        }
+        if ($ayCreated) {
+          if ((Get-RequiredCategoryAxis $s) -eq "y" -and
+              $null -ne $s._Info.CategoryTitle) {
+            $ay.Title = $s._Info.CategoryTitle
+          }
+          else {
+            $ay.Title = $s._Info.YAxisTitle
+          }
+        }
+        break
       }
-      if ($ayCreated) {
-        $ay.Title = $s._Info.YAxisTitle
-      }
-      break
     }
   }
 

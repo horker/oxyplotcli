@@ -62,6 +62,27 @@ function Get-AxisByPartialTypeName {
   $null
 }
 
+function Get-RequiredCategoryAxis {
+  param(
+    [OxyPlot.Series.Series]$Series
+  )
+
+  if ($Series -is [OxyPlot.Series.ColumnSeries] -or
+      $Series -is [OxyPlot.Series.ErrorColumnSeries]) {
+    return "x"
+  }
+
+  if ($Series -is [OxyPlot.Series.BarSeries] -or
+      $Series -is [OxyPlot.Series.IntervalBarSeries] -or
+      $Series -is [OxyPlot.Series.LinearBarSeries] -or
+      $Series -is [OxyPlot.Series.TornadoBarSeries]) {
+    return "y"
+  }
+
+  return $null
+}
+
+
 ############################################################
 # PlotModel cmdlets
 

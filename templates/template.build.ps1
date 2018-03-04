@@ -77,8 +77,8 @@ $DATAPOINTS.Pie = @{
 $DATAPOINTS.Bar = @{
   Cmdlet = "Add-OxyBarSeriesPoint"
   Element = @(
-    @{ Name = "Value"; Class = "object"; Axis = "Y" },
-    @{ Name = "CategoryIndex"; Class = "int"; Axis = "X" },
+    @{ Name = "Value"; Class = "object"; Axis = "X" },
+    @{ Name = "CategoryIndex"; Class = "int"; Axis = "Y" },
     @{ Name = "Category"; Class = "string" }
   )
 }
@@ -86,8 +86,8 @@ $DATAPOINTS.Bar = @{
 $DATAPOINTS.Column = @{
   Cmdlet = "Add-OxyColumnSeriesPoint"
   Element = @(
-    @{ Name = "Value"; Class = "object"; Axis = "X" },
-    @{ Name = "CategoryIndex"; Class = "int"; Axis = "Y" }
+    @{ Name = "Value"; Class = "object"; Axis = "Y" },
+    @{ Name = "CategoryIndex"; Class = "int"; Axis = "X" }
     @{ Name = "Category"; Class = "string" }
   )
 }
