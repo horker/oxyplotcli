@@ -226,3 +226,11 @@ function Set-OxyDefaultStyle {
 
   $Styles["default"] = $Styles[$StyleName]
 }
+
+function Remove-OxyStyle {
+  param(
+    [string]$StyleName
+  )
+
+  $styles.Remove($StyleName)
+}

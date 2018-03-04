@@ -71,12 +71,19 @@ $config = @{
   # Event hook
   "[BeforeRendering]" = {
     param($m)
-    $n = $m.Series.Count
-    if ($n -le 1) {
-      $m.DefaultColors = [OxyPlot.OxyColor[]]@(New-OxyColor black)
-    }
-    else {
-      $m.DefaultColors = Get-OxyHuePalette -N $n
+    if ($m.DefaultColors.Count -eq 0 -or $m.Series.Count -gt 0) {
+      $n = $m.Series.Count
+      if ($n -eq 1) {
+        if ($m.Series[0] -is [OxyPlot.Series.PieSeries]) {
+          $m.DefaultColors = Get-OxyHuePalette -N $m.Series[0].Slices.Count
+        }
+        else {
+          $m.DefaultColors = [OxyPlot.OxyColor[]]@(New-OxyColor black)
+        }
+      }
+      else {
+        $m.DefaultColors = Get-OxyHuePalette -N $n
+      }
     }
   }
 
