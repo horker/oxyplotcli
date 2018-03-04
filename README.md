@@ -8,7 +8,7 @@ OxyPlot CLI provides the 'style' feature. A style can apply a set of visual prop
 
 ## Installation
 
-OxyPLot CLI is published in [PowerShell Gallery](https://www.powershellgallery.com).
+OxyPLot CLI is available in [PowerShell Gallery](https://www.powershellgallery.com).
 
 ```PowerShell
 Install-Package oxyplotcli
