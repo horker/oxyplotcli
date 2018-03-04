@@ -16,7 +16,7 @@ In the near future, OxyPLot CLI will be published in [PowerShell Gallery](https:
 
 ### Series, axis and annotation creation cmdlets
 
-OxyPlot CLI provides cmdlets corresponding to series, axis and annotation classes in OxyPlot. By calling one of these cmdlets, you can create an object of the type that the cmdlet name suggests.
+OxyPlot CLI provides cmdlets corresponding to series, axis and annotation classes in OxyPlot. By calling these cmdlets, you can create any object of the type that the cmdlet name suggests.
 
 (TBD: aliases)
 
@@ -75,7 +75,7 @@ OxyPlot CLI provides cmdlets corresponding to series, axis and annotation classe
 
 #### Object properties to parameters
 
-These cmdlets provide the parameters corresponding to the properties of the corresponding classes. With these parameters, you can set any writable property values of an object instance.
+These cmdlets provide the parameters corresponding to the properties of the corresponding classes. With these parameters, you can set any property values of an object instance.
 
 For example, the following script:
 
