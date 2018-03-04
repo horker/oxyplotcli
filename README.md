@@ -10,7 +10,7 @@ OxyPlot CLI offers a concept of 'style'. A style can apply a set of visual prope
 
 (Work In Progress)
 
-In near future, OxyPLot CLI will be published in [PowerShell Gallery](https://www.powershellgallery.com).
+In the near future, OxyPLot CLI will be published in [PowerShell Gallery](https://www.powershellgallery.com).
 
 ## Usage
 
