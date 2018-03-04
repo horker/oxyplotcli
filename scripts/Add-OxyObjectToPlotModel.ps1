@@ -89,6 +89,12 @@ function Add-OxyObjectToPlotModel {
         foreach ($n in $Object._Info.CategoryNames) {
           $ax.Labels.Add($n)
         }
+        if ($null -ne $Object._Info.CategoryTitle) {
+          $ax.Title = $Object._Info.CategoryTitle
+        }
+        else {
+          $ax.Title = $Object._Info.XAxisTitle
+        }
       }
     }
     else {
@@ -98,14 +104,11 @@ function Add-OxyObjectToPlotModel {
       else {
         $ax = New-Object OxyPlot.Axes.LinearAxes
       }
+      $ax.Title = $Object._Info.YAxisTitle
     }
 
     $ax.Position = "Bottom"
     $ax.PositionTier = $axTier
-
-    if ($Object.PSObject.Properties.Name -Contains "_Info") {
-      $ax.Title = $Object._Info.XAxisTitle
-    }
 
     $axisKey = $Object.XAxisKey
     if ($axisKey -eq "" -or $axisKey -eq $null) {
@@ -126,6 +129,12 @@ function Add-OxyObjectToPlotModel {
         foreach ($n in $Object._Info.CategoryNames) {
           $ay.Labels.Add($n)
         }
+        if ($null -ne $Object._Info.CategoryTitle) {
+          $ay.Title = $Object._Info.CategoryTitle
+        }
+        else {
+          $ay.Title = $Object._Info.YAxisTitle
+        }
       }
     }
     else {
@@ -135,13 +144,11 @@ function Add-OxyObjectToPlotModel {
       else {
         $ay = New-Object OxyPlot.Axes.LinearAxes
       }
+      $ay.Title = $Object._Info.YAxisTitle
     }
 
     $ay.Position = "Left"
     $ay.PositionTier = $ayTier
-    if ($Object.PSObject.Properties.Name -Contains "_Info") {
-      $ay.Title = $Object._Info.YAxisTitle
-    }
 
     $axisKey = $Object.YAxisKey
     if ($axisKey -eq "" -or $axisKey -eq $null) {
