@@ -88,7 +88,9 @@ FunctionsToExport = @(
 
   # Style.ps1
   "Add-OxyStyle"
+  "Remove-OxyStyle"
   "Get-OxyStyle"
+  "Test-OxyStyleName"
   "Set-OxyDefaultStyle"
 
   # WpfWindow.ps1

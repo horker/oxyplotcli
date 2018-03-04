@@ -146,6 +146,14 @@ function Add-OxyStyle {
   $Styles[$StyleName] = $result
 }
 
+function Remove-OxyStyle {
+  param(
+    [string]$StyleName
+  )
+
+  $styles.Remove($StyleName)
+}
+
 function Get-OxyStyle {
   [cmdletbinding()]
   param(
@@ -161,6 +169,7 @@ function Get-OxyStyle {
 }
 
 function Test-OxyStyleName {
+  [cmdletbinding()]
   param(
     [string]$StyleName
   )
@@ -225,12 +234,4 @@ function Set-OxyDefaultStyle {
   )
 
   $Styles["default"] = $Styles[$StyleName]
-}
-
-function Remove-OxyStyle {
-  param(
-    [string]$StyleName
-  )
-
-  $styles.Remove($StyleName)
 }
