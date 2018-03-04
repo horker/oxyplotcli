@@ -71,14 +71,25 @@ Describe "Apply-OxyStyle" {
 
 Describe "Local style" {
 
-  It "can be applied every time" {
+  It "will be applied every time" {
+    $local = $null
+    if ((Test-OxyStyleName local)) {
+      $local = Get-OxyStyle local
+    }
+
     Add-OxyStyle local @{
       "PlotModel.DefaultFont" = "Times New Roman"
     }
 
     $m = New-OxyPlotModel -Style empty
-
     $m.DefaultFont | Should -Be "Times New Roman"
+
+    if ($null -ne $local) {
+      Set-OxyStyle local $local
+    }
+    else {
+      Remove-OxyStyle local
+    }
   }
 
 }
