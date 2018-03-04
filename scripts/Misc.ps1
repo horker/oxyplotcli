@@ -114,6 +114,10 @@ function Update-OxyPlotModel {
     [OxyPlot.PlotModel]$PlotModel,
     [switch]$UpdateData = $false
   )
+
+  if ($PlotModel.PSObject.Properties -Contains "_Info") {
+    Apply-OxyStyleEvent $PlotModel $PlotModel._Info.Style BeforeRendering $MyInvocation
+  }
   $PlotModel.InvalidatePlot($UpdateData)
 }
 

@@ -114,6 +114,8 @@ begin {
   $modelCreated = $false
   if ($PlotModel -eq $null) {
     $PlotModel = New-Object OxyPlot.PlotModel
+    $PlotModel = $PlotModel |
+      Add-Member -PassThru NoteProperty _Info ([PSCustomObject]@{ Style = $Style })
     $modelCreated = $true
   }
 }
