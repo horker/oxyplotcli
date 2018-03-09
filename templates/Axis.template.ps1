@@ -19,6 +19,8 @@ function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
 
   $a = New-Object <% $ClassName %>
 
+  Apply-OxyStyle $a $Style $MyInvocation
+
 <% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName $ClassName -Indent 2 -VariableName a -OptionHashName Options -%>
 
   if ($AddTo -ne $null) {

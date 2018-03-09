@@ -52,7 +52,7 @@ Describe "Add-OxyStyle" {
 
 Describe "Apply-OxyStyle" {
 
-  It "can apply a style to an object" {
+  It "can apply a style to a series object" {
     Add-OxyStyle TestStyle @{
       "ColumnSeries.FontSize" = 100.0
     }
@@ -65,6 +65,18 @@ Describe "Apply-OxyStyle" {
 
     $s3 = New-OxyBarSeries -Style TestStyle
     $s3.FontSize | Should -Not -Be 100.0
+  }
+
+  It "can apply a style to an axis object" {
+    Add-OxyStyle TestStyle @{
+      "LinearAxis.Minimum" = -10
+    }
+
+    $a1 = New-OxyLinearAxis -Style TestStyle
+    $a1.Minimum | Should -Be -10
+
+    $a2 = New-OxyLinearAxis
+    $a2.Minimum | Should -Not -Be -10
   }
 
   It "will be overwritten by explicit parameters" {
