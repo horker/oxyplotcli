@@ -67,6 +67,15 @@ Describe "Apply-OxyStyle" {
     $s3.FontSize | Should -Not -Be 100.0
   }
 
+  It "will be overwritten by explicit parameters" {
+    Add-OxyStyle TestStyle @{
+      "ColumnSeries.FontSize" = 100.0
+    }
+
+    $s = New-OxyColumnSeries -Style TestStyle -FontSize 20
+    $s.FontSize | Should -Be 20
+  }
+
 }
 
 Describe "Local style" {

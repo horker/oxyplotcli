@@ -176,8 +176,6 @@ end {
     }
 
 <% } # if ($SeriesElement -ne $null) -%>
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName $ClassName -Indent 4 -VariableName series -OptionHashName Options -%>
-
 <% if ($SeriesElement -ne $null) { -%>
     for ($i = 0; $i -lt $dataCount; ++$i) {
       if ($grouping -and $GroupData[$i] -ne $group) {
@@ -207,6 +205,8 @@ end {
     $series = $series | Add-Member -PassThru NoteProperty _Info $info
 
     Apply-OxyStyle $series $Style $MyInvocation
+
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName $ClassName -Indent 4 -VariableName series -OptionHashName Options -%>
 
     if ($AddTo -ne $null) {
       Add-OxyObjectToPlotModel $series $AddTo -NoRefresh
