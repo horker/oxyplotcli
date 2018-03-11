@@ -126,7 +126,6 @@ begin {
 <% } -%>
   $GroupData = New-Object Collections.Generic.List[string]
 
-  Set-StrictMode -Off
 <% } -%>
 }
 
