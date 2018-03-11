@@ -12,7 +12,7 @@
 RootModule = 'OxyPlotCli.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0.0'
+ModuleVersion = '1.0.1'
 
 # Supported PSEditions
 # CompatiblePSEditions = ''
@@ -30,9 +30,9 @@ CompanyName = ''
 Copyright = '(c) 2018 horker. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = "OxyPlot CLI is a PowerShell module for using the OxyPlot library on commnad line.
+Description = "OxyPlot CLI is a PowerShell module for using OxyPlot on commnad line.
 
-OxyPlot CLI is designed for both interactive usage and complex, sophisticated visualization scripting. It supports all series, axes and annotations of OxyPlot.
+OxyPlot CLI is designed for both interactive usage and elaborate visualization scripting. It supports all series, axes and annotations of OxyPlot.
 
 For more details, see https://github.com/horkerps/oxyplotcli"
 
@@ -205,7 +205,8 @@ PrivateData = @{
           'OxyPlot', 'cli', 'powershell', 'commnadline', 'command', 'line',
           'chart', 'plot', 'graphic',
           'visualization', 'interactive', 'data', 'analysis',
-          'wpf', 'window'
+          'wpf', 'window',
+          'R', 'ggplot', 'matplotlib'
         )
 
         # A URL to the license for this module.
@@ -219,6 +220,9 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @"
+v1.0.1
+Several bug fixes
+
 v1.0.0
 First release
 "@
