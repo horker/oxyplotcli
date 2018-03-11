@@ -12,7 +12,6 @@ $config = @{
 
   # Default
   "PlotModel.DefaultFontSize" = $baseSize, "pt"
-  "PlotModel.DefaultColors" = @()
 
   # PlotArea
   "PlotModel.PlotAreaBackground" = "#E5E5E5"

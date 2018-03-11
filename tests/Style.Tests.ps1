@@ -37,17 +37,6 @@ Describe "Add-OxyStyle" {
     $style["OxyPlot.Series.ColumnSeries"]["FontSize"] | Should -Be (10 * 96)
   }
 
-  It "can specify default units" {
-    Add-OxyStyle TestStyle @{
-      "[Unit]" = "pt"
-      "ColumnSeries.FontSize" = 10
-    }
-
-    $style = Get-OxyStyle TestStyle
-    $dif = [math]::Abs($style["OxyPlot.Series.ColumnSeries"]["FontSize"] - 10.0 * 96 / 72)
-    $dif | Should -BeLessThan 1e-10
-  }
-
 }
 
 Describe "Apply-OxyStyle" {

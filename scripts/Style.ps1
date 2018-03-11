@@ -2,36 +2,6 @@ Set-StrictMode -Version 3
 
 $script:Styles = @{}
 
-function Get-LogicalPoint {
-  param(
-    [string]$Value,
-    [string]$Unit
-  )
-
-  if ($Value -match "^\s*-?([\d.]+)\s*([^\d.]+)\s*$") {
-    $Value = $matches[1]
-    $Unit = $matches[2]
-  }
-
-  if ($Unit -notmatch "^(px|in|cm|pt)$") {
-    Write-Error "Unknown unit: '$Unit'"
-    return
-  }
-
-  switch ($Unit) {
-    "px" { $result = [double]$Value }
-    "in" { $result = [double]$Value * 96.0 }
-    "cm" { $result = [double]$Value * (96.0 / 2.54) }
-    "pt" { $result = [double]$Value * (96.0 / 72) }
-    default {
-      Write-Error "Unknown unit: '$Unit'"
-      return
-    }
-  }
-
-  $result
-}
-
 function Add-OxyStyle {
   [cmdletbinding()]
   param(
@@ -40,18 +10,8 @@ function Add-OxyStyle {
   )
 
   $filteredTypes = New-Object Collections.Generic.List[object]
-  $unit = "px"
 
   $result = @{}
-
-  # Must read first
-  if ($Config.Contains("[Unit]")) {
-    $unit = $Config["[Unit]"]
-    if ($unit -notmatch "^(px|in|cm|pt)$") {
-      Write-Error "Unknown unit: '$unit'"
-      return
-    }
-  }
 
   foreach ($filter in $Config.Keys) {
 
@@ -103,26 +63,7 @@ function Add-OxyStyle {
         Write-Verbose "$filter=$originalValue (class: $($t.FullName))"
         ++$matchCount
 
-        switch -regex ($prop.PropertyType.FullName) {
-          "^System\.Double$" {
-            $value = Get-LogicalPoint $originalValue $unit
-          }
-          "^OxyPlot\.OxyColor$" {
-            $value = New-OxyColor $originalValue
-          }
-          "^System\.Collections\.Generic\.IList``1\[\[OxyPlot\.OxyColor" {
-            $value = New-Object Collections.Generic.List[OxyPlot.OxyColor]
-            foreach ($v in $originalValue) {
-              if ($v -isnot [OxyPlot.OxyColor]) {
-                $v = New-OxyColor $v
-              }
-              $value.Add($v)
-            }
-          }
-          default {
-            $value = $originalValue
-          }
-        }
+        $value = Convert-ParameterValue $prop.PropertyType.FullName $originalValue
       }
 
       if ($result.Contains($t.FullName)) {
