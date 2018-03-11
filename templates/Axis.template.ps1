@@ -3,7 +3,10 @@ Set-StrictMode -Version 3
 
 <#
 <% ../tools/Insert-Help.ps1 $Document $ClassName %>
-.INPUTS
+
+.DESCRIPTION
+This cmdlet creates an <% $ClassName %> object.
+
 #>
 function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
  [cmdletbinding()]

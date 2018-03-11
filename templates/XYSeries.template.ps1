@@ -3,11 +3,15 @@ Set-StrictMode -Version 3
 
 <#
 <% ../tools/Insert-Help.ps1 $Document $ClassName -%>
+
+.DESCRIPTION
+This cmdlet creates an <% $ClassName %> object.
+
 <% if ($SeriesElement -ne $null) { -%>
-<% $SeriesElement.Element | foreach { -%>
 .PARAMETER InputObject
 Sets the source of the data set.
 
+<% $SeriesElement.Element | foreach { -%>
 .PARAMETER <% $_.Name %>
 Sets the column <% $_.Name %> of the data set.
 
