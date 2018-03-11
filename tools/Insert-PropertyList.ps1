@@ -55,10 +55,12 @@ foreach ($p in $Properties) {
       $results.Add("$indent[object]`$$Prefix$name,")
     }
     "System.Collections.Generic.IList*" {
-      $results.Add("$indent[$($class.GenericTypeArguments[0])[]]`$$Prefix$name,")
+      $elementType = Get-GeneralTypeName $class.GenericTypeArguments[0].FullName
+      $results.Add("$indent[$($elementType)[]]`$$Prefix$name,")
     }
     "OxyPlot.ElementCollection*" {
-      $results.Add("$indent[$($class.GenericTypeArguments[0])[]]`$$Prefix$name,")
+      $elementType = Get-GeneralTypeName $class.GenericTypeArguments[0].FullName
+      $results.Add("$indent[$($elementType)[]]`$$Prefix$name,")
     }
     default {
       $results.Add("$indent[$($class.FullName)]`$$Prefix$name,")

@@ -185,13 +185,17 @@ function Assign-Parameter {
 
   foreach($c in $collections) {
     if ($TargetTypeName.StartsWith($c)) {
+      $elementType = $Prop.PropertyType.GenericTypeArguments[0]
       $coll = $Object.$name
       if ($null -eq $coll) {
-        $coll = New-Object "$c[$($t.GenericTypeArguments[0].FullName)]"
+        $coll = New-Object "$c[$($elementType.FullName)]"
         $Object.$name = $coll
       }
+      else {
+        $coll.Clear()
+      }
       foreach ($e in $Value) {
-        [void]$coll.Add($e)
+        [void]$coll.Add((Convert-ParameterValue $elementType.FullName $e))
       }
       return
     }

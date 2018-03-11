@@ -117,3 +117,13 @@ Describe "Data[,] parameter" {
     $s.Data[1,2] | Should -Be 6
   }
 }
+
+Describe "OxyColor collection parameter" {
+
+  It "can accept an array of color name strings" {
+    $m = New-OxyPlotModel -DefaultColors @("red", "blue")
+    $m.DefaultColors.Count | Should -Be 2
+    $m.DefaultColors[0] | Should -Be ([OxyPlot.OxyColors]::Red)
+  }
+
+}
