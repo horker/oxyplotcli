@@ -58,7 +58,7 @@ function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
     [object]$InputObject,
 
 <% $SeriesElement.Element | foreach { -%>
-    [<% $_.Class %>[]]$<% $_.Name %> = @(),
+    [<% Get-GeneralTypeName $_.Class %>[]]$<% $_.Name %> = @(),
 <% } -%>
     [string[]]$Group = @(),
 
@@ -118,7 +118,7 @@ begin {
 
 <% if ($SeriesElement -ne $null) { -%>
 <% foreach ($e in $SeriesElement.Element) { -%>
-  $<% $e.Name %>Data = New-Object Collections.Generic.List[<% $e.Class %>]
+  $<% $e.Name %>Data = New-Object Collections.Generic.List[<% Get-GeneralTypeName $e.Class %>]
 <% } -%>
   $GroupData = New-Object Collections.Generic.List[string]
 
@@ -193,10 +193,10 @@ end {
 
 <% } # if ($SeriesElement -ne $null) -%>
 <% if ($XAxisElement -ne $null) { -%>
-    if ($<% $XAxisElement.Name %>Data.Count -gt 0) { $info.XDataType = $<% $XAxisElement.Name %>Data[0].GetType() }
+    if ($<% $XAxisElement.Name %>Data.Count -gt 0) { $info.XDataType = Get-ValueType $<% $XAxisElement.Name %>Data[0] }
 <% } -%>
 <% if ($YAxisElement -ne $null) { -%>
-    if ($<% $YAxisElement.Name %>Data.Count -gt 0) { $info.YDataType = $<% $YAxisElement.Name %>Data[0].GetType() }
+    if ($<% $YAxisElement.Name %>Data.Count -gt 0) { $info.YDataType = Get-ValueType $<% $YAxisElement.Name %>Data[0] }
 <% } -%>
 <% if ($SeriesElement -ne $null -and $SeriesElement.Element.Name -Contains "Category") { -%>
     $info.CategoryNames = $CategoryData
@@ -206,7 +206,8 @@ end {
 
     Apply-OxyStyle $series $Style $MyInvocation
 
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName $ClassName -Indent 4 -VariableName series -OptionHashName Options -%>
+    $props = $PROPERTY_HASH["<% $ClassName %>"]
+    Assign-ParametersToProperties $props $PSBoundParameters $Options $series
 
     if ($AddTo -ne $null) {
       Add-OxyObjectToPlotModel $series $AddTo -NoRefresh

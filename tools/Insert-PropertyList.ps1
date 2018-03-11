@@ -36,54 +36,32 @@ if ($ClassName -ne "") {
 
 foreach ($p in $Properties) {
   $name = $p.Name
-  $class = [string]$p.PropertyType
+  $class = $p.PropertyType
 
-  switch ($OutputType) {
-    "param" {
-      switch -regex ($class) {
-        "^OxyPlot\.OxyColor$" {
-          $results.Add("$indent$colorValidateAttribute[string]`$$Prefix$name,")
-        }
-        "^OxyPlot\.OxyPalette$" {
-          $results.Add("$indent[object[]]`$$Prefix$name,")
-        }
-        "^OxyPlot\.OxyThickness$" {
-          $results.Add("$indent[double[]]`$$Prefix$name,")
-        }
-        "^OxyPlot\.ElementCollection\[" {
-          $m = ([regex]"^OxyPlot\.ElementCollection\[(.+)\]$").Match($class)
-          $results.Add("$indent[$($m.Groups[1].Value)[]]`$$Prefix$name,")
-        }
-        "^double\[,\]$" {
-          $results.Add("$indent[object]`$$Prefix$name,")
-        }
-        default {
-          $results.Add("$indent[$class]`$$Prefix$name,")
-        }
-      }
+  switch -wildcard ($class.FullName) {
+    "System.Double" {
+      $results.Add("$indent[object]`$$Prefix$name,")
     }
-    "assign" {
-      switch -regex ($class) {
-        "^OxyPlot\.OxyColor$" {
-          $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = New-OxyColor `$$Prefix$name }")
-        }
-        "^OxyPlot\.OxyPalette$" {
-          $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { if (`$$Prefix$name.Length -eq 1) { `$$VariableName.$name = New-OxyPalette `$$Prefix$name[0] } else { `$$VariableName.$name = New-OxyPalette `$$Prefix$name[0] `$$Prefix$name[1] } }")
-        }
-        "^OxyPlot\.OxyThickness$" {
-          $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = New-OxyThickness `$$Prefix$name }")
-        }
-        "^OxyPlot\.ElementCollection\[" {
-          $m = ([regex]"^OxyPlot\.ElementCollection\[.+\.(.+)\]$").Match($class)
-          $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { Add-ToCollection `$$VariableName.$name `$$Prefix$name }")
-        }
-        "^double\[,\]$" {
-          $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = New-OxyTwoDimensionArray `$$Prefix$name }")
-        }
-        default{
-          $results.Add("$($indent)if (`$PSBoundParameters.ContainsKey('$Prefix$name')) { `$$VariableName.$name = `$$Prefix$name }")
-        }
-      }
+    "OxyPlot.OxyColor" {
+      $results.Add("$indent$colorValidateAttribute[string]`$$Prefix$name,")
+    }
+    "OxyPlot.OxyPalette" {
+      $results.Add("$indent[object[]]`$$Prefix$name,")
+    }
+    "OxyPlot.OxyThickness" {
+      $results.Add("$indent[double[]]`$$Prefix$name,")
+    }
+    "System.Double``[,``]" {
+      $results.Add("$indent[object]`$$Prefix$name,")
+    }
+    "System.Collections.Generic.IList*" {
+      $results.Add("$indent[$($class.GenericTypeArguments[0])[]]`$$Prefix$name,")
+    }
+    "OxyPlot.ElementCollection*" {
+      $results.Add("$indent[$($class.GenericTypeArguments[0])[]]`$$Prefix$name,")
+    }
+    default {
+      $results.Add("$indent[$($class.FullName)]`$$Prefix$name,")
     }
   }
 }

@@ -109,8 +109,6 @@ function New-OxyFunctionSeries {
     }
   }
 
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName OxyPlot.Series.FunctionSeries -Indent 2 -VariableName series -OptionHashName Options -%>
-
   $info = [PSCustomObject]@{
     XAxisTitle = "x"
     YAxisTitle = "y"
@@ -122,6 +120,9 @@ function New-OxyFunctionSeries {
   $series = $series | Add-Member -PassThru NoteProperty _Info $info
 
   Apply-OxyStyle $series $Style $MyInvocation
+
+  $props = $PROPERTY_HASH["OxyPlot.Series.FunctionSeries"]
+  Assign-ParametersToProperties $props $PSBoundParameters $Options $series
 
   if ($AddTo -ne $null) {
     Add-OxyObjectToPlotModel $series $AddTo

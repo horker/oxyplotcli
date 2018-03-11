@@ -16,16 +16,16 @@ $DATAPOINTS = @{}
 $DATAPOINTS.Line = @{
   Cmdlet = "Add-OxyLineSeriesPoint"
   Element = @(
-    @{ Name = "X"; Class = "object"; Axis = "X" },
-    @{ Name = "Y"; Class = "object"; Axis = "Y" }
+    @{ Name = "X"; Class = "double"; Axis = "X" },
+    @{ Name = "Y"; Class = "double"; Axis = "Y" }
   )
 }
 
 $DATAPOINTS.Scatter = @{
   Cmdlet = "Add-OxyScatterSeriesPoint"
   Element = @(
-    @{ Name = "X"; Class = "object"; Axis = "X" },
-    @{ Name = "Y"; Class = "object"; Axis = "Y" },
+    @{ Name = "X"; Class = "double"; Axis = "X" },
+    @{ Name = "Y"; Class = "double"; Axis = "Y" },
     @{ Name = "Size"; Class = "double" },
     @{ Name = "Value"; Class = "double" }
   )
@@ -34,10 +34,10 @@ $DATAPOINTS.Scatter = @{
 $DATAPOINTS.ScatterError = @{
   Cmdlet = "Add-OxyScatterErrorSeriesPoint"
   Element = @(
-    @{ Name = "X"; Class = "object"; Axis = "X" },
-    @{ Name = "Y"; Class = "object"; Axis = "Y" },
-    @{ Name = "ErrorX"; Class = "object" },
-    @{ Name = "ErrorY"; Class = "object" },
+    @{ Name = "X"; Class = "double"; Axis = "X" },
+    @{ Name = "Y"; Class = "double"; Axis = "Y" },
+    @{ Name = "ErrorX"; Class = "double" },
+    @{ Name = "ErrorY"; Class = "double" },
     @{ Name = "Size"; Class = "double" },
     @{ Name = "Value"; Class = "double" }
   )
@@ -46,17 +46,17 @@ $DATAPOINTS.ScatterError = @{
 $DATAPOINTS.Area = @{
   Cmdlet = "Add-OxyAreaSeriesPoint"
   Element = @(
-    @{ Name = "X"; Class = "object"; Axis = "X" },
-    @{ Name = "Y"; Class = "object"; Axis = "Y" },
-    @{ Name = "X2"; Class = "object" },
-    @{ Name = "Y2"; Class = "object" }
+    @{ Name = "X"; Class = "double"; Axis = "X" },
+    @{ Name = "Y"; Class = "double"; Axis = "Y" },
+    @{ Name = "X2"; Class = "double" },
+    @{ Name = "Y2"; Class = "double" }
   )
 }
 
 $DATAPOINTS.CandleStick = @{
   Cmdlet = "Add-OxyCandleStickSeriesPoint"
   Element = @(
-    @{ Name = "X"; Class = "object"; Axis = "X" },
+    @{ Name = "X"; Class = "double"; Axis = "X" },
     @{ Name = "High"; Class = "double" },
     @{ Name = "Low"; Class = "double" },
     @{ Name = "Open"; Class = "double" },
@@ -70,14 +70,14 @@ $DATAPOINTS.Pie = @{
     @{ Name = "Label"; Class = "string" },
     @{ Name = "Value"; Class = "double" },
     @{ Name = "Fill"; Class = "string" },
-    @{ Name = "IsExploded"; Class = "object" }
+    @{ Name = "IsExploded"; Class = "bool" }
   )
 }
 
 $DATAPOINTS.Bar = @{
   Cmdlet = "Add-OxyBarSeriesPoint"
   Element = @(
-    @{ Name = "Value"; Class = "object"; Axis = "X" },
+    @{ Name = "Value"; Class = "double"; Axis = "X" },
     @{ Name = "CategoryIndex"; Class = "int"; Axis = "Y" },
     @{ Name = "Category"; Class = "string" }
   )
@@ -86,7 +86,7 @@ $DATAPOINTS.Bar = @{
 $DATAPOINTS.Column = @{
   Cmdlet = "Add-OxyColumnSeriesPoint"
   Element = @(
-    @{ Name = "Value"; Class = "object"; Axis = "Y" },
+    @{ Name = "Value"; Class = "double"; Axis = "Y" },
     @{ Name = "CategoryIndex"; Class = "int"; Axis = "X" }
     @{ Name = "Category"; Class = "string" }
   )
@@ -95,8 +95,8 @@ $DATAPOINTS.Column = @{
 $DATAPOINTS.ErrorColumn = @{
   Cmdlet = "Add-OxyErrorColumnSeriesPoint"
   Element = @(
-    @{ Name = "Value"; Class = "object"; Axis = "X" },
-    @{ Name = "Error"; Class = "object" },
+    @{ Name = "Value"; Class = "double"; Axis = "X" },
+    @{ Name = "Error"; Class = "double" },
     @{ Name = "CategoryIndex"; Class = "int"; Axis = "Y" }
     @{ Name = "Category"; Class = "string" }
   )
@@ -105,8 +105,8 @@ $DATAPOINTS.ErrorColumn = @{
 $DATAPOINTS.IntervalBar = @{
   Cmdlet = "Add-OxyIntervalBarSeriesPoint"
   Element = @(
-    @{ Name = "Start"; Class = "object" },
-    @{ Name = "End"; Class = "object" },
+    @{ Name = "Start"; Class = "double" },
+    @{ Name = "End"; Class = "double" },
     @{ Name = "BarTitle"; Class = "string" }, # renamed from Title to avoid conflict against the Series.InternalBarSeries property
     @{ Name = "Category"; Class = "string" }
   )
@@ -115,10 +115,10 @@ $DATAPOINTS.IntervalBar = @{
 $DATAPOINTS.RectangleBar = @{
   Cmdlet = "Add-OxyRectangleBarSeriesPoint"
   Element = @(
-    @{ Name = "X0"; Class = "object"; Axis = "X" },
-    @{ Name = "Y0"; Class = "object"; Axis = "Y" },
-    @{ Name = "X1"; Class = "object" },
-    @{ Name = "Y1"; Class = "object" },
+    @{ Name = "X0"; Class = "double"; Axis = "X" },
+    @{ Name = "Y0"; Class = "double"; Axis = "Y" },
+    @{ Name = "X1"; Class = "double" },
+    @{ Name = "Y1"; Class = "double" },
     @{ Name = "Category"; Class = "string" }
   )
 }
@@ -126,9 +126,9 @@ $DATAPOINTS.RectangleBar = @{
 $DATAPOINTS.TornadoBar = @{
   Cmdlet = "Add-OxyTornadoBarSeriesPoint"
   Element = @(
-    @{ Name = "Minimum"; Class = "object"; Axis = "X" },
-    @{ Name = "Maximum"; Class = "object" },
-    @{ Name = "BarBaseValue"; Class = "object" }, # renamed from BaseValue to avoid conflict against the Series.TornadoBarSeries property
+    @{ Name = "Minimum"; Class = "double"; Axis = "X" },
+    @{ Name = "Maximum"; Class = "double" },
+    @{ Name = "BarBaseValue"; Class = "double" }, # renamed from BaseValue to avoid conflict against the Series.TornadoBarSeries property
     @{ Name = "MinimumColor"; Class = "string" },
     @{ Name = "MaximumColor"; Class = "string" },
     @{ Name = "Category"; Class = "string" }
@@ -138,7 +138,7 @@ $DATAPOINTS.TornadoBar = @{
 $DATAPOINTS.CandleStickAndVolume = @{
   Cmdlet = "Add-OxyCandleStickAndVolumeSeriesPoint"
   Element = @(
-    @{ Name = "X"; Class = "object"; Axis = "X" },
+    @{ Name = "X"; Class = "double"; Axis = "X" },
     @{ Name = "Open"; Class = "double" },
     @{ Name = "High"; Class = "double" },
     @{ Name = "Low"; Class = "double" },
@@ -151,7 +151,7 @@ $DATAPOINTS.CandleStickAndVolume = @{
 $DATAPOINTS.BoxPlot = @{
   Cmdlet = "Add-OxyBoxPlotSeriesPoint"
   Element = @(
-    @{ Name = "X"; Class = "object"; Axis = "X" },
+    @{ Name = "X"; Class = "double"; Axis = "X" },
     @{ Name = "LowerWhisker"; Class = "double" },
     @{ Name = "BoxBottom"; Class = "double" },
     @{ Name = "Median"; Class = "double"; Axis = "Y" },

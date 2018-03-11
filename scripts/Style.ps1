@@ -1,14 +1,5 @@
 Set-StrictMode -Version 3
 
-$script:TYPES = [OxyPlot.PlotModel].Assembly.DefinedTypes |
-  where { $_.IsPublic -and !$_.IsAbstract -and $_.FullName -match "(PlotModel|Series|Axis|Annotation)$" } |
-  sort FullName
-
-$script:TYPE_HASH = @{}
-foreach ($t in $TYPES) {
-  $TYPE_HASH[$t.FullName -replace "^OxyPlot\.((Series|Axes|Annotations)\.)?", ""] = $t
-}
-
 $script:Styles = @{}
 
 function Get-LogicalPoint {

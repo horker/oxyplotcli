@@ -21,7 +21,8 @@ function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
 
   Apply-OxyStyle $a $Style $MyInvocation
 
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName $ClassName -Indent 2 -VariableName a -OptionHashName Options -%>
+  $props = $PROPERTY_HASH["<% $ClassName %>"]
+  Assign-ParametersToProperties $props $PSBoundParameters $Options $a
 
   if ($AddTo -ne $null) {
 <% if ($ClassName -match "Axis$") { -%>

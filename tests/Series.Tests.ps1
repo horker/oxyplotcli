@@ -45,101 +45,6 @@ Describe "New-OxyLineSeries and data points" {
   }
 }
 
-Describe "New-OxyHeapMapSeries" {
-
-  It "can create a HeatMapSeries object" {
-    $s = New-OxyHeatMapSeries -X0 1.0 -X1 2.0 -Y0 3.0 -Y1 4.0
-    $s | Should -BeOfType [OxyPlot.Series.HeatMapSeries]
-    $s.X0 | Should -Be 1.0
-    $s.Y1 | Should -Be 4.0
-  }
-
-  It "can accept a two-dimension array as data points" {
-    $data = New-Object "double[,]" 1, 2
-    $data[0, 0] = 0.0
-    $data[0, 1] = 0.1
-    $s = New-OxyHeatMapSeries -Data $data
-    $s.Data | Should -Be $data
-  }
-
-  It "can accept a jagged array as data points" {
-    $data = @(1, 2), @(3, 4), @(5, 6)
-    $s = New-OxyHeatMapSeries -Data $data
-    $s.Data.Rank | Should -Be 2
-    $s.Data.GetLength(0) | Should -Be 2
-    $s.Data.GetLength(1) | Should -Be 3
-    $s.Data[0,0] | Should -Be 1
-    $s.Data[1,1] | Should -Be 4
-    $s.Data[1,2] | Should -Be 6
-  }
-}
-
-Describe "OxyColor parameter" {
-
-  It "accepts a color name" {
-    $s = New-OxyLineSeries -X $dataA -Y $dataB -Color white
-    $s.Color | Should -Be ([OxyPlot.OxyColor]::Parse("#ffffff"))
-
-    $s = New-OxyLineSeries -X $dataA -Y $dataB -Color transparent
-    $s.Color | Should -Be ([OxyPlot.OxyColor]::Parse("#00ffffff"))
-
-    $s = New-OxyLineSeries -X $dataA -Y $dataB -Color RED
-    $s.Color | Should -Be ([OxyPlot.OxyColor]::Parse("#ff0000"))
-  }
-
-  It "accepts in a hexadecimal style" {
-    $s = New-OxyLineSeries -X $dataA -Y $dataB -Color "#8090a0"
-    $s.Color | Should -Be ([OxyPlot.OxyColor]::Parse("#8090a0"))
-
-    $s = New-OxyLineSeries -X $dataA -Y $dataB -Color 8090a0
-    $s.Color | Should -Be ([OxyPlot.OxyColor]::Parse("#8090a0"))
-  }
-
-  It "raises an error for invalid parameter" {
-    { $s = New-OxyLineSeries -X $dataA -Y $dataB -Color xxxx } | Should -Throw "Cannot validate"
-  }
-}
-
-Describe "OxyPalette parameter" {
-
-  It "accepts a type" {
-    $a = New-OxyLinearColorAxis -Palette hue
-    $a.Palette | Should -BeOfType [OxyPlot.OxyPalette]
-    $a.Palette.Colors.Count | Should -Be 100
-  }
-
-  It "accepts a type and the number of colors" {
-    $a = New-OxyLinearColorAxis -Palette "hot", 500
-    $a.Palette | Should -BeOfType [OxyPlot.OxyPalette]
-    $a.Palette.Colors.Count | Should -Be 500
-  }
-}
-
-Describe "OxyThickness parameter" {
-
-  It "accepts one value of thickness" {
-    $p = New-OxyPlotModel -PlotMargins 0.1
-    $p.PlotMargins | Should -BeOfType [OxyPlot.OxyThickness]
-    $p.PlotMargins | Should -Be (New-Object OxyPlot.OxyThickness 0.1)
-  }
-
-  It "accepts two values of thickness" {
-    $p = New-OxyPlotModel -PlotMargins 0.1, 0.2
-    $p.PlotMargins | Should -BeOfType [OxyPlot.OxyThickness]
-    $p.PlotMargins | Should -Be (New-Object OxyPlot.OxyThickness 0.1, 0.2, 0.1, 0.2)
-  }
-
-  It "doesn't accept three values of thickness" {
-    { New-OxyPlotModel -PlotMargins 0.1, 0.2, 0.3 } | Should -Throw "Illegal thickness"
-  }
-
-  It "accepts four values of thickness" {
-    $p = New-OxyPlotModel -PlotMargins 0.1, 0.2, 0.3, 0.4
-    $p.PlotMargins | Should -BeOfType [OxyPlot.OxyThickness]
-    $p.PlotMargins | Should -Be (New-Object OxyPlot.OxyThickness 0.1, 0.2, 0.3, 0.4)
-  }
-}
-
 Describe "series creation cmdlets" {
 
   It "can create a AreaSeries object" {
@@ -241,6 +146,13 @@ Describe "series creation cmdlets" {
     $s.Points[0] | Should -Be (New-OxyDataPoint 1.5 -1.5)
     $s.Points[1] | Should -Be (New-OxyDataPoint 2.0 -1.0)
     $s.Points[2] | Should -Be (New-OxyDataPoint 2.5 -0.5)
+  }
+
+  It "can create a HeatMapSeries object" {
+    $s = New-OxyHeatMapSeries -X0 1.0 -X1 2.0 -Y0 3.0 -Y1 4.0
+    $s | Should -BeOfType [OxyPlot.Series.HeatMapSeries]
+    $s.X0 | Should -Be 1.0
+    $s.Y1 | Should -Be 4.0
   }
 
   It "can create a HighLowSeries object" {

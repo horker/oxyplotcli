@@ -90,7 +90,7 @@ function <% $output %> {
     [hashtable]$Options = @{},
 
 <% if ($output -match "Show-OxyPlot|New-OxyPlotModel") { -%>
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "System.Windows.Window" -Indent 2 -VariableName w -OptionHashName WOptions -Prefix W -%>
+<% ..\tools\Insert-PropertyList.ps1 -OutputType "param" -ClassName "System.Windows.Window" -Indent 4 -VariableName w -OptionHashName WOptions -Prefix W -%>
     [hashtable]$WOptions = @{},
 
 <% } -%>
@@ -138,7 +138,8 @@ end {
     Apply-OxyStyle $PlotModel $Style $MyInvocation
   }
 
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "OxyPlot.PlotModel" -Indent 2 -VariableName PlotModel -OptionHashName Options -%>
+  $props = $PROPERTY_HASH["OxyPlot.PlotModel"]
+  Assign-ParametersToProperties $props $PSBoundParameters $Options $PlotModel
 
   $ax = $null
   $ay = $null
@@ -260,9 +261,9 @@ end {
     $PlotModel.Axes.Add($ay)
   }
 
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -Properties $AxesProperties -Indent 2 -VariableName ax -OptionHashName AxOptions -Prefix Ax -%>
-
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -Properties $AxesProperties -Indent 2 -VariableName ay -OptionHashName AyOptions -Prefix Ay -%>
+  $props = $AXES_PROPERTY_HASH
+  Assign-ParametersToProperties $props $PSBoundParameters $AxOptions $ax Ax
+  Assign-ParametersToProperties $props $PSBoundParameters $AyOptions $ay Ay
 
 <% if ($output -match "New-OxyPlotModel") { -%>
   if (!$Show) {
@@ -277,7 +278,8 @@ end {
     Title = $MyInvocation.Line
   }
 
-  <% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "System.Windows.Window" -Indent 4 -VariableName windowOptions -OptionHashName WOptions -Prefix W -%>
+  $props = $PROPERTY_HASH["System.Windows.Window"]
+  Assign-ParametersToProperties $props $PSBoundParameters $WOptions $windowOptions
 
   if ($Reuse) {
     $w = Get-OxyWindow

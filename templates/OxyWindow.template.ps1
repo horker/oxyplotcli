@@ -10,7 +10,8 @@ function New-OxyWindow {
 
   $OptionHash = @{ Title = "OxyPlot CLI" }
 
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "System.Windows.Window" -VariableName "OptionHash" -OptionHashName "Options" -%>
+  $props = $PROPERTY_HASH["System.Windows.Window"]
+  Assign-ParametersToProperties $props $PSBoundParameters $Options $OptionHash
 
   New-WpfWindow -Options $OptionHash
 }
@@ -91,7 +92,8 @@ function Add-OxyPlotViewInGrid {
   )
 
   $OptionHash = @{}
-<% ..\tools\Insert-PropertyList.ps1 -OutputType "assign" -ClassName "System.Windows.Controls.Grid" -VariableName "OptionHash" -OptionHashName "Options" -Indent 2 -%>
+  $props = $PROPERTY_HASH["System.Windows.Controls.Grid"]
+  Assign-ParametersToProperties $props $PSBoundParameters $Options $OptionHash
 
   if ($PSCmdlet.ParameterSetName -eq "ByCount") {
     $ColumnDefinition = (1..$Columns) | foreach { "*" }

@@ -5,13 +5,13 @@ Set-StrictMode -Version 3
 
 function Get-AxisObject {
   param(
-    [Reflection.TypeInfo]$DataType
+    [string]$DataType
   )
 
-  if ($DataType -eq [DateTime]) {
+  if ($DataType -eq "System.DateTime") {
     $type = "OxyPlot.Axes.DateTimeAxis"
   }
-  elseif ($DataType -is [TimeSpan]) {
+  elseif ($DataType -eq "System.TimeSpan") {
     $type = "OxyPlot.Axes.TimeSpanAxis"
   }
   else {
