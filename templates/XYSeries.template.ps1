@@ -157,18 +157,18 @@ end {
     foreach ($e in $GroupData) {
       $groups[$e] = 1
     }
-    if ($GroupKeys.Count -eq 0) {
-      $groupKeys = $groups.Keys | Sort
+    if ($GroupingKeys.Count -eq 0) {
+      $GroupingKeys = $groups.Keys | Sort
     }
     $grouping = $true
   }
   else {
-    $groupKeys = @("dummy")
+    $GroupingKeys = @("dummy")
     $grouping = $false
   }
 
   $dataCount = $<% $SeriesElement.Element[0].Name %>Data.Count
-  foreach ($group in $groupKeys) {
+  foreach ($group in $GroupingKeys) {
 
 <% } # if ($SeriesElement -ne $null) -%>
     $series = New-Object <% $ClassName %>
@@ -180,6 +180,7 @@ end {
 
 <% } # if ($SeriesElement -ne $null) -%>
 <% if ($SeriesElement -ne $null) { -%>
+    $catCount = 0;
     for ($i = 0; $i -lt $dataCount; ++$i) {
       if ($grouping -and $GroupData[$i] -ne $group) {
         continue
@@ -188,10 +189,11 @@ end {
 <%   if ($e.Name -ne "CategoryIndex") { -%>
       if ($i -lt $<% $e.Name %>Data.Count) { $<% $e.Name %>Element = $<% $e.Name %>Data[$i] } else { $<% $e.Name %>Element = $null }
 <%   } else { -%>
-      if ($i -lt $CategoryIndexData.Count) { $CategoryIndexElement = $CategoryIndexData[$i] } else { $CategoryIndexElement = $i }
+      if ($i -lt $CategoryIndexData.Count) { $CategoryIndexElement = $CategoryIndexData[$i] } else { $CategoryIndexElement = $catCount }
 <%   } -%>
 <% } -%>
       <% $SeriesElement.Cmdlet %> $series<% $SeriesElement.Element | where { $_.Name -ne "Category" } | foreach { %> $<% $_.Name %>Element<% } %>
+      ++$catCount
     }
 
 <% } # if ($SeriesElement -ne $null) -%>
@@ -202,7 +204,15 @@ end {
     if ($<% $YAxisElement.Name %>Data.Count -gt 0) { $info.YDataType = Get-ValueType $<% $YAxisElement.Name %>Data[0] }
 <% } -%>
 <% if ($SeriesElement -ne $null -and $SeriesElement.Element.Name -Contains "Category") { -%>
-    $info.CategoryNames = $CategoryData
+
+    if ($grouping) {
+      $info.CategoryNames = New-Object Collections.Generic.List[string]
+      for ($i = 0; $i -lt $dataCount; ++$i) {
+        if ($GroupData[$i] -eq $GroupingKeys[0]) {
+          $info.CategoryNames.Add($CategoryData[$i])
+        }
+      }
+    }
 <% } -%>
 
     $series = $series | Add-Member -PassThru NoteProperty _Info $info
