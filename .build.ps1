@@ -12,6 +12,11 @@ task SetupOxyPlot {
 }
 
 task Build {
+
+  Add-Type -Path "$PSScriptRoot\OxyPlotCli\lib\OxyPlot.dll"
+  Add-Type -Path "$PSScriptRoot\OxyPlotCli\lib\OxyPlot.Wpf.dll"
+  . "$PSScriptRoot\scripts\Parameter.ps1"
+
   Copy-Item -Recurse "$PSScriptRoot\scripts\*" "$PSScriptRoot\OxyPlotCli"
 
   $null = mkdir "$PSScriptRoot\OxyPlotCli\datasets" -force
