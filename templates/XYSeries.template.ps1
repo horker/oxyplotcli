@@ -213,6 +213,9 @@ end {
         }
       }
     }
+    else {
+      $info.CategoryNames = $CategoryData
+    }
 <% } -%>
 
     $series = $series | Add-Member -PassThru NoteProperty _Info $info
