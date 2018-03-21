@@ -314,7 +314,8 @@ function Add-OxyBoxPlotSeriesPoint {
     [object]$BoxBottom,
     [object]$Median,
     [object]$BoxTop,
-    [object]$UpperWhistker
+    [object]$UpperWhistker,
+    [object[]]$Outlier
   )
 
   $X = Convert-ParameterValue double $X
@@ -325,5 +326,13 @@ function Add-OxyBoxPlotSeriesPoint {
   $UpperWhistker = Convert-ParameterValue double $UpperWhistker
 
   $p = New-Object OxyPlot.Series.BoxPlotItem $X, $LowerWhisker, $BoxBottom, $Median, $BoxTop, $UpperWhistker
+
+  if ($null -ne $Outlier -and $Outlier.Count -gt 0) {
+    $Outlier = $Outlier | foreach {
+      Convert-ParameterValue double $_
+    }
+    $p.Outliers.AddRange([double[]]$Outlier)
+  }
+
   $series.Items.Add($p)
 }

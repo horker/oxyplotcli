@@ -68,7 +68,8 @@ function Get-RequiredCategoryAxis {
   )
 
   if ($Series -is [OxyPlot.Series.ColumnSeries] -or
-      $Series -is [OxyPlot.Series.ErrorColumnSeries]) {
+      $Series -is [OxyPlot.Series.ErrorColumnSeries] -or
+      $Series -is [OxyPlot.Series.BoxPlotSeries]) {
     return "x"
   }
 

@@ -31,29 +31,32 @@ $config = @{
   "PlotModel.LegendFontSize" = $baseSize, "pt"
   "PlotModel.LegendLineSpacing" = $baseLineSize, "pt"
 
-  # Axis: Tick
+  # *Axis: Tick
   "*Axis.TickStyle" = "Outside"
   "*Axis.TicklineColor" = "#4D4D4D"
   "*Axis.TextColor" = "#4D4D4D"
   "*Axis.FontSize" = ($baseSize * 0.8), "pt"
 
-  # Axis: MinorTick
+  # *Axis: MinorTick
   "*Axis.MinorTickSize" = 0
 
-  # Axis: MajorGridline
+  # *Axis: MajorGridline
   "*Axis.MajorGridlineStyle" = "Solid"
   "*Axis.MajorGridlineColor" = "White"
   "*Axis.MajorGridlineThickness" = "1px"
 
-  # Axis: MinorGridline
+  # *Axis: MinorGridline
   "*Axis.MinorGridlineStyle" = "Solid"
   "*Axis.MinorGridlineColor" = "#F0F0F0"
   "*Axis.MinorGridlineThickness" = "1px"
 
-  # Axis: Title
+  # *Axis: Title
   "*Axis.TitleFontSize" = ($baseSize * 1.2), "pt"
   "*Axis.TitleColor" = "#4D4D4D"
   "*Axis.AxisTitleDistance" = ($baseSize * 2), "pt"
+
+  # CategoryAxis: FontSize
+  "CategoryAxis.FontSize" = $baseSize, "pt"
 
   # *Series
   "*Series.StrokeThickness" = "1px"
@@ -64,6 +67,12 @@ $config = @{
   # Scatter*Series
   "Scatter*Series.MarkerType" = "Diamond"
   "Scatter*Series.MarkerSize" = "3px"
+
+  # BoxPlotSeries
+  "BoxPlotSeries.Fill" = "White"
+  "BoxPlotSeries.StrokeThickNess" = "2pt"
+  "BoxPlotSeries.WhiskerWidth" = 0
+  "BoxPlotSeries.OutlierSize" = "3pt"
 
   # PieSeries
   "PieSeries.StartAngle" = -90

@@ -167,7 +167,7 @@ end {
     $grouping = $false
   }
 
-  $dataCount = $<% $SeriesElement.Element[0].Name %>Data.Count
+  $dataCount = (<% ($SeriesElement.Element.Name -replace "(.+)", '$$$1Data.Count') -join ", " %> | Measure -Maximum).Maximum
   foreach ($group in $GroupingKeys) {
 
 <% } # if ($SeriesElement -ne $null) -%>
@@ -186,10 +186,12 @@ end {
         continue
       }
 <% foreach ($e in $SeriesElement.Element) { -%>
-<%   if ($e.Name -ne "CategoryIndex") { -%>
-      if ($i -lt $<% $e.Name %>Data.Count) { $<% $e.Name %>Element = $<% $e.Name %>Data[$i] } else { $<% $e.Name %>Element = $null }
-<%   } else { -%>
+<%   if ($e.Name -eq "CategoryIndex") { -%>
       if ($i -lt $CategoryIndexData.Count) { $CategoryIndexElement = $CategoryIndexData[$i] } else { $CategoryIndexElement = $catCount }
+<%   } elseif ($e.Name -eq "X" -and $ClassName -match "BoxPlotSeries") { -%>
+      if ($i -lt $XData.Count) { $XElement = $XData[$i] } else { $XElement = $catCount }
+<%   } else { -%>
+      if ($i -lt $<% $e.Name %>Data.Count) { $<% $e.Name %>Element = $<% $e.Name %>Data[$i] } else { $<% $e.Name %>Element = $null }
 <%   } -%>
 <% } -%>
       <% $SeriesElement.Cmdlet %> $series<% $SeriesElement.Element | where { $_.Name -ne "Category" } | foreach { %> $<% $_.Name %>Element<% } %>

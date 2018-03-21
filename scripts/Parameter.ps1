@@ -3,6 +3,7 @@ Set-StrictMode -Version 3
 $TypeMapping = @{
   "System.Double" = "object"
   "double" = "object"
+  "double[]" = "object[]"
   "OxyPlot.OxyColor" = "string"
   "OxyPlot.OxyPalette" = "object[]"
   "OxyPlot.OxyThickness" = "double[]"
