@@ -74,7 +74,6 @@ function Get-RequiredCategoryAxis {
 
   if ($Series -is [OxyPlot.Series.BarSeries] -or
       $Series -is [OxyPlot.Series.IntervalBarSeries] -or
-      $Series -is [OxyPlot.Series.LinearBarSeries] -or
       $Series -is [OxyPlot.Series.TornadoBarSeries]) {
     return "y"
   }
