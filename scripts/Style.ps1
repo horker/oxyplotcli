@@ -11,12 +11,13 @@ function Add-OxyStyle {
 
   $filteredTypes = New-Object Collections.Generic.List[object]
 
-  $result = @{}
+  $general = @{}
+  $specific = @{}
 
   foreach ($filter in $Config.Keys) {
 
     if ($filter -match "^\[") {
-      $result[$filter] = $Config[$filter]
+      $general[$filter] = $Config[$filter]
       continue
     }
 
@@ -66,11 +67,22 @@ function Add-OxyStyle {
         $value = Convert-ParameterValue $prop.PropertyType.FullName $originalValue
       }
 
-      if ($result.Contains($t.FullName)) {
-        $result[$t.Fullname][$filterProp] = $value
+      $isGeneral = $filterType -match "[*?]"
+      if ($isGeneral) {
+        if ($general.Contains($t.FullName)) {
+          $general[$t.Fullname][$filterProp] = $value
+        }
+        else {
+          $general[$t.FullName] = @{ $filterProp = $value }
+        }
       }
       else {
-        $result[$t.FullName] = @{ $filterProp = $value }
+        if ($specific.Contains($t.FullName)) {
+          $specific[$t.Fullname][$filterProp] = $value
+        }
+        else {
+          $specific[$t.FullName] = @{ $filterProp = $value }
+        }
       }
 
     }
@@ -82,7 +94,20 @@ function Add-OxyStyle {
 
   }
 
-  $Styles[$StyleName] = $result
+  foreach ($type in $specific.Keys) {
+    if ($specific[$type] -is [Collections.IDictionary]) {
+      foreach ($prop in $specific[$type].Keys) {
+        if ($general.Contains($type)) {
+          $general[$type][$prop] = $specific[$type][$prop]
+        }
+        else {
+          $general[$type] = @{ $prop = $specific[$type][$prop] }
+        }
+      }
+    }
+  }
+
+  $Styles[$StyleName] = $general
 }
 
 function Remove-OxyStyle {

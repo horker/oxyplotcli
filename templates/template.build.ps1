@@ -156,7 +156,9 @@ $DATAPOINTS.BoxPlot = @{
     @{ Name = "BoxBottom"; Class = "double" },
     @{ Name = "Median"; Class = "double"; Axis = "Y" },
     @{ Name = "BoxTop"; Class = "double" },
-    @{ Name = "UpperWhisker"; Class = "double" }
+    @{ Name = "UpperWhisker"; Class = "double" },
+    @{ Name = "Outlier"; Class = "double[]" },
+    @{ Name = "Category"; Class = "string" }
   )
 }
 

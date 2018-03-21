@@ -68,7 +68,8 @@ Describe "series creation cmdlets" {
       -BoxBottom 21,22,23,24,25,36 `
       -Median 31,32,33,34,35,36 `
       -BoxTop 41,42,43,44,45,46 `
-      -UpperWhisker 51,52,53,54,55,56
+      -UpperWhisker 51,52,53,54,55,56 `
+      -Outlier @(@(1,2,3), @(4,5,6,7), @(8,9,10,11,12))
     $s | Should -BeOfType [OxyPlot.Series.BoxPlotSeries]
     $s.Items[0].X | Should -Be 1
     $s.Items[1].LowerWhisker | Should -Be 12
@@ -76,6 +77,8 @@ Describe "series creation cmdlets" {
     $s.Items[3].Median | Should -Be 34
     $s.Items[4].BoxTop | Should -Be 45
     $s.Items[5].UpperWhisker | Should -Be 56
+    $s.Items[0].Outliers.Count | Should -Be 3
+    $s.Items[0].Outliers[2] | Should -Be 3
   }
 
   It "can create a CandleStickAndVolumeSeries object" {

@@ -37,6 +37,15 @@ Describe "Add-OxyStyle" {
     $style["OxyPlot.Series.ColumnSeries"]["FontSize"] | Should -Be (10 * 96)
   }
 
+  It "can override a specific definition over a general definition" {
+    Add-OxyStyle TestStyle @{
+      "*Series.FontSize" = 10
+      "ColumnSeries.FontSize" = 20
+    }
+
+    $style = Get-OxyStyle TestStyle
+    $style["OxyPlot.Series.ColumnSeries"]["FontSize"] | Should -Be 20
+  }
 }
 
 Describe "Apply-OxyStyle" {

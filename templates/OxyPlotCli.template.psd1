@@ -12,7 +12,7 @@
 RootModule = 'OxyPlotCli.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0.3'
+ModuleVersion = '1.0.4'
 
 # Supported PSEditions
 # CompatiblePSEditions = ''
@@ -222,6 +222,9 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @"
+v1.0.4
+Several bug fixes
+
 v1.0.3
 Bug fix: grouping
 

@@ -68,7 +68,8 @@ function Get-RequiredCategoryAxis {
   )
 
   if ($Series -is [OxyPlot.Series.ColumnSeries] -or
-      $Series -is [OxyPlot.Series.ErrorColumnSeries]) {
+      $Series -is [OxyPlot.Series.ErrorColumnSeries] -or
+      $Series -is [OxyPlot.Series.BoxPlotSeries]) {
     return "x"
   }
 
@@ -249,19 +250,19 @@ function New-OxyTwoDimensionArray {
     return
   }
 
-  $length1 = $Data[0].Length
-  $length2 = $Data.Length
+  $length1 = $Data.Length
+  $length2 = $Data[0].Length
 
   $result = New-Object "double[,]" $length1, $length2
 
-  for ($i = 0; $i -lt $length2; ++$i) {
-    $row = [double[]]$Data[$i]
-    if ($row -isnot [double[]]) {
+  for ($i = 0; $i -lt $length1; ++$i) {
+    $column = [double[]]$Data[$i]
+    if ($column -isnot [double[]]) {
       Write-Error "Not two-dimension array nor jagged array"
       return
     }
-    for ($j = 0; $j -lt $row.Length; ++$j) {
-      $result[$j, $i] = $row[$j]
+    for ($j = 0; $j -lt $column.Length; ++$j) {
+      $result[$i, $j] = $column[$j]
     }
   }
 

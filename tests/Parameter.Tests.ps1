@@ -110,11 +110,11 @@ Describe "Data[,] parameter" {
     $data = @(1, 2), @(3, 4), @(5, 6)
     $s = New-OxyHeatMapSeries -Data $data
     $s.Data.Rank | Should -Be 2
-    $s.Data.GetLength(0) | Should -Be 2
-    $s.Data.GetLength(1) | Should -Be 3
+    $s.Data.GetLength(0) | Should -Be 3
+    $s.Data.GetLength(1) | Should -Be 2
     $s.Data[0,0] | Should -Be 1
     $s.Data[1,1] | Should -Be 4
-    $s.Data[1,2] | Should -Be 6
+    $s.Data[2,1] | Should -Be 6
   }
 }
 
