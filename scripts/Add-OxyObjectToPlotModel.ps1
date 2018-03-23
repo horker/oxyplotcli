@@ -161,6 +161,18 @@ function Add-OxyObjectToPlotModel {
     $PlotModel.Axes.Add($ay)
   }
 
+  if ($Object -is [OxyPlot.Series.HeatMapSeries] -and $null -eq $Object.ColorAxis -and $null -eq $Object.ColorAxisKey) {
+    $colorAxis = New-Object OxyPlot.Axes.LinearColorAxis
+    $colorAxis.Position = "Right"
+
+    $axisKey = [Guid]::NewGuid().ToString()
+    $colorAxis.Key = $axisKey
+    $Object.ColorAxisKey = $axisKey
+
+    Apply-OxyStyle $colorAxis $Style $MyInvocation
+    $PlotModel.Axes.Add($colorAxis)
+  }
+
   $PlotModel.Series.Add($Object)
 
   Apply-OxyStyleEvent $PlotModel $Style "BeforeRendering" $MyInvocation

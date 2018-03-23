@@ -265,6 +265,20 @@ end {
   Assign-ParametersToProperties $props $PSBoundParameters $AxOptions $ax Ax
   Assign-ParametersToProperties $props $PSBoundParameters $AyOptions $ay Ay
 
+  foreach ($s in $PlotModel.Series) {
+    if ($s.IsVisible -and $s -is [OxyPlot.Series.HeatMapSeries] -and $null -eq $s.ColorAxis -and $null -eq $s.ColorAxisKey) {
+      $colorAxis = New-Object OxyPlot.Axes.LinearColorAxis
+      $colorAxis.Position = "Right"
+
+      $axisKey = [Guid]::NewGuid().ToString()
+      $colorAxis.Key = $axisKey
+      $s.ColorAxisKey = $axisKey
+
+      Apply-OxyStyle $colorAxis $Style $MyInvocation
+      $PlotModel.Axes.Add($colorAxis)
+    }
+  }
+
 <% if ($output -match "New-OxyPlotModel") { -%>
   if (!$Show) {
     return $PlotModel
