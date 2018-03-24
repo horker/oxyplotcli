@@ -134,7 +134,12 @@ function Convert-ParameterValue {
 
   }
 
-  ,$Value
+  if ($Value -is [Collections.IEnumerable]) {
+    ,$Value
+  }
+  else {
+    $Value
+  }
 }
 
 function Get-ValueType {
