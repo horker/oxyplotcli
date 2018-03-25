@@ -12,6 +12,7 @@ param(
 Set-StrictMode -version 3
 
 . $PSScriptRoot\..\scripts\Misc.ps1
+. $PSScriptRoot\..\scripts\Parameter.ps1
 
 $colorNames = Get-OxyColorList
 

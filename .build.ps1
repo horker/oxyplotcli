@@ -45,8 +45,6 @@ task Load {
   Add-Type -Path $OXYPLOT_CORE_FILE
   Add-Type -Path $OXYPLOT_WPF_FILE
   Add-Type -Path $OXYPLOTCLI_FILE
-
-  . "$PSScriptRoot\scripts\Parameter.ps1"
 }
 
 task Build {

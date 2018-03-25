@@ -62,7 +62,7 @@ function New-Oxy<% $ClassName -replace "^([^.]+\.)*", "" %> {
     [object]$InputObject,
 
 <% $SeriesElement.Element | foreach { -%>
-    [<% Get-GeneralTypeName $_.Class %>[]]$<% $_.Name %> = @(),
+    [<% ..\tools\Get-GeneralTypeName.ps1 $_.Class %>[]]$<% $_.Name %> = @(),
 <% } -%>
     [string[]]$Group = @(),
 
@@ -122,7 +122,7 @@ begin {
 
 <% if ($SeriesElement -ne $null) { -%>
 <% foreach ($e in $SeriesElement.Element) { -%>
-  $<% $e.Name %>Data = New-Object Collections.Generic.List[<% Get-GeneralTypeName $e.Class %>]
+  $<% $e.Name %>Data = New-Object Collections.Generic.List[<% ..\tools\Get-GeneralTypeName.ps1 $e.Class %>]
 <% } -%>
   $GroupData = New-Object Collections.Generic.List[string]
 
