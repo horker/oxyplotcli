@@ -171,6 +171,13 @@ $DATAPOINTS.BoxPlotRaw = @{
   )
 }
 
+$DATAPOINTS.Histogram = @{
+  Cmdlet = "Add-OxyHistogramSeriesRawPoint"
+  Element = @(
+    @{ Name = "Value"; Class = "double"; Axis = "X" }
+  )
+}
+
 ([string[]]$DATAPOINTS.Keys) | foreach {
   $value = [PsCustomObject]$DATAPOINTS.$_
   $value.Element = @($value.Element | foreach { [PSCustomObject]$_ })
@@ -304,6 +311,11 @@ $SERIES_TEMPLATES = @(
   @{
     ClassName = "OxyPlot.Series.VolumeSeries"
     SeriesElement = $DATAPOINTS.CandleStickAndVolume
+  }
+
+  @{
+    ClassName = "Horker.OxyPlotCli.Series.HistogramSeries"
+    SeriesElement = $DATAPOINTS.Histogram
   }
 )
 

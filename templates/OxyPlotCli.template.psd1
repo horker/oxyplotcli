@@ -172,6 +172,7 @@ AliasesToExport = @(
   "oxycol"
   "oxyecol"
   "oxyfunc"
+  "oxyhist"
   "oxyibar"
   "oxylbar"
   "oxyrbar"
@@ -201,7 +202,7 @@ PrivateData = @{
         # Tags applied to this module. These help with module discovery in online galleries.
         Tags = @(
           'OxyPlot', 'cli', 'powershell', 'commnadline', 'command', 'line',
-          'chart', 'plot', 'graphic',
+          'chart', 'plot', 'graphic', 'pie', 'histogram',
           'visualization', 'interactive', 'data', 'analysis',
           'wpf', 'window',
           'R', 'ggplot', 'matplotlib'

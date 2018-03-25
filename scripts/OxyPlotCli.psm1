@@ -34,6 +34,7 @@ Set-Alias oxycandlev New-OxyCandleStickAndVolumeSeries
 Set-Alias oxycol New-OxyColumnSeries
 Set-Alias oxyecol New-OxyErrorColumnSeries
 Set-Alias oxyfunc New-OxyFunctionSeries
+Set-Alias oxyhist New-OxyHistogramSeries
 Set-Alias oxyibar New-OxyIntervalBarSeries
 Set-Alias oxylbar New-OxyLinearBarSeries
 Set-Alias oxyrbar New-OxyRectangleBarSeries

@@ -68,8 +68,6 @@ Describe "series creation cmdlets" {
 
     $s | Should -BeOfType [OxyPlot.Series.BoxPlotSeries]
 
-    $s.ComputeRepresentativeValues()
-
     $s.Items.Count | Should -Be 2
 
     $s.Items[0].X | Should -Be 0
@@ -177,6 +175,15 @@ Describe "series creation cmdlets" {
     $s.Items[2].Low | Should -Be 23
     $s.Items[3].Open | Should -Be 34
     $s.Items[4].Close | Should -Be 45
+  }
+
+  It "can create a Histogram object" {
+    $s = New-OxyHistogramSeries -Value 1,1,1,3,4 -BinCount 3
+    $s | Should -BeOfType [Horker.OxyPlotCli.Series.HistogramSeries]
+    $s.Items.Count | Should -Be 3
+    $s.Items[0].Value | Should -Be 3
+    $s.Items[1].Value | Should -Be 0
+    $s.Items[2].Value | Should -Be 2
   }
 
   It "can create an IntervalBarSeries object" {

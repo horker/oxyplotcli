@@ -18,7 +18,7 @@ namespace Horker.OxyPlotCli.Series
         }
     }
 
-    public class BoxPlotSeries : OxyPlot.Series.BoxPlotSeries
+    public class BoxPlotSeries : OxyPlot.Series.BoxPlotSeries, IProcessingSeries
     {
         public IList<BoxPlotRawItem> RawItems { get; set; }
 
@@ -28,7 +28,7 @@ namespace Horker.OxyPlotCli.Series
             RawItems = new List<BoxPlotRawItem>();
         }
 
-        public void ComputeRepresentativeValues()
+        public void ProcessRawValues()
         {
             var itemsByCategory = new Dictionary<double, IList<double>>();
 

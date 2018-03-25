@@ -178,11 +178,36 @@ end {
     $grouping = $false
   }
 
+<% if ($ClassName -match "HistogramSeries") { -%>
+  $hist = New-Object Horker.OxyPlotCli.Series.Histogram
+  $hist.BinCount = Convert-ParameterValue double $BinCount
+  if ([double]::IsNaN($hist.BinCount)) { $hist.BinCount = 0.0 }
+  $hist.BinWidth = Convert-ParameterValue double $BinWidth
+  if ([double]::IsNaN($hist.BinWidth)) { $hist.BinWidth = 0.0 }
+  $hist.BinOffset = Convert-ParameterValue double $BinOffset
+  if ([double]::IsNaN($hist.BinOffset)) { $hist.BinOffset = 0.0 }
+
+  $all = New-Object Collections.Generic.List[double]
+  foreach ($v in $ValueData) {
+    $v = Convert-ParameterValue double $v
+    $all.Add($v)
+  }
+
+  $hist.UpdateBinWidth($all)
+  $hist.FillBins($all)
+
+  $info.CategoryNames = $hist.GetLabels($BinLabelFormatString)
+
+<% } -%>
   $dataCount = (<% ($SeriesElement.Element.Name -replace "(.+)", '$$$1Data.Count') -join ", " %> | Measure -Maximum).Maximum
   foreach ($group in $GroupingKeys) {
 
 <% } # if ($SeriesElement -ne $null) -%>
+<% if ($ClassName -match "HistogramSeries") { -%>
+    $series = New-Object <% $ClassName %> $hist
+<% } else { -%>
     $series = New-Object <% $ClassName %>
+<% } -%>
 
 <% if ($SeriesElement -ne $null) { -%>
     if ($grouping) {
@@ -249,8 +274,8 @@ end {
     $props = $PROPERTY_HASH["<% $ClassName %>"]
     Assign-ParametersToProperties $props $PSBoundParameters $Options $series
 
-<% if ($ClassName -match "Horker.OxyPlotCli.Series.BoxPlotSeries") { -%>
-    $series.ComputeRepresentativeValues()
+<% if ($ClassName -match "^Horker\..+(BoxPlot|Histogram)Series$") { -%>
+    $series.ProcessRawValues()
 
 <% } -%>
     if ($AddTo -ne $null) {
