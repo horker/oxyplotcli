@@ -28,7 +28,7 @@ function Get-OxyHuePalette {
   for ($i = 0; $i -lt $N; ++$i) {
     $h0 = $HFrom + ($HTo - $HFrom) / ($N-1) * $i * $Direction
     $h = ($h0 + $HStart) % 360
-    $rgb = [OxyPlotCliHelpers.ColorConverter]::ConvertHclToRgb($h, $C, $L)
+    $rgb = [Horker.OxyPlotCli.ColorConverter]::ConvertHclToRgb($h, $C, $L)
     $rgb.Fixup()
     $result.Add($rgb.ToString())
   }

@@ -336,3 +336,21 @@ function Add-OxyBoxPlotSeriesPoint {
 
   $series.Items.Add($p)
 }
+############################################################
+# BoxPlotSeries (Raw Value)
+
+function Add-OxyBoxPlotSeriesRawPoint {
+  [cmdletbinding()]
+  param(
+    [Horker.OxyPlotCli.Series.BoxPlotSeries]$series,
+    [object]$X,
+    [object]$Value
+  )
+
+  $X = Convert-ParameterValue double $X
+  $Value = Convert-ParameterValue double $Value
+
+  $p = New-Object Horker.OxyPlotCli.Series.BoxPlotRawItem $X, $Value
+
+  $series.RawItems.Add($p)
+}

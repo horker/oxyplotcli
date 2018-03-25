@@ -63,22 +63,21 @@ Describe "series creation cmdlets" {
 
   It "can create a BoxPlotSeries object" {
     $s = New-OxyBoxPlotSeries `
-      -X 1,2,3,4,5,6 `
-      -LowerWhisker 11,12,13,14,15,16 `
-      -BoxBottom 21,22,23,24,25,36 `
-      -Median 31,32,33,34,35,36 `
-      -BoxTop 41,42,43,44,45,46 `
-      -UpperWhisker 51,52,53,54,55,56 `
-      -Outlier @(@(1,2,3), @(4,5,6,7), @(8,9,10,11,12))
+      -X 0,0,0,1,1,1 `
+      -Value 1,2,3,4,5,99
+
     $s | Should -BeOfType [OxyPlot.Series.BoxPlotSeries]
-    $s.Items[0].X | Should -Be 1
-    $s.Items[1].LowerWhisker | Should -Be 12
-    $s.Items[2].BoxBottom | Should -Be 23
-    $s.Items[3].Median | Should -Be 34
-    $s.Items[4].BoxTop | Should -Be 45
-    $s.Items[5].UpperWhisker | Should -Be 56
-    $s.Items[0].Outliers.Count | Should -Be 3
-    $s.Items[0].Outliers[2] | Should -Be 3
+
+    $s.ComputeRepresentativeValues()
+
+    $s.Items.Count | Should -Be 2
+    $s.Items[0].X | Should -Be 0
+    $s.Items[0].Median | Should -Be 2
+    $s.Items[0].BoxBottom | Should -Be 1.5
+    $s.Items[0].BoxTop | Should -Be 2.5
+    $s.Items[1].X | Should -Be 1
+    $s.Items[1].Outliers.Count | Should -Be 1
+    $s.Items[1].Outliers[0] | Should -Be 99
   }
 
   It "can create a CandleStickAndVolumeSeries object" {

@@ -1,16 +1,19 @@
 Set-StrictMode -Version 3
 
-$TYPES = [System.Windows.Window], [System.Windows.Controls.Grid]
+$TYPES_WPF = [System.Windows.Window], [System.Windows.Controls.Grid]
 
-$TYPES += [OxyPlot.PlotModel].Assembly.DefinedTypes |
+$TYPES_OXYPLOT = [OxyPlot.PlotModel].Assembly.DefinedTypes |
   where { $_.IsPublic -and !$_.IsAbstract -and $_.FullName -match "(PlotModel|Series|Axis|Annotation)$" }
 
-$TYPES = $TYPES | Sort FullName
+$TYPES_HORKER = [Horker.OxyPlotCli.Series.BoxPlotSeries].Assembly.DefinedTypes |
+  where { $_.IsPublic -and !$_.IsAbstract -and $_.FullName -match "(PlotModel|Series|Axis|Annotation)$" }
+
+$TYPES = $TYPES_WPF + $TYPES_OXYPLOT + $TYPES_HORKER
 
 $TYPE_HASH = @{}
 
 foreach ($t in $TYPES) {
-  $TYPE_HASH[$t.FullName -replace "^OxyPlot\.((Series|Axes|Annotations)\.)?", ""] = $t
+  $TYPE_HASH[$t.FullName -replace "^(OxyPlot|Horker\.OxyPlotCli)\.((Series|Axes|Annotations)\.)?", ""] = $t
 }
 
 $PROPERTY_HASH = @{}

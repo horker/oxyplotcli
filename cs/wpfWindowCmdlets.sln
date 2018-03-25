@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfWindowCmdlets", "wpfWind
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OxyPlotCliHelpers", "OxyPlotCliHelpers\OxyPlotCliHelpers.csproj", "{07D7C723-5D13-45F4-AC40-9D52EE6C67A6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OxyPlotCliTests", "OxyPlotCliTests\OxyPlotCliTests.csproj", "{FABE1978-E35D-46D5-A3A0-0AE0C5B41ECF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{07D7C723-5D13-45F4-AC40-9D52EE6C67A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07D7C723-5D13-45F4-AC40-9D52EE6C67A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07D7C723-5D13-45F4-AC40-9D52EE6C67A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FABE1978-E35D-46D5-A3A0-0AE0C5B41ECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FABE1978-E35D-46D5-A3A0-0AE0C5B41ECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FABE1978-E35D-46D5-A3A0-0AE0C5B41ECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FABE1978-E35D-46D5-A3A0-0AE0C5B41ECF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,20 @@
-
 task . Build, LocalImport, Test
+
+# Copy-Item without any exception
+function Copy-ItemError {
+  [cmdletbinding()]
+  param(
+    [string]$Source,
+    [string]$Destination
+  )
+
+  try {
+    Copy-Item $Source $Destination
+  }
+  catch {
+    Write-Error $_
+  }
+}
 
 task SetupOxyPlot {
   Install-Package OxyPlot.Core -Destination lib
@@ -13,9 +28,16 @@ task SetupOxyPlot {
 
 task Build {
 
+  . {
+    $ErrorActionPreference = "Continue"
+    Copy-ItemError "$PSScriptRoot\cs\WpfWindowCmdlets\bin\Release\WpfWindowCmdlets.dll" "$PSScriptRoot\OxyPlotCli"
+    Copy-ItemError "$PSScriptRoot\cs\OxyPlotCliHelpers\bin\Release\OxyPlotCliHelpers.dll" "$PSScriptRoot\OxyPlotCli"
+  }
+
   Add-Type -Path "$PSScriptRoot\OxyPlotCli\lib\OxyPlot.dll"
   Add-Type -Path "$PSScriptRoot\OxyPlotCli\lib\OxyPlot.Wpf.dll"
-  . "$PSScriptRoot\scripts\Parameter.ps1"
+  Add-Type -Path "$PSScriptRoot\OxyPlotCli\WpfWindowCmdlets.dll"
+  Add-Type -Path "$PSScriptRoot\OxyPlotCli\OxyPlotCliHelpers.dll"
 
   Copy-Item -Recurse "$PSScriptRoot\scripts\*" "$PSScriptRoot\OxyPlotCli"
 
@@ -25,19 +47,13 @@ task Build {
   $null = mkdir "$PSScriptRoot\OxyPlotCli\styles" -force
   Copy-Item -Recurse "$PSScriptRoot\styles\*" "$PSScriptRoot\OxyPlotCli\styles"
 
+  . "$PSScriptRoot\scripts\Parameter.ps1"
+
   Import-Module HorkerTemplateEngine
   Invoke-Build -File "$PSScriptRoot\templates\template.build.ps1"
   Invoke-Build -File "$PSScriptRoot\templates\Axis.build.ps1"
   Invoke-Build -File "$PSScriptRoot\templates\Show-OxyPlot.build.ps1"
 
-  try {
-    Copy-Item "$PSScriptRoot\cs\WpfWindowCmdlets\bin\Release\WpfWindowCmdlets.dll" "$PSScriptRoot\OxyPlotCli"
-  }
-  catch {}
-  try {
-    Copy-Item "$PSScriptRoot\cs\OxyPlotCliHelpers\bin\Release\OxyPlotCliHelpers.dll" "$PSScriptRoot\OxyPlotCli"
-  }
-  catch {}
 }
 
 task LocalImport {

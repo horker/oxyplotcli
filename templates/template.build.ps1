@@ -148,16 +148,25 @@ $DATAPOINTS.CandleStickAndVolume = @{
   )
 }
 
-$DATAPOINTS.BoxPlot = @{
-  Cmdlet = "Add-OxyBoxPlotSeriesPoint"
+#$DATAPOINTS.BoxPlot = @{
+#  Cmdlet = "Add-OxyBoxPlotSeriesPoint"
+#  Element = @(
+#    @{ Name = "X"; Class = "double"; Axis = "X" },
+#    @{ Name = "LowerWhisker"; Class = "double" },
+#    @{ Name = "BoxBottom"; Class = "double" },
+#    @{ Name = "Median"; Class = "double"; Axis = "Y" },
+#    @{ Name = "BoxTop"; Class = "double" },
+#    @{ Name = "UpperWhisker"; Class = "double" },
+#    @{ Name = "Outlier"; Class = "double[]" },
+#    @{ Name = "Category"; Class = "string" }
+#  )
+#}
+
+$DATAPOINTS.BoxPlotRaw = @{
+  Cmdlet = "Add-OxyBoxPlotSeriesRawPoint"
   Element = @(
     @{ Name = "X"; Class = "double"; Axis = "X" },
-    @{ Name = "LowerWhisker"; Class = "double" },
-    @{ Name = "BoxBottom"; Class = "double" },
-    @{ Name = "Median"; Class = "double"; Axis = "Y" },
-    @{ Name = "BoxTop"; Class = "double" },
-    @{ Name = "UpperWhisker"; Class = "double" },
-    @{ Name = "Outlier"; Class = "double[]" },
+    @{ Name = "Value"; Class = "double"; Axis = "Y" },
     @{ Name = "Category"; Class = "string" }
   )
 }
@@ -182,9 +191,14 @@ $SERIES_TEMPLATES = @(
     SeriesElement = $DATAPOINTS.Bar
   },
 
+#  @{
+#    ClassName = "OxyPlot.Series.BoxPlotSeries"
+#    SeriesElement = $DATAPOINTS.BoxPlot
+#  },
+
   @{
-    ClassName = "OxyPlot.Series.BoxPlotSeries"
-    SeriesElement = $DATAPOINTS.BoxPlot
+    ClassName = "Horker.OxyPlotCli.Series.BoxPlotSeries"
+    SeriesElement = $DATAPOINTS.BoxPlotRaw
   },
 
   @{

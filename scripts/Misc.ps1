@@ -23,8 +23,8 @@ function Get-AxisObject {
 
 $script:ResultsOfAreAxesRequired = @{}
 
-[OxyPlot.Series.Series].Assembly.GetTypes() |
-  where { $_.Name -Match "Series$" -And !$_.IsAbstract } |
+[OxyPlot.Series.Series].Assembly.GetTypes() + [Horker.OxyPlotCli.Series.BoxPlotSeries].Assembly.GetTypes() |
+  where { $_.Name -Match "Series$" -and $_.IsPublic -and !$_.IsAbstract } |
   foreach {
     $m = [OxyPlot.Series.Series].GetMethod(
       "AreAxesRequired",
@@ -69,7 +69,8 @@ function Get-RequiredCategoryAxis {
 
   if ($Series -is [OxyPlot.Series.ColumnSeries] -or
       $Series -is [OxyPlot.Series.ErrorColumnSeries] -or
-      $Series -is [OxyPlot.Series.BoxPlotSeries]) {
+      $Series -is [OxyPlot.Series.BoxPlotSeries] -or
+      $Series -is [Horker.OxyPlotCli.Series.BoxPlotSeries]) {
     return "x"
   }
 
@@ -82,6 +83,32 @@ function Get-RequiredCategoryAxis {
   return $null
 }
 
+############################################################
+# Add-OxyObjectToPlotModel helpers
+
+function Get-RequiredAxisType {
+  param(
+    [OxyPlot.Series.Series]$Series,
+    [string]$Position
+  )
+
+  if ($Position -eq "x") {
+    if ($Series -is [OxyPlot.Series.ColumnSeries] -or
+        $Series -is [OxyPlot.Series.ErrorColumnSeries] -or
+        $Series -is [OxyPlot.Series.BoxPlotSeries] -or
+        $Series -is [Horker.OxyPlotCli.Series.BoxPlotSeries]) {
+      return "category"
+    }
+  }
+  else {
+    if ($Series -is [OxyPlot.Series.BarSeries] -or
+        $Series -is [OxyPlot.Series.IntervalBarSeries] -or
+        $Series -is [OxyPlot.Series.TornadoBarSeries]) {
+      return "category"
+    }
+  }
+  "linear"
+}
 
 ############################################################
 # PlotModel cmdlets

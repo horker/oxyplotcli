@@ -1,25 +1,4 @@
-function Get-RequiredAxisType {
-  param(
-    [OxyPlot.Series.Series]$Series,
-    [string]$Position
-  )
-
-  if ($Position -eq "x") {
-    if ($Series -is [OxyPlot.Series.ColumnSeries] -or
-        $Series -is [OxyPlot.Series.ErrorColumnSeries]) {
-      return "category"
-    }
-  }
-  else {
-    if ($Series -is [OxyPlot.Series.BarSeries] -or
-        $Series -is [OxyPlot.Series.IntervalBarSeries] -or
-        $Series -is [OxyPlot.Series.LinearBarSeries] -or
-        $Series -is [OxyPlot.Series.TornadoBarSeries]) {
-      return "category"
-    }
-  }
-  "linear"
-}
+Set-StrictMode -Version 3
 
 function Add-OxyObjectToPlotModel {
   [cmdletbinding()]
@@ -48,10 +27,6 @@ function Add-OxyObjectToPlotModel {
 
   if ($Object -isnot [OxyPlot.Series.Series]) {
     Write-Error "Object is not a series, axis, nor annotation"
-    return
-  }
-
-  if (!(Test-AxesRequired $Object)) {
     return
   }
 

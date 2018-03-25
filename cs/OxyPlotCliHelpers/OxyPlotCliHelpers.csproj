@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\OxyPlotCliHelpers.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Release\OxyPlotCliHelpers.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
@@ -54,7 +56,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OxyPlotCliHelpers.cs" />
+    <Compile Include="OxyPlotSubclasses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SummaryOfDataSet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

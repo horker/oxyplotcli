@@ -8,7 +8,9 @@ using System.Management.Automation;
 using OxyPlot;
 using OxyPlot.Axes;
 
-namespace OxyPlotCliHelpers
+#pragma warning disable CS1591
+
+namespace Horker.OxyPlotCli
 {
     [Cmdlet("Add", "OxyAxisShare")]
     public class AddOxyAxisShare : PSCmdlet

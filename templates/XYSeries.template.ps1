@@ -152,6 +152,18 @@ end {
 <% } -%>
   $GroupData.AddRange($Group)
 
+<% if ($SeriesElement -ne $null -and $SeriesElement.Element.Name -Contains "Category") { -%>
+  $categoryIndexMap = @{}
+  $index = 0
+  foreach ($c in $CategoryData) {
+    if (!$categoryIndexMap.ContainsKey($c)) {
+      $categoryIndexMap[$c] = $index
+      ++$index
+      $info.CategoryNames += $c
+    }
+  }
+
+<% } -%>
   if ($GroupData.Count -gt 0) {
     $groups = @{}
     foreach ($e in $GroupData) {
@@ -180,22 +192,47 @@ end {
 
 <% } # if ($SeriesElement -ne $null) -%>
 <% if ($SeriesElement -ne $null) { -%>
-    $catCount = 0;
     for ($i = 0; $i -lt $dataCount; ++$i) {
       if ($grouping -and $GroupData[$i] -ne $group) {
         continue
       }
 <% foreach ($e in $SeriesElement.Element) { -%>
 <%   if ($e.Name -eq "CategoryIndex") { -%>
-      if ($i -lt $CategoryIndexData.Count) { $CategoryIndexElement = $CategoryIndexData[$i] } else { $CategoryIndexElement = $catCount }
-<%   } elseif ($e.Name -eq "X" -and $ClassName -match "BoxPlotSeries") { -%>
-      if ($i -lt $XData.Count) { $XElement = $XData[$i] } else { $XElement = $catCount }
+      if ($i -lt $CategoryIndexData.Count) {
+        $CategoryIndexElement = $CategoryIndexData[$i]
+      }
+      elseif ($i -lt $CategoryData.Count) {
+        $CategoryIndexElement = $categoryIndexMap[$CategoryData[$i]]
+      }
+      elseif ($categoryIndexMap.Count -gt 0) {
+        $CategoryIndexElement = ($categoryIndexMap.Values | Measure-Object -Maximum).Maximum
+      }
+      else {
+        $CategoryIndexElement = 0
+      }
+<%   } elseif ($e.Name -eq "X" -and $ClassName -match "Horker.OxyPlotCli.Series.BoxPlotSeries") { -%>
+      if ($i -lt $XData.Count) {
+        $XElement = $XData[$i]
+      }
+      elseif ($i -lt $CategoryData.Count) {
+        $XElement = $categoryIndexMap[$CategoryData[$i]]
+      }
+      elseif ($categoryIndexMap.Count -gt 0) {
+        $XElement = ($categoryIndexMap.Values | Measure-Object -Maximum).Maximum
+      }
+      else {
+        $XElement = 0
+      }
 <%   } else { -%>
-      if ($i -lt $<% $e.Name %>Data.Count) { $<% $e.Name %>Element = $<% $e.Name %>Data[$i] } else { $<% $e.Name %>Element = $null }
+      if ($i -lt $<% $e.Name %>Data.Count) {
+        $<% $e.Name %>Element = $<% $e.Name %>Data[$i]
+      }
+      else {
+        $<% $e.Name %>Element = $null
+      }
 <%   } -%>
 <% } -%>
       <% $SeriesElement.Cmdlet %> $series<% $SeriesElement.Element | where { $_.Name -ne "Category" } | foreach { %> $<% $_.Name %>Element<% } %>
-      ++$catCount
     }
 
 <% } # if ($SeriesElement -ne $null) -%>
@@ -205,20 +242,6 @@ end {
 <% if ($YAxisElement -ne $null) { -%>
     if ($<% $YAxisElement.Name %>Data.Count -gt 0) { $info.YDataType = Get-ValueType $<% $YAxisElement.Name %>Data[0] }
 <% } -%>
-<% if ($SeriesElement -ne $null -and $SeriesElement.Element.Name -Contains "Category") { -%>
-
-    if ($grouping) {
-      $info.CategoryNames = New-Object Collections.Generic.List[string]
-      for ($i = 0; $i -lt $dataCount; ++$i) {
-        if ($GroupData[$i] -eq $GroupingKeys[0]) {
-          $info.CategoryNames.Add($CategoryData[$i])
-        }
-      }
-    }
-    else {
-      $info.CategoryNames = $CategoryData
-    }
-<% } -%>
 
     $series = $series | Add-Member -PassThru NoteProperty _Info $info
 
@@ -227,6 +250,10 @@ end {
     $props = $PROPERTY_HASH["<% $ClassName %>"]
     Assign-ParametersToProperties $props $PSBoundParameters $Options $series
 
+<% if ($ClassName -match "Horker.OxyPlotCli.Series.BoxPlotSeries") { -%>
+    $series.ComputeRepresentativeValues()
+
+<% } -%>
     if ($AddTo -ne $null) {
       Add-OxyObjectToPlotModel $series $AddTo -NoRefresh
     }
