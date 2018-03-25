@@ -1,5 +1,8 @@
 Set-StrictMode -version 3
 
+Add-Type -Path "$PSScriptRoot\lib\OxyPlot.dll"
+Add-Type -Path "$PSScriptRoot\lib\OxyPlot.Wpf.dll"
+
 Import-Module $PSScriptRoot\Horker.OxyPlotCli.dll
 
 Get-ChildItem $PSScriptRoot\*.ps1 | foreach { . $_.FullName }
