@@ -55,9 +55,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OxyPlotCliHelpers\OxyPlotCliHelpers.csproj">
+    <ProjectReference Include="..\Horker.OxyPlotCli\Horker.OxyPlotCli.csproj">
       <Project>{07d7c723-5d13-45f4-ac40-9d52ee6c67a6}</Project>
-      <Name>OxyPlotCliHelpers</Name>
+      <Name>Horker.OxyPlotCli</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

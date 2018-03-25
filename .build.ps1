@@ -1,77 +1,77 @@
-task . Build, LocalImport, Test
+task . Load, Build, ImportLocal, Test
+
+$TARGET_PATH =         "$PSScriptRoot\OxyPlotCli"
+$TARGET_VENDOR_PATH =  "$TARGET_PATH\lib"
+$TARGET_STYLE_PATH =   "$TARGET_PATH\styles"
+$TARGET_DATASET_PATH = "$TARGET_PATH\datasets"
+
+$VENDOR_PATH = "$PSScriptRoot\lib"
+
+$OXYPLOT_CORE_FILE = Resolve-Path "$VENDOR_PATH\OxyPlot.Core.*\lib\net45\OxyPlot.dll"
+$OXYPLOT_WPF_FILE = Resolve-Path "$VENDOR_PATH\OxyPlot.Wpf.*\lib\net45\OxyPlot.Wpf.dll"
+$OXYPLOTCLI_FILE = "$PSScriptRoot\source\Horker.OxyPlotCli\bin\Release\Horker.OxyPlotCli.dll"
 
 # Copy-Item without any exception
 function Copy-ItemError {
   [cmdletbinding()]
   param(
     [string]$Source,
-    [string]$Destination
+    [string]$Destination,
+    [switch]$Recurse
   )
 
   try {
-    Copy-Item $Source $Destination
+    Copy-Item -Recurse:$Recurse $Source $Destination
   }
   catch {
     Write-Error $_
   }
 }
 
-task SetupOxyPlot {
-  Install-Package OxyPlot.Core -Destination lib
-  Install-Package OxyPlot.Wpf -Destination lib
+task InstallOxyPlot {
+  Install-Package OxyPlot.Core -Destination $VENDOR_PATH
+  Install-Package OxyPlot.Wpf -Destination $VENDOR_PATH
 
-  $null = mkdir "$PSScriptRoot\OxyPlotCli\lib" -force
+  $null = mkdir $VENDOR_PATH -force
 
-  (Get-Item "$PSScriptRoot\lib\OxyPlot.Core.*\lib\net45\OxyPlot.dll").CopyTo("$PSScriptRoot\OxyPlotCli\lib\OxyPlot.dll")
-  (Get-Item "$PSScriptRoot\lib\OxyPlot.Wpf.*\lib\net45\OxyPlot.Wpf.dll").CopyTo("$PSScriptRoot\OxyPlotCli\lib\OxyPlot.Wpf.dll")
+  Copy-ItemError $OXYPLOT_CORE_FILE $TARGET_VENDOR_PATH
+  Copy-ItemError $OXYPLOT_WPF_FILE $TARGET_VENDOR_PATH
+}
+
+# Load necessary modules for the build process
+task Load {
+  Import-Module HorkerTemplateEngine
+
+  Add-Type -Path $OXYPLOT_CORE_FILE
+  Add-Type -Path $OXYPLOT_WPF_FILE
+  Add-Type -Path $OXYPLOTCLI_FILE
+
+  . "$PSScriptRoot\scripts\Parameter.ps1"
 }
 
 task Build {
+  $ErrorActionPreference = "Continue"
 
-  . {
-    $ErrorActionPreference = "Continue"
-    Copy-ItemError "$PSScriptRoot\cs\WpfWindowCmdlets\bin\Release\WpfWindowCmdlets.dll" "$PSScriptRoot\OxyPlotCli"
-    Copy-ItemError "$PSScriptRoot\cs\OxyPlotCliHelpers\bin\Release\OxyPlotCliHelpers.dll" "$PSScriptRoot\OxyPlotCli"
-  }
+  Copy-ItemError $OXYPLOTCLI_FILE $TARGET_PATH
 
-  Add-Type -Path "$PSScriptRoot\OxyPlotCli\lib\OxyPlot.dll"
-  Add-Type -Path "$PSScriptRoot\OxyPlotCli\lib\OxyPlot.Wpf.dll"
-  Add-Type -Path "$PSScriptRoot\OxyPlotCli\WpfWindowCmdlets.dll"
-  Add-Type -Path "$PSScriptRoot\OxyPlotCli\OxyPlotCliHelpers.dll"
+  Copy-ItemError -Recurse "$PSScriptRoot\scripts\*" $TARGET_PATH
 
-  Copy-Item -Recurse "$PSScriptRoot\scripts\*" "$PSScriptRoot\OxyPlotCli"
+  $null = mkdir $TARGET_DATASET_PATH -force
+  Copy-ItemError -Recurse "$PSScriptRoot\datasets\*" $TARGET_DATASET_PATH
 
-  $null = mkdir "$PSScriptRoot\OxyPlotCli\datasets" -force
-  Copy-Item -Recurse "$PSScriptRoot\datasets\*" "$PSScriptRoot\OxyPlotCli\datasets"
+  $null = mkdir $TARGET_STYLE_PATH -force
+  Copy-ItemError -Recurse "$PSScriptRoot\styles\*" $TARGET_STYLE_PATH
 
-  $null = mkdir "$PSScriptRoot\OxyPlotCli\styles" -force
-  Copy-Item -Recurse "$PSScriptRoot\styles\*" "$PSScriptRoot\OxyPlotCli\styles"
-
-  . "$PSScriptRoot\scripts\Parameter.ps1"
-
-  Import-Module HorkerTemplateEngine
   Invoke-Build -File "$PSScriptRoot\templates\template.build.ps1"
   Invoke-Build -File "$PSScriptRoot\templates\Axis.build.ps1"
   Invoke-Build -File "$PSScriptRoot\templates\Show-OxyPlot.build.ps1"
-
 }
 
-task LocalImport {
+task ImportLocal {
   Import-Module .\OxyPlotCli -Force
 
   # for testing purpose
   Set-OxyDefaultStyle ggplot
-}
-
-task Install {
-  $INSTALL_PATH = "$HOME\Documents\WindowsPowerShell\Modules\OxyPlotCli"
-  if (Test-Path $INSTALL_PATH) {
-    Remove-Item -Recurse -Force "$HOME\Documents\WindowsPowerShell\Modules\OxyPlotCli" -EA Continue
-  }
-  else {
-    $null = mkdir $INSTALL_PATH
-  }
-  Copy-Item -Recurse -Force OxyPlotCli\* $INSTALL_PATH
 }
 
 task TouchTemplate {
@@ -83,5 +83,9 @@ task Test {
 }
 
 task Clean {
-  Remove-Item -Force "$PSScriptRoot\OxyPlotCli\*.ps1"
+  Remove-Item -Force "$TARGET_PATH\*.ps1"
+  Remove-Item -Force $TARGET_STYLE_PATH
+  Remove-Item -Force $TARGET_DATASET_PATH
+
+  Remove-Item -Force "$TARGET_PATH\*.dll"
 }

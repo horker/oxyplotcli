@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Windows;
@@ -14,7 +11,9 @@ using System.Reflection;
 using System.Windows.Interop;
 using System.Runtime.InteropServices;
 
-namespace WpfWindowCmdlets
+#pragma warning disable CS1591
+
+namespace Horker.OxyPlotCli.Cmdlets
 {
     // Win32 API functions and constants to make a window invisible in the task switcher
     // ref.
@@ -150,7 +149,7 @@ namespace WpfWindowCmdlets
 
             _powerShell.AddScript(@"
                 param($result, $event)
-                [WpfWindowCmdlets.Util]::OpenWindow($result, $event)");
+                [Horker.OxyPlotCli.Cmdlets.Util]::OpenWindow($result, $event)");
             _powerShell.AddParameter("result", result);
             _powerShell.AddParameter("event", e);
 
@@ -167,7 +166,7 @@ namespace WpfWindowCmdlets
 
             OpenRootWindow();
 
-            _rootWindow.Dispatcher.Invoke(() => {
+            _rootWindow.Dispatcher.Invoke(delegate {
                 if (XamlString != null) {
                     window = (Window)XamlReader.Parse(XamlString);
                 }

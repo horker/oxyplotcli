@@ -1,7 +1,6 @@
 Set-StrictMode -version 3
 
-Import-Module $PSScriptRoot\WpfWindowCmdlets.dll
-Import-Module $PSScriptRoot\OxyPlotCliHelpers.dll
+Import-Module $PSScriptRoot\Horker.OxyPlotCli.dll
 
 Get-ChildItem $PSScriptRoot\*.ps1 | foreach { . $_.FullName }
 
@@ -13,14 +12,16 @@ Set-Alias oxymodel New-OxyPlotModel
 
 # Aliases of series cmdlets
 
-Get-Item function:\New-Oxy*Series  | where { $_ -match "^New-Oxy(\w+)Series(\w*)$" } | foreach {
-  $fullName = $matches[0]
-  $series = $matches[1]
-  $lseries = $series.ToLower()
-  $suffix = $matches[2]
+Get-Item function:\New-Oxy*Series  |
+  where { $_ -match "^New-Oxy(\w+)Series(\w*)$" } |
+  foreach {
+    $fullName = $matches[0]
+    $series = $matches[1]
+    $lseries = $series.ToLower()
+    $suffix = $matches[2]
 
-  Set-Alias "oxy$lseries$suffix" $fullName
-}
+    Set-Alias "oxy$lseries$suffix" $fullName
+  }
 
 # Additional aliases
 
