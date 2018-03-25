@@ -1,14 +1,21 @@
+# Products and library folders
 OxyPlotCli/
 lib/
+vendor/
 
+# Visual Studio files
 .vs/
 bin/
 obj/
 packages/
 *.user
 
+# Working folders
 old/
 source/
 private/
 temp/
+
+# Temporary files in the projet folder
 temp.*
+*.db
