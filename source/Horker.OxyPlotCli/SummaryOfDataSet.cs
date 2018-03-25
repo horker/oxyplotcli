@@ -1,20 +1,23 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 #pragma warning disable CS1591
 
 namespace Horker.OxyPlotCli
 {
     /// <summary>
-    /// Represents the five-number summary of a data set.</summary>
+    /// Represents the five-number summary plus whiskers of a data set.</summary>
     /// <para> Returns the same results of the "boxplot.stat" function in R. This is the same as the computing method 2 in Wikipedia.</para>
     /// <para>boxplot.stat: http://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/boxplot.stats.html"</para>
     /// <para>Quartile in Wikipedia: https://en.wikipedia.org/wiki/Quartile"</para>
     public class SummaryOfDataSet
     {
         public double Minimum { get; private set; }
+        public double LowerWhisker { get; private set; }
         public double LowerQuartile { get; private set; }
         public double Median { get; private set; }
         public double UpperQuartile { get; private set; }
+        public double UpperWhisker { get; private set; }
         public double Maximum { get; private set; }
 
         public SummaryOfDataSet(IList<double> sortedDataSet)
@@ -66,6 +69,18 @@ namespace Horker.OxyPlotCli
                 var upperq = latterHalf + halfSize / 2; // round down
                 UpperQuartile = dataSet[upperq];
             }
+
+            // Whiskers
+            // The same results as R's boxplot.stat()
+            // See: http://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/boxplot.stats.html
+
+            var iqr = UpperQuartile - LowerQuartile;
+            var lowerBoundary = LowerQuartile - 1.5 * iqr;
+            LowerWhisker = dataSet.First(x => x >= lowerBoundary);
+
+            var upperBoundary = UpperQuartile + 1.5 * iqr;
+            UpperWhisker = dataSet.Last(x => x <= upperBoundary);
+
         }
     }
 }

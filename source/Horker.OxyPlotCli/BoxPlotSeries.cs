@@ -44,20 +44,11 @@ namespace Horker.OxyPlotCli.Series
                 values.Sort();
 
                 var summary = new SummaryOfDataSet(values);
-                var median = summary.Median;
-                var lowerq = summary.LowerQuartile;
-                var upperq = summary.UpperQuartile;
 
-                // The same results as R's boxplot.stat()
-                // See: http://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/boxplot.stats.html
+                var outliers = values.Where((x) => { return x < summary.LowerWhisker || summary.UpperWhisker < x; }).ToList<double>();
 
-                var iqr = upperq - lowerq;
-                var lowerWhisker = lowerq - 1.58 * iqr / Math.Sqrt(values.Count);
-                var upperWhisker = upperq + 1.58 * iqr / Math.Sqrt(values.Count);
-
-                var outliers = values.Where((x) => { return x < lowerWhisker || upperWhisker < x; }).ToList<double>();
-
-                var oxyItem = new OxyPlot.Series.BoxPlotItem(entry.Key, lowerWhisker, lowerq, median, upperq, upperWhisker);
+                var oxyItem = new OxyPlot.Series.BoxPlotItem(
+                    entry.Key, summary.LowerWhisker, summary.LowerQuartile, summary.Median, summary.UpperQuartile, summary.UpperWhisker);
 
                 oxyItem.Outliers = outliers;
 

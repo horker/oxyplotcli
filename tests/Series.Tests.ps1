@@ -63,19 +63,26 @@ Describe "series creation cmdlets" {
 
   It "can create a BoxPlotSeries object" {
     $s = New-OxyBoxPlotSeries `
-      -X 0,0,0,1,1,1 `
-      -Value 1,2,3,4,5,99
+      -X     0,0,0,1,1,1,1,1,1,1 `
+      -Value 1,2,3,1,2,3,4,5,6,99
 
     $s | Should -BeOfType [OxyPlot.Series.BoxPlotSeries]
 
     $s.ComputeRepresentativeValues()
 
     $s.Items.Count | Should -Be 2
+
     $s.Items[0].X | Should -Be 0
-    $s.Items[0].Median | Should -Be 2
-    $s.Items[0].BoxBottom | Should -Be 1.5
     $s.Items[0].BoxTop | Should -Be 2.5
+    $s.Items[0].BoxBottom | Should -Be 1.5
+    $s.Items[0].Median | Should -Be 2
+
     $s.Items[1].X | Should -Be 1
+    $s.Items[1].UpperWhisker | Should -Be 6
+    $s.Items[1].BoxTop | Should -Be 5.5
+    $s.Items[1].Median | Should -Be 4
+    $s.Items[1].BoxBottom | Should -Be 2.5
+    $s.Items[1].LowerWhisker | Should -Be 1
     $s.Items[1].Outliers.Count | Should -Be 1
     $s.Items[1].Outliers[0] | Should -Be 99
   }

@@ -153,15 +153,14 @@ end {
   $GroupData.AddRange($Group)
 
 <% if ($SeriesElement -ne $null -and $SeriesElement.Element.Name -Contains "Category") { -%>
+  $categoryNames = $CategoryData | Sort-Object -Unique
   $categoryIndexMap = @{}
   $index = 0
-  foreach ($c in $CategoryData) {
-    if (!$categoryIndexMap.ContainsKey($c)) {
-      $categoryIndexMap[$c] = $index
-      ++$index
-      $info.CategoryNames += $c
-    }
+  foreach ($c in $categoryNames) {
+    $categoryIndexMap[$c] = $index
+    ++$index
   }
+  $info.CategoryNames = $categoryNames
 
 <% } -%>
   if ($GroupData.Count -gt 0) {
