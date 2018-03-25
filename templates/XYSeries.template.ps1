@@ -2,10 +2,10 @@
 Set-StrictMode -Version 3
 
 <#
-<% ../tools/Insert-Help.ps1 $Document $ClassName -%>
-
 .DESCRIPTION
 This cmdlet creates an <% $ClassName %> object.
+
+<% ../tools/Insert-Help.ps1 $Document $ClassName -%>
 
 <% if ($SeriesElement -ne $null) { -%>
 .PARAMETER InputObject
