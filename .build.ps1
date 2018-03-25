@@ -82,8 +82,8 @@ task Test {
 
 task Clean {
   Remove-Item -Force "$TARGET_PATH\*.ps1"
-  Remove-Item -Force $TARGET_STYLE_PATH
-  Remove-Item -Force $TARGET_DATASET_PATH
+  Remove-Item -Force -Recurse $TARGET_STYLE_PATH
+  Remove-Item -Force -Recurse $TARGET_DATASET_PATH
 
   Remove-Item -Force "$TARGET_PATH\*.dll"
 }
