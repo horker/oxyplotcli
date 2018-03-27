@@ -79,13 +79,18 @@ function Convert-ParameterValue {
               $Value = [OxyPlot.Axes.DateTimeAxis]::ToDouble([DateTime]::Parse($Value))
             }
             catch [FormatException] {
-              # Try to parse as [TimeSpan]
+              try {
+                # Try to parse as [TimeSpan]
 
-              # Remove a leading plus
-              # You can place a plus to force the value to be interpreted as a TimeSpan.
-              $Value = $Value -replace "^\s*\+", ""
+                # Remove a leading plus
+                # You can place a plus to force the value to be interpreted as a TimeSpan.
+                $Value = $Value -replace "^\s*\+", ""
 
-              $Value = [OxyPlot.Axes.TimeSpanAxis]::ToDouble([TimeSpan]::Parse($Value))
+                $Value = [OxyPlot.Axes.TimeSpanAxis]::ToDouble([TimeSpan]::Parse($Value))
+              }
+              catch [FormatException] {
+                Write-Error "Failed to convert into double"
+              }
             }
           }
         }
