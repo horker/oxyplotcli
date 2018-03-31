@@ -12,7 +12,7 @@
 RootModule = 'OxyPlotCli.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0.4'
+ModuleVersion = '1.0.5'
 
 # Supported PSEditions
 # CompatiblePSEditions = ''
@@ -32,7 +32,9 @@ Copyright = '(c) 2018 horker. All rights reserved.'
 # Description of the functionality provided by this module
 Description = "OxyPlot CLI is a PowerShell module for using OxyPlot, the .NET chart library, on commnad line.
 
-OxyPlot CLI is designed for both interactive usage and elaborate visualization scripting. It supports all series, axes and annotations of OxyPlot.
+OxyPlot CLI is designed for both interactive usage and elaborate visualization scripting.
+
+It supports all series, axes and annotations of OxyPlot. Furthermore, it provides an additional histogram series.
 
 For more details, see the project site: https://github.com/horker/oxyplotcli
 
@@ -219,17 +221,13 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @"
-v1.0.4
+v1.0.5
+Add New-OxyHistogramSerie
+New-OxyBoxPlotSeries renewal
 Several bug fixes
 
-v1.0.3
-Bug fix: grouping
-
-v1.0.2
-Updated the link to the project site
-
-v1.0.1
-Several bug fixes
+v1.0.1 - v1.0.4
+Bug fixes
 
 v1.0.0
 First release
