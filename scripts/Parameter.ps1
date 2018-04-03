@@ -96,11 +96,11 @@ function Convert-ParameterValue {
         }
 
         "System.DateTime" {
-          $Value = [OxyPlot.Axes.DateTimeAxis].ToDouble($Value)
+          $Value = [OxyPlot.Axes.DateTimeAxis]::ToDouble($Value)
         }
 
         "System.TimeSpan" {
-          $Value = [OxyPlot.Axes.TimeSpanAxis].ToDouble($Value)
+          $Value = [OxyPlot.Axes.TimeSpanAxis]::ToDouble($Value)
         }
 
         defalut {
