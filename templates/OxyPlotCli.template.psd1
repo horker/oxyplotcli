@@ -12,7 +12,7 @@
 RootModule = 'OxyPlotCli.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0.5'
+ModuleVersion = '1.0.6'
 
 # Supported PSEditions
 # CompatiblePSEditions = ''
@@ -221,8 +221,11 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @"
+v1.0.6
+Fix data conversion error
+
 v1.0.5
-Add New-OxyHistogramSerie
+Add New-OxyHistogramSeries
 New-OxyBoxPlotSeries renewal
 Several bug fixes
 
