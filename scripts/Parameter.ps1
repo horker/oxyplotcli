@@ -104,7 +104,7 @@ function Convert-ParameterValue {
         }
 
         defalut {
-          $value = [double]$Value
+          $value = [System.Convert]::ToDouble($Value)
         }
       }
     }
