@@ -49,7 +49,7 @@ Describe "OxyColor parameter" {
   }
 
   It "raises an error for invalid parameter" {
-    { $s = New-OxyLineSeries -Color xxxx } | Should -Throw "Cannot validate"
+    { $s = New-OxyLineSeries -Color xxxx } | Should -Throw "xxxx"
   }
 
 }
