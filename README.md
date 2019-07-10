@@ -2,6 +2,8 @@
 
 ![Example](https://github.com/horkerps/oxyplotcli/wiki/images/scatter.png)
 
+**The latest release is v2.0.0-beta. The project site is [here](http://github.com/oxyplotcli2).**
+
 OxyPlot CLI is a PowerShell module for using [OxyPlot](http://www.oxyplot.org), the .NET chart library, on commnad line.
 
 OxyPlot CLI is designed for both interactive usage and elaborate visualization scripting. It supports all series, axes and annotations of OxyPlot.
@@ -25,4 +27,3 @@ See [Wiki pages](https://github.com/horkerps/oxyplotcli/wiki).
 Licensed under the MIT License, except the following:
 
 The files in the `datasets` folder contains the contents obtained from the products of the R and ggplot2 projects. These files are subject to the license of the original products (GPL).
-
